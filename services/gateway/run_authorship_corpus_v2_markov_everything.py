@@ -1189,7 +1189,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--calibration-hc3-qa", type=Path, default=DEFAULT_QA)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--min-frequency", type=int, default=8)
-    parser.add_argument("--max-features", type=int, default=30000)
+    parser.add_argument("--max-features", type=int, default=12000)
     parser.add_argument("--epochs", type=int, default=220)
     parser.add_argument("--limit-per-split", type=int, default=0, help="Optional smoke cap per split, balanced by label.")
     parser.add_argument("--methods", default="", help="Comma-separated method subset.")
