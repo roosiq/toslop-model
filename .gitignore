@@ -1,0 +1,22 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# Downloaded source corpora and regenerated JSONL splits are intentionally not
+# committed. They are reproducible from the pinned source revisions and hashes
+# in metadata/source_revisions.json.
+services/data/
+services/evals/corporate_sequence_model/hf_normalized_corpus*.jsonl
+services/evals/corporate_sequence_model/hf_normalized_authorship_clean_v1*.jsonl
+services/evals/corporate_sequence_model/authorship_corpus_v2/*.jsonl
+
+# Local secrets must never enter the replication repo.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.dev.vars
+

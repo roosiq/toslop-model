@@ -1,0 +1,72 @@
+{
+  "datasets": [
+    {
+      "repo_id": "andythetechnerd03/AI-human-text",
+      "revision": "0387d82c81d6af6caaa6d792b48c9d07afa704d7",
+      "license": "apache-2.0",
+      "source_files": [
+        {
+          "path": "data/test-00000-of-00001.parquet",
+          "sha256": "3a465bec1d49c3a37dca52393aa4cd43085de6da8ba991505a7b3f3034583b69"
+        }
+      ]
+    },
+    {
+      "repo_id": "Ateeqq/AI-and-Human-Generated-Text",
+      "revision": "e0627b3f39fe0a27725889239067868797a4db40",
+      "license": "mit",
+      "source_files": [
+        {
+          "path": "train.csv",
+          "sha256": "33c5da151521acb7cb2ba32a972a162551c46284fff115a0a837d19fcc03c085"
+        },
+        {
+          "path": "test.csv",
+          "sha256": "522d9bbf146e6292bab9920447745dcf01fbd5628fd3b189969dcdb238576dc4"
+        }
+      ]
+    },
+    {
+      "repo_id": "silentone0725/ai-human-text-detection-v1",
+      "revision": "a303611a074f8f6736302126e8f06c51273f4562",
+      "license": "cc-by-4.0",
+      "source_files": [
+        {
+          "path": "train.csv",
+          "sha256": "2d851c99faf7f2b42edb87973b6e66b0122add284e40e695a2eff59ff1f89002"
+        },
+        {
+          "path": "validation.csv",
+          "sha256": "96a4153bffd14f3dd703252e5b477e81ce8cb8ccb1a8d252d4875be8d5232652"
+        },
+        {
+          "path": "test.csv",
+          "sha256": "6d11a782e93320792ae0ef28b198f951de69db7ea8720ad6b841b2a81f85a8db"
+        }
+      ]
+    },
+    {
+      "repo_id": "rajendrabaskota/hc3-wiki-intro-dataset",
+      "revision": "58f59eb06ad91e4f8fad1a86d40877661f0d63d9",
+      "license": "unknown",
+      "source_files": [
+        {
+          "path": "data/test-00000-of-00001-d5b50745903d93eb.parquet",
+          "sha256": "beb81dd0276732ef957f1874eea47e1f1c93cbcf93f6724e272377fbedeed61f"
+        }
+      ]
+    },
+    {
+      "repo_id": "pszemraj/HC3-textgen-qa",
+      "revision": "4cddc2b69948c9dba7ded91ed73f0a2b1a318340",
+      "license": "apache-2.0",
+      "source_files": [
+        {
+          "path": "test.csv",
+          "sha256": "48c7d3134af475362aa11d53a5492a167a6632ef956eaf1a6695fc8ba77eef39"
+        }
+      ]
+    }
+  ]
+}
+

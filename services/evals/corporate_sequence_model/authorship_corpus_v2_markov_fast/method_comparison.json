@@ -1,0 +1,2184 @@
+{
+  "schema": "corporate.authorship_corpus_v2_markov_fast.v1",
+  "rows": {
+    "train": 19643,
+    "supervised_test": 7879,
+    "calibration_hc3_wiki": 15446,
+    "calibration_hc3_qa": 3618
+  },
+  "label_counts": {
+    "train": {
+      "ai_generated": 10349,
+      "human_written": 9294
+    },
+    "supervised_test": {
+      "ai_generated": 3412,
+      "human_written": 4467
+    },
+    "calibration_hc3_wiki": {
+      "ai_generated": 7053,
+      "human_written": 8393
+    },
+    "calibration_hc3_qa": {
+      "ai_generated": 2213,
+      "human_written": 1405
+    }
+  },
+  "leakage_audit": {
+    "supervised_test": {
+      "row_count": 7879,
+      "unique_hashes": 7879,
+      "duplicate_hash_groups_within_split": 0,
+      "train_overlap_hash_groups": 0
+    },
+    "calibration_hc3_wiki": {
+      "row_count": 15446,
+      "unique_hashes": 15446,
+      "duplicate_hash_groups_within_split": 0,
+      "train_overlap_hash_groups": 0
+    },
+    "calibration_hc3_qa": {
+      "row_count": 3618,
+      "unique_hashes": 3618,
+      "duplicate_hash_groups_within_split": 0,
+      "train_overlap_hash_groups": 0
+    }
+  },
+  "results": [
+    {
+      "method": "lexical_style_fast",
+      "vocab_size": 15000,
+      "min_frequency": 12,
+      "max_features": 15000,
+      "epochs": 120,
+      "splits": {
+        "supervised_test": {
+          "row_count": 7879,
+          "correct_count": 7707,
+          "accuracy": 0.9781698185048864,
+          "confusion": {
+            "ai_generated->ai_generated": 3357,
+            "human_written->human_written": 4350,
+            "human_written->ai_generated": 117,
+            "ai_generated->human_written": 55
+          },
+          "vocab_size": 15000,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.9781698185048864,
+              "human_false_positive_rate": 0.026192075218267292,
+              "ai_recall": 0.9838804220398594,
+              "confusion": {
+                "ai_generated->ai_generated": 3357,
+                "human_written->human_written": 4350,
+                "human_written->ai_generated": 117,
+                "ai_generated->human_written": 55
+              }
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.980073613402716,
+              "human_false_positive_rate": 0.0167897918065816,
+              "ai_recall": 0.9759671746776084,
+              "confusion": {
+                "ai_generated->ai_generated": 3330,
+                "human_written->human_written": 4392,
+                "human_written->ai_generated": 75,
+                "ai_generated->human_written": 82
+              }
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.9794390151034396,
+              "human_false_positive_rate": 0.010073875083948958,
+              "ai_recall": 0.9657092614302462,
+              "confusion": {
+                "ai_generated->ai_generated": 3295,
+                "human_written->human_written": 4422,
+                "ai_generated->human_written": 117,
+                "human_written->ai_generated": 45
+              }
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.9715699961924102,
+              "human_false_positive_rate": 0.004253413924334005,
+              "ai_recall": 0.9399179366940211,
+              "confusion": {
+                "ai_generated->ai_generated": 3207,
+                "human_written->human_written": 4448,
+                "ai_generated->human_written": 205,
+                "human_written->ai_generated": 19
+              }
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.9468206625206245,
+              "human_false_positive_rate": 0.001343183344526528,
+              "ai_recall": 0.8789566236811255,
+              "confusion": {
+                "ai_generated->ai_generated": 2999,
+                "human_written->human_written": 4461,
+                "ai_generated->human_written": 413,
+                "human_written->ai_generated": 6
+              }
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "andythetechnerd03/AI-human-text": {
+                "row_count": 5947,
+                "accuracy": 0.9920968555574239,
+                "confusion": {
+                  "ai_generated->ai_generated": 2264,
+                  "human_written->human_written": 3636,
+                  "human_written->ai_generated": 23,
+                  "ai_generated->human_written": 24
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                }
+              },
+              "Ateeqq/AI-and-Human-Generated-Text": {
+                "row_count": 1111,
+                "accuracy": 0.9432943294329433,
+                "confusion": {
+                  "ai_generated->ai_generated": 571,
+                  "human_written->human_written": 477,
+                  "human_written->ai_generated": 59,
+                  "ai_generated->human_written": 4
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                }
+              },
+              "silentone0725/ai-human-text-detection-v1": {
+                "row_count": 821,
+                "accuracy": 0.9244823386114495,
+                "confusion": {
+                  "ai_generated->ai_generated": 522,
+                  "human_written->ai_generated": 35,
+                  "human_written->human_written": 237,
+                  "ai_generated->human_written": 27
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                }
+              }
+            },
+            "domain": {
+              "mixed": {
+                "row_count": 5947,
+                "accuracy": 0.9920968555574239,
+                "confusion": {
+                  "ai_generated->ai_generated": 2264,
+                  "human_written->human_written": 3636,
+                  "human_written->ai_generated": 23,
+                  "ai_generated->human_written": 24
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                }
+              },
+              "academic": {
+                "row_count": 1111,
+                "accuracy": 0.9432943294329433,
+                "confusion": {
+                  "ai_generated->ai_generated": 571,
+                  "human_written->human_written": 477,
+                  "human_written->ai_generated": 59,
+                  "ai_generated->human_written": 4
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                }
+              },
+              "general": {
+                "row_count": 821,
+                "accuracy": 0.9244823386114495,
+                "confusion": {
+                  "ai_generated->ai_generated": 522,
+                  "human_written->ai_generated": 35,
+                  "human_written->human_written": 237,
+                  "ai_generated->human_written": 27
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                }
+              }
+            },
+            "doc_type": {
+              "long_form_text": {
+                "row_count": 5947,
+                "accuracy": 0.9920968555574239,
+                "confusion": {
+                  "ai_generated->ai_generated": 2264,
+                  "human_written->human_written": 3636,
+                  "human_written->ai_generated": 23,
+                  "ai_generated->human_written": 24
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                }
+              },
+              "abstract": {
+                "row_count": 1111,
+                "accuracy": 0.9432943294329433,
+                "confusion": {
+                  "ai_generated->ai_generated": 571,
+                  "human_written->human_written": 477,
+                  "human_written->ai_generated": 59,
+                  "ai_generated->human_written": 4
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                }
+              },
+              "generic_text": {
+                "row_count": 821,
+                "accuracy": 0.9244823386114495,
+                "confusion": {
+                  "ai_generated->ai_generated": 522,
+                  "human_written->ai_generated": 35,
+                  "human_written->human_written": 237,
+                  "ai_generated->human_written": 27
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                }
+              }
+            }
+          }
+        },
+        "calibration_hc3_wiki": {
+          "row_count": 15446,
+          "correct_count": 10229,
+          "accuracy": 0.6622426518192412,
+          "confusion": {
+            "ai_generated->ai_generated": 4190,
+            "human_written->human_written": 6039,
+            "ai_generated->human_written": 2863,
+            "human_written->ai_generated": 2354
+          },
+          "vocab_size": 15000,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.6622426518192412,
+              "human_false_positive_rate": 0.2804718217562254,
+              "ai_recall": 0.5940734439245711,
+              "confusion": {
+                "ai_generated->ai_generated": 4190,
+                "human_written->human_written": 6039,
+                "ai_generated->human_written": 2863,
+                "human_written->ai_generated": 2354
+              }
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.6664508610643533,
+              "human_false_positive_rate": 0.1690694626474443,
+              "ai_recall": 0.4707216787182759,
+              "confusion": {
+                "ai_generated->ai_generated": 3320,
+                "ai_generated->human_written": 3733,
+                "human_written->human_written": 6974,
+                "human_written->ai_generated": 1419
+              }
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.6569985756830248,
+              "human_false_positive_rate": 0.09269629453115692,
+              "ai_recall": 0.3591379554799376,
+              "confusion": {
+                "ai_generated->human_written": 4520,
+                "human_written->human_written": 7615,
+                "ai_generated->ai_generated": 2533,
+                "human_written->ai_generated": 778
+              }
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.6399067719798006,
+              "human_false_positive_rate": 0.039437626593589896,
+              "ai_recall": 0.2583297887423791,
+              "confusion": {
+                "ai_generated->human_written": 5231,
+                "human_written->human_written": 8062,
+                "ai_generated->ai_generated": 1822,
+                "human_written->ai_generated": 331
+              }
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.6101255988605464,
+              "human_false_positive_rate": 0.009531752651018707,
+              "ai_recall": 0.15752162200482064,
+              "confusion": {
+                "ai_generated->human_written": 5942,
+                "human_written->human_written": 8313,
+                "ai_generated->ai_generated": 1111,
+                "human_written->ai_generated": 80
+              }
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "rajendrabaskota/hc3-wiki-intro-dataset": {
+                "row_count": 15446,
+                "accuracy": 0.6622426518192412,
+                "confusion": {
+                  "ai_generated->ai_generated": 4190,
+                  "human_written->human_written": 6039,
+                  "ai_generated->human_written": 2863,
+                  "human_written->ai_generated": 2354
+                },
+                "label_counts": {
+                  "ai_generated": 7053,
+                  "human_written": 8393
+                }
+              }
+            },
+            "domain": {
+              "wiki-intro": {
+                "row_count": 13462,
+                "accuracy": 0.6270984994800178,
+                "confusion": {
+                  "ai_generated->ai_generated": 3192,
+                  "human_written->human_written": 5250,
+                  "ai_generated->human_written": 2809,
+                  "human_written->ai_generated": 2211
+                },
+                "label_counts": {
+                  "ai_generated": 6001,
+                  "human_written": 7461
+                }
+              },
+              "hc3-reddit_eli5": {
+                "row_count": 1482,
+                "accuracy": 0.9014844804318488,
+                "confusion": {
+                  "human_written->human_written": 650,
+                  "ai_generated->ai_generated": 686,
+                  "human_written->ai_generated": 107,
+                  "ai_generated->human_written": 39
+                },
+                "label_counts": {
+                  "human_written": 757,
+                  "ai_generated": 725
+                }
+              },
+              "hc3-finance": {
+                "row_count": 290,
+                "accuracy": 0.9413793103448276,
+                "confusion": {
+                  "ai_generated->ai_generated": 172,
+                  "ai_generated->human_written": 3,
+                  "human_written->human_written": 101,
+                  "human_written->ai_generated": 14
+                },
+                "label_counts": {
+                  "ai_generated": 175,
+                  "human_written": 115
+                }
+              },
+              "hc3-wiki_csai": {
+                "row_count": 74,
+                "accuracy": 0.7027027027027027,
+                "confusion": {
+                  "ai_generated->ai_generated": 34,
+                  "human_written->human_written": 18,
+                  "human_written->ai_generated": 17,
+                  "ai_generated->human_written": 5
+                },
+                "label_counts": {
+                  "ai_generated": 39,
+                  "human_written": 35
+                }
+              },
+              "hc3-open_qa": {
+                "row_count": 59,
+                "accuracy": 0.8813559322033898,
+                "confusion": {
+                  "ai_generated->human_written": 7,
+                  "ai_generated->ai_generated": 51,
+                  "human_written->human_written": 1
+                },
+                "label_counts": {
+                  "ai_generated": 58,
+                  "human_written": 1
+                }
+              },
+              "hc3-medicine": {
+                "row_count": 79,
+                "accuracy": 0.9367088607594937,
+                "confusion": {
+                  "ai_generated->ai_generated": 55,
+                  "human_written->human_written": 19,
+                  "human_written->ai_generated": 5
+                },
+                "label_counts": {
+                  "ai_generated": 55,
+                  "human_written": 24
+                }
+              }
+            },
+            "doc_type": {
+              "wiki_intro": {
+                "row_count": 15446,
+                "accuracy": 0.6622426518192412,
+                "confusion": {
+                  "ai_generated->ai_generated": 4190,
+                  "human_written->human_written": 6039,
+                  "ai_generated->human_written": 2863,
+                  "human_written->ai_generated": 2354
+                },
+                "label_counts": {
+                  "ai_generated": 7053,
+                  "human_written": 8393
+                }
+              }
+            }
+          }
+        },
+        "calibration_hc3_qa": {
+          "row_count": 3618,
+          "correct_count": 3217,
+          "accuracy": 0.8891652846876728,
+          "confusion": {
+            "ai_generated->human_written": 200,
+            "ai_generated->ai_generated": 2013,
+            "human_written->human_written": 1204,
+            "human_written->ai_generated": 201
+          },
+          "vocab_size": 15000,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.8891652846876728,
+              "human_false_positive_rate": 0.14306049822064057,
+              "ai_recall": 0.9096249435155896,
+              "confusion": {
+                "ai_generated->human_written": 200,
+                "ai_generated->ai_generated": 2013,
+                "human_written->human_written": 1204,
+                "human_written->ai_generated": 201
+              }
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.8888888888888888,
+              "human_false_positive_rate": 0.07615658362989323,
+              "ai_recall": 0.8666967916854948,
+              "confusion": {
+                "ai_generated->human_written": 295,
+                "ai_generated->ai_generated": 1918,
+                "human_written->human_written": 1298,
+                "human_written->ai_generated": 107
+              }
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.8698175787728026,
+              "human_false_positive_rate": 0.032740213523131674,
+              "ai_recall": 0.807953004970628,
+              "confusion": {
+                "ai_generated->human_written": 425,
+                "ai_generated->ai_generated": 1788,
+                "human_written->human_written": 1359,
+                "human_written->ai_generated": 46
+              }
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.8228302929795467,
+              "human_false_positive_rate": 0.013523131672597865,
+              "ai_recall": 0.7189335743334839,
+              "confusion": {
+                "ai_generated->human_written": 622,
+                "ai_generated->ai_generated": 1591,
+                "human_written->human_written": 1386,
+                "human_written->ai_generated": 19
+              }
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.7291321171918187,
+              "human_false_positive_rate": 0.0028469750889679717,
+              "ai_recall": 0.5589697243560777,
+              "confusion": {
+                "ai_generated->human_written": 976,
+                "ai_generated->ai_generated": 1237,
+                "human_written->human_written": 1401,
+                "human_written->ai_generated": 4
+              }
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "pszemraj/HC3-textgen-qa": {
+                "row_count": 3618,
+                "accuracy": 0.8891652846876728,
+                "confusion": {
+                  "ai_generated->human_written": 200,
+                  "ai_generated->ai_generated": 2013,
+                  "human_written->human_written": 1204,
+                  "human_written->ai_generated": 201
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                }
+              }
+            },
+            "domain": {
+              "qa": {
+                "row_count": 3618,
+                "accuracy": 0.8891652846876728,
+                "confusion": {
+                  "ai_generated->human_written": 200,
+                  "ai_generated->ai_generated": 2013,
+                  "human_written->human_written": 1204,
+                  "human_written->ai_generated": 201
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                }
+              }
+            },
+            "doc_type": {
+              "qa_response": {
+                "row_count": 3618,
+                "accuracy": 0.8891652846876728,
+                "confusion": {
+                  "ai_generated->human_written": 200,
+                  "ai_generated->ai_generated": 2013,
+                  "human_written->human_written": 1204,
+                  "human_written->ai_generated": 201
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "shape_ngrams_plus_markov",
+      "vocab_size": 457,
+      "min_frequency": 8,
+      "max_features": 12000,
+      "epochs": 160,
+      "splits": {
+        "supervised_test": {
+          "row_count": 7879,
+          "correct_count": 6968,
+          "accuracy": 0.8843761898718111,
+          "confusion": {
+            "ai_generated->ai_generated": 3072,
+            "ai_generated->human_written": 340,
+            "human_written->human_written": 3896,
+            "human_written->ai_generated": 571
+          },
+          "vocab_size": 457,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.8843761898718111,
+              "human_false_positive_rate": 0.12782628162077456,
+              "ai_recall": 0.9003516998827668,
+              "confusion": {
+                "ai_generated->ai_generated": 3072,
+                "ai_generated->human_written": 340,
+                "human_written->human_written": 3896,
+                "human_written->ai_generated": 571
+              }
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.8897068155857343,
+              "human_false_positive_rate": 0.08394895903290799,
+              "ai_recall": 0.8552168815943728,
+              "confusion": {
+                "ai_generated->ai_generated": 2918,
+                "ai_generated->human_written": 494,
+                "human_written->human_written": 4092,
+                "human_written->ai_generated": 375
+              }
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.8786648051783221,
+              "human_false_positive_rate": 0.053503469890306694,
+              "ai_recall": 0.7898593200468933,
+              "confusion": {
+                "ai_generated->ai_generated": 2695,
+                "ai_generated->human_written": 717,
+                "human_written->human_written": 4228,
+                "human_written->ai_generated": 239
+              }
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.8466810508947836,
+              "human_false_positive_rate": 0.0315648085963734,
+              "ai_recall": 0.6872801875732708,
+              "confusion": {
+                "ai_generated->ai_generated": 2345,
+                "ai_generated->human_written": 1067,
+                "human_written->human_written": 4326,
+                "human_written->ai_generated": 141
+              }
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.7744637644371113,
+              "human_false_positive_rate": 0.01544660846205507,
+              "ai_recall": 0.49941383352872215,
+              "confusion": {
+                "ai_generated->human_written": 1708,
+                "ai_generated->ai_generated": 1704,
+                "human_written->human_written": 4398,
+                "human_written->ai_generated": 69
+              }
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "andythetechnerd03/AI-human-text": {
+                "row_count": 5947,
+                "accuracy": 0.8950731461240962,
+                "confusion": {
+                  "ai_generated->ai_generated": 2012,
+                  "human_written->human_written": 3311,
+                  "human_written->ai_generated": 348,
+                  "ai_generated->human_written": 276
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                }
+              },
+              "Ateeqq/AI-and-Human-Generated-Text": {
+                "row_count": 1111,
+                "accuracy": 0.8217821782178217,
+                "confusion": {
+                  "ai_generated->ai_generated": 552,
+                  "human_written->ai_generated": 175,
+                  "human_written->human_written": 361,
+                  "ai_generated->human_written": 23
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                }
+              },
+              "silentone0725/ai-human-text-detection-v1": {
+                "row_count": 821,
+                "accuracy": 0.8915956151035322,
+                "confusion": {
+                  "ai_generated->human_written": 41,
+                  "human_written->ai_generated": 48,
+                  "human_written->human_written": 224,
+                  "ai_generated->ai_generated": 508
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                }
+              }
+            },
+            "domain": {
+              "mixed": {
+                "row_count": 5947,
+                "accuracy": 0.8950731461240962,
+                "confusion": {
+                  "ai_generated->ai_generated": 2012,
+                  "human_written->human_written": 3311,
+                  "human_written->ai_generated": 348,
+                  "ai_generated->human_written": 276
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                }
+              },
+              "academic": {
+                "row_count": 1111,
+                "accuracy": 0.8217821782178217,
+                "confusion": {
+                  "ai_generated->ai_generated": 552,
+                  "human_written->ai_generated": 175,
+                  "human_written->human_written": 361,
+                  "ai_generated->human_written": 23
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                }
+              },
+              "general": {
+                "row_count": 821,
+                "accuracy": 0.8915956151035322,
+                "confusion": {
+                  "ai_generated->human_written": 41,
+                  "human_written->ai_generated": 48,
+                  "human_written->human_written": 224,
+                  "ai_generated->ai_generated": 508
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                }
+              }
+            },
+            "doc_type": {
+              "long_form_text": {
+                "row_count": 5947,
+                "accuracy": 0.8950731461240962,
+                "confusion": {
+                  "ai_generated->ai_generated": 2012,
+                  "human_written->human_written": 3311,
+                  "human_written->ai_generated": 348,
+                  "ai_generated->human_written": 276
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                }
+              },
+              "abstract": {
+                "row_count": 1111,
+                "accuracy": 0.8217821782178217,
+                "confusion": {
+                  "ai_generated->ai_generated": 552,
+                  "human_written->ai_generated": 175,
+                  "human_written->human_written": 361,
+                  "ai_generated->human_written": 23
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                }
+              },
+              "generic_text": {
+                "row_count": 821,
+                "accuracy": 0.8915956151035322,
+                "confusion": {
+                  "ai_generated->human_written": 41,
+                  "human_written->ai_generated": 48,
+                  "human_written->human_written": 224,
+                  "ai_generated->ai_generated": 508
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                }
+              }
+            }
+          }
+        },
+        "calibration_hc3_wiki": {
+          "row_count": 15446,
+          "correct_count": 8706,
+          "accuracy": 0.5636410721222322,
+          "confusion": {
+            "ai_generated->human_written": 1591,
+            "ai_generated->ai_generated": 5462,
+            "human_written->ai_generated": 5149,
+            "human_written->human_written": 3244
+          },
+          "vocab_size": 457,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.5636410721222322,
+              "human_false_positive_rate": 0.6134874300011914,
+              "ai_recall": 0.7744222316744648,
+              "confusion": {
+                "ai_generated->human_written": 1591,
+                "ai_generated->ai_generated": 5462,
+                "human_written->ai_generated": 5149,
+                "human_written->human_written": 3244
+              }
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.5773015667486728,
+              "human_false_positive_rate": 0.5285356844989872,
+              "ai_recall": 0.7032468453140508,
+              "confusion": {
+                "ai_generated->human_written": 2093,
+                "human_written->ai_generated": 4436,
+                "human_written->human_written": 3957,
+                "ai_generated->ai_generated": 4960
+              }
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.5853295351547326,
+              "human_false_positive_rate": 0.436435124508519,
+              "ai_recall": 0.6112292641429179,
+              "confusion": {
+                "ai_generated->human_written": 2742,
+                "human_written->ai_generated": 3663,
+                "human_written->human_written": 4730,
+                "ai_generated->ai_generated": 4311
+              }
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.5880486857438819,
+              "human_false_positive_rate": 0.32145835815560586,
+              "ai_recall": 0.4803629661137105,
+              "confusion": {
+                "ai_generated->human_written": 3665,
+                "human_written->human_written": 5695,
+                "ai_generated->ai_generated": 3388,
+                "human_written->ai_generated": 2698
+              }
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.5722517156545384,
+              "human_false_positive_rate": 0.1856308828785893,
+              "ai_recall": 0.2841344108889834,
+              "confusion": {
+                "ai_generated->human_written": 5049,
+                "human_written->human_written": 6835,
+                "ai_generated->ai_generated": 2004,
+                "human_written->ai_generated": 1558
+              }
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "rajendrabaskota/hc3-wiki-intro-dataset": {
+                "row_count": 15446,
+                "accuracy": 0.5636410721222322,
+                "confusion": {
+                  "ai_generated->human_written": 1591,
+                  "ai_generated->ai_generated": 5462,
+                  "human_written->ai_generated": 5149,
+                  "human_written->human_written": 3244
+                },
+                "label_counts": {
+                  "ai_generated": 7053,
+                  "human_written": 8393
+                }
+              }
+            },
+            "domain": {
+              "wiki-intro": {
+                "row_count": 13462,
+                "accuracy": 0.5332788590105482,
+                "confusion": {
+                  "ai_generated->human_written": 1505,
+                  "ai_generated->ai_generated": 4496,
+                  "human_written->ai_generated": 4778,
+                  "human_written->human_written": 2683
+                },
+                "label_counts": {
+                  "ai_generated": 6001,
+                  "human_written": 7461
+                }
+              },
+              "hc3-reddit_eli5": {
+                "row_count": 1482,
+                "accuracy": 0.7604588394062078,
+                "confusion": {
+                  "human_written->human_written": 467,
+                  "ai_generated->ai_generated": 660,
+                  "ai_generated->human_written": 65,
+                  "human_written->ai_generated": 290
+                },
+                "label_counts": {
+                  "human_written": 757,
+                  "ai_generated": 725
+                }
+              },
+              "hc3-finance": {
+                "row_count": 290,
+                "accuracy": 0.8310344827586207,
+                "confusion": {
+                  "ai_generated->ai_generated": 166,
+                  "human_written->human_written": 75,
+                  "human_written->ai_generated": 40,
+                  "ai_generated->human_written": 9
+                },
+                "label_counts": {
+                  "ai_generated": 175,
+                  "human_written": 115
+                }
+              },
+              "hc3-wiki_csai": {
+                "row_count": 74,
+                "accuracy": 0.7027027027027027,
+                "confusion": {
+                  "ai_generated->ai_generated": 37,
+                  "human_written->human_written": 15,
+                  "human_written->ai_generated": 20,
+                  "ai_generated->human_written": 2
+                },
+                "label_counts": {
+                  "ai_generated": 39,
+                  "human_written": 35
+                }
+              },
+              "hc3-open_qa": {
+                "row_count": 59,
+                "accuracy": 0.847457627118644,
+                "confusion": {
+                  "ai_generated->human_written": 8,
+                  "ai_generated->ai_generated": 50,
+                  "human_written->ai_generated": 1
+                },
+                "label_counts": {
+                  "ai_generated": 58,
+                  "human_written": 1
+                }
+              },
+              "hc3-medicine": {
+                "row_count": 79,
+                "accuracy": 0.7215189873417721,
+                "confusion": {
+                  "ai_generated->ai_generated": 53,
+                  "human_written->human_written": 4,
+                  "human_written->ai_generated": 20,
+                  "ai_generated->human_written": 2
+                },
+                "label_counts": {
+                  "ai_generated": 55,
+                  "human_written": 24
+                }
+              }
+            },
+            "doc_type": {
+              "wiki_intro": {
+                "row_count": 15446,
+                "accuracy": 0.5636410721222322,
+                "confusion": {
+                  "ai_generated->human_written": 1591,
+                  "ai_generated->ai_generated": 5462,
+                  "human_written->ai_generated": 5149,
+                  "human_written->human_written": 3244
+                },
+                "label_counts": {
+                  "ai_generated": 7053,
+                  "human_written": 8393
+                }
+              }
+            }
+          }
+        },
+        "calibration_hc3_qa": {
+          "row_count": 3618,
+          "correct_count": 2562,
+          "accuracy": 0.7081260364842454,
+          "confusion": {
+            "ai_generated->human_written": 514,
+            "ai_generated->ai_generated": 1699,
+            "human_written->ai_generated": 542,
+            "human_written->human_written": 863
+          },
+          "vocab_size": 457,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.7081260364842454,
+              "human_false_positive_rate": 0.38576512455516015,
+              "ai_recall": 0.7677361048350655,
+              "confusion": {
+                "ai_generated->human_written": 514,
+                "ai_generated->ai_generated": 1699,
+                "human_written->ai_generated": 542,
+                "human_written->human_written": 863
+              }
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.6948590381426202,
+              "human_false_positive_rate": 0.296085409252669,
+              "ai_recall": 0.6891098056936286,
+              "confusion": {
+                "ai_generated->human_written": 688,
+                "ai_generated->ai_generated": 1525,
+                "human_written->ai_generated": 416,
+                "human_written->human_written": 989
+              }
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.6622443338861249,
+              "human_false_positive_rate": 0.19644128113879003,
+              "ai_recall": 0.5725259828287392,
+              "confusion": {
+                "ai_generated->human_written": 946,
+                "human_written->ai_generated": 276,
+                "ai_generated->ai_generated": 1267,
+                "human_written->human_written": 1129
+              }
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.5975677169707021,
+              "human_false_positive_rate": 0.11316725978647686,
+              "ai_recall": 0.4139177586985992,
+              "confusion": {
+                "ai_generated->human_written": 1297,
+                "human_written->human_written": 1246,
+                "ai_generated->ai_generated": 916,
+                "human_written->ai_generated": 159
+              }
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.5105030403537866,
+              "human_false_positive_rate": 0.03416370106761566,
+              "ai_recall": 0.22141888838680523,
+              "confusion": {
+                "ai_generated->human_written": 1723,
+                "human_written->human_written": 1357,
+                "ai_generated->ai_generated": 490,
+                "human_written->ai_generated": 48
+              }
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "pszemraj/HC3-textgen-qa": {
+                "row_count": 3618,
+                "accuracy": 0.7081260364842454,
+                "confusion": {
+                  "ai_generated->human_written": 514,
+                  "ai_generated->ai_generated": 1699,
+                  "human_written->ai_generated": 542,
+                  "human_written->human_written": 863
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                }
+              }
+            },
+            "domain": {
+              "qa": {
+                "row_count": 3618,
+                "accuracy": 0.7081260364842454,
+                "confusion": {
+                  "ai_generated->human_written": 514,
+                  "ai_generated->ai_generated": 1699,
+                  "human_written->ai_generated": 542,
+                  "human_written->human_written": 863
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                }
+              }
+            },
+            "doc_type": {
+              "qa_response": {
+                "row_count": 3618,
+                "accuracy": 0.7081260364842454,
+                "confusion": {
+                  "ai_generated->human_written": 514,
+                  "ai_generated->ai_generated": 1699,
+                  "human_written->ai_generated": 542,
+                  "human_written->human_written": 863
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "shape_ngrams",
+      "vocab_size": 427,
+      "min_frequency": 8,
+      "max_features": 12000,
+      "epochs": 160,
+      "splits": {
+        "supervised_test": {
+          "row_count": 7879,
+          "correct_count": 6793,
+          "accuracy": 0.8621652493971316,
+          "confusion": {
+            "ai_generated->ai_generated": 3084,
+            "human_written->human_written": 3709,
+            "human_written->ai_generated": 758,
+            "ai_generated->human_written": 328
+          },
+          "vocab_size": 427,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.8621652493971316,
+              "human_false_positive_rate": 0.16968882919185135,
+              "ai_recall": 0.9038686987104337,
+              "confusion": {
+                "ai_generated->ai_generated": 3084,
+                "human_written->human_written": 3709,
+                "human_written->ai_generated": 758,
+                "ai_generated->human_written": 328
+              }
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.8732072598045437,
+              "human_false_positive_rate": 0.11148421759570182,
+              "ai_recall": 0.8531652989449003,
+              "confusion": {
+                "ai_generated->ai_generated": 2911,
+                "human_written->human_written": 3969,
+                "ai_generated->human_written": 501,
+                "human_written->ai_generated": 498
+              }
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.8634344459956848,
+              "human_false_positive_rate": 0.06581598388179986,
+              "ai_recall": 0.7708089097303634,
+              "confusion": {
+                "ai_generated->human_written": 782,
+                "ai_generated->ai_generated": 2630,
+                "human_written->human_written": 4173,
+                "human_written->ai_generated": 294
+              }
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.8259931463383678,
+              "human_false_positive_rate": 0.031117080814864563,
+              "ai_recall": 0.6389214536928488,
+              "confusion": {
+                "ai_generated->human_written": 1232,
+                "ai_generated->ai_generated": 2180,
+                "human_written->human_written": 4328,
+                "human_written->ai_generated": 139
+              }
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.7187460337606295,
+              "human_false_positive_rate": 0.008059100067159167,
+              "ai_recall": 0.36107854630715125,
+              "confusion": {
+                "ai_generated->human_written": 2180,
+                "ai_generated->ai_generated": 1232,
+                "human_written->human_written": 4431,
+                "human_written->ai_generated": 36
+              }
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "andythetechnerd03/AI-human-text": {
+                "row_count": 5947,
+                "accuracy": 0.8659828484950395,
+                "confusion": {
+                  "ai_generated->ai_generated": 2007,
+                  "human_written->human_written": 3143,
+                  "human_written->ai_generated": 516,
+                  "ai_generated->human_written": 281
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                }
+              },
+              "Ateeqq/AI-and-Human-Generated-Text": {
+                "row_count": 1111,
+                "accuracy": 0.8064806480648065,
+                "confusion": {
+                  "ai_generated->ai_generated": 553,
+                  "human_written->ai_generated": 193,
+                  "human_written->human_written": 343,
+                  "ai_generated->human_written": 22
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                }
+              },
+              "silentone0725/ai-human-text-detection-v1": {
+                "row_count": 821,
+                "accuracy": 0.9098660170523751,
+                "confusion": {
+                  "ai_generated->ai_generated": 524,
+                  "human_written->ai_generated": 49,
+                  "human_written->human_written": 223,
+                  "ai_generated->human_written": 25
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                }
+              }
+            },
+            "domain": {
+              "mixed": {
+                "row_count": 5947,
+                "accuracy": 0.8659828484950395,
+                "confusion": {
+                  "ai_generated->ai_generated": 2007,
+                  "human_written->human_written": 3143,
+                  "human_written->ai_generated": 516,
+                  "ai_generated->human_written": 281
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                }
+              },
+              "academic": {
+                "row_count": 1111,
+                "accuracy": 0.8064806480648065,
+                "confusion": {
+                  "ai_generated->ai_generated": 553,
+                  "human_written->ai_generated": 193,
+                  "human_written->human_written": 343,
+                  "ai_generated->human_written": 22
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                }
+              },
+              "general": {
+                "row_count": 821,
+                "accuracy": 0.9098660170523751,
+                "confusion": {
+                  "ai_generated->ai_generated": 524,
+                  "human_written->ai_generated": 49,
+                  "human_written->human_written": 223,
+                  "ai_generated->human_written": 25
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                }
+              }
+            },
+            "doc_type": {
+              "long_form_text": {
+                "row_count": 5947,
+                "accuracy": 0.8659828484950395,
+                "confusion": {
+                  "ai_generated->ai_generated": 2007,
+                  "human_written->human_written": 3143,
+                  "human_written->ai_generated": 516,
+                  "ai_generated->human_written": 281
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                }
+              },
+              "abstract": {
+                "row_count": 1111,
+                "accuracy": 0.8064806480648065,
+                "confusion": {
+                  "ai_generated->ai_generated": 553,
+                  "human_written->ai_generated": 193,
+                  "human_written->human_written": 343,
+                  "ai_generated->human_written": 22
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                }
+              },
+              "generic_text": {
+                "row_count": 821,
+                "accuracy": 0.9098660170523751,
+                "confusion": {
+                  "ai_generated->ai_generated": 524,
+                  "human_written->ai_generated": 49,
+                  "human_written->human_written": 223,
+                  "ai_generated->human_written": 25
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                }
+              }
+            }
+          }
+        },
+        "calibration_hc3_wiki": {
+          "row_count": 15446,
+          "correct_count": 7983,
+          "accuracy": 0.516832836980448,
+          "confusion": {
+            "ai_generated->ai_generated": 6097,
+            "human_written->ai_generated": 6507,
+            "human_written->human_written": 1886,
+            "ai_generated->human_written": 956
+          },
+          "vocab_size": 427,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.516832836980448,
+              "human_false_positive_rate": 0.775288931252234,
+              "ai_recall": 0.8644548419112434,
+              "confusion": {
+                "ai_generated->ai_generated": 6097,
+                "human_written->ai_generated": 6507,
+                "human_written->human_written": 1886,
+                "ai_generated->human_written": 956
+              }
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.5282273727825975,
+              "human_false_positive_rate": 0.7038007863695938,
+              "ai_recall": 0.8043385793279455,
+              "confusion": {
+                "ai_generated->ai_generated": 5673,
+                "human_written->ai_generated": 5907,
+                "human_written->human_written": 2486,
+                "ai_generated->human_written": 1380
+              }
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.5365143079114334,
+              "human_false_positive_rate": 0.6102704634814726,
+              "ai_recall": 0.7111867290514675,
+              "confusion": {
+                "ai_generated->human_written": 2037,
+                "ai_generated->ai_generated": 5016,
+                "human_written->ai_generated": 5122,
+                "human_written->human_written": 3271
+              }
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.5430532176615305,
+              "human_false_positive_rate": 0.4756344572858334,
+              "ai_recall": 0.5652913653764355,
+              "confusion": {
+                "ai_generated->human_written": 3066,
+                "ai_generated->ai_generated": 3987,
+                "human_written->ai_generated": 3992,
+                "human_written->human_written": 4401
+              }
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.5295869480771721,
+              "human_false_positive_rate": 0.28118670320505185,
+              "ai_recall": 0.30440947114702965,
+              "confusion": {
+                "ai_generated->human_written": 4906,
+                "human_written->human_written": 6033,
+                "ai_generated->ai_generated": 2147,
+                "human_written->ai_generated": 2360
+              }
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "rajendrabaskota/hc3-wiki-intro-dataset": {
+                "row_count": 15446,
+                "accuracy": 0.516832836980448,
+                "confusion": {
+                  "ai_generated->ai_generated": 6097,
+                  "human_written->ai_generated": 6507,
+                  "human_written->human_written": 1886,
+                  "ai_generated->human_written": 956
+                },
+                "label_counts": {
+                  "ai_generated": 7053,
+                  "human_written": 8393
+                }
+              }
+            },
+            "domain": {
+              "wiki-intro": {
+                "row_count": 13462,
+                "accuracy": 0.48744614470361014,
+                "confusion": {
+                  "ai_generated->ai_generated": 5106,
+                  "human_written->ai_generated": 6005,
+                  "human_written->human_written": 1456,
+                  "ai_generated->human_written": 895
+                },
+                "label_counts": {
+                  "ai_generated": 6001,
+                  "human_written": 7461
+                }
+              },
+              "hc3-reddit_eli5": {
+                "row_count": 1482,
+                "accuracy": 0.6929824561403509,
+                "confusion": {
+                  "human_written->human_written": 345,
+                  "ai_generated->ai_generated": 682,
+                  "ai_generated->human_written": 43,
+                  "human_written->ai_generated": 412
+                },
+                "label_counts": {
+                  "human_written": 757,
+                  "ai_generated": 725
+                }
+              },
+              "hc3-finance": {
+                "row_count": 290,
+                "accuracy": 0.8206896551724138,
+                "confusion": {
+                  "ai_generated->ai_generated": 168,
+                  "human_written->ai_generated": 45,
+                  "human_written->human_written": 70,
+                  "ai_generated->human_written": 7
+                },
+                "label_counts": {
+                  "ai_generated": 175,
+                  "human_written": 115
+                }
+              },
+              "hc3-wiki_csai": {
+                "row_count": 74,
+                "accuracy": 0.6486486486486487,
+                "confusion": {
+                  "ai_generated->ai_generated": 37,
+                  "human_written->ai_generated": 24,
+                  "human_written->human_written": 11,
+                  "ai_generated->human_written": 2
+                },
+                "label_counts": {
+                  "ai_generated": 39,
+                  "human_written": 35
+                }
+              },
+              "hc3-open_qa": {
+                "row_count": 59,
+                "accuracy": 0.8813559322033898,
+                "confusion": {
+                  "ai_generated->human_written": 6,
+                  "ai_generated->ai_generated": 52,
+                  "human_written->ai_generated": 1
+                },
+                "label_counts": {
+                  "ai_generated": 58,
+                  "human_written": 1
+                }
+              },
+              "hc3-medicine": {
+                "row_count": 79,
+                "accuracy": 0.7088607594936709,
+                "confusion": {
+                  "ai_generated->ai_generated": 52,
+                  "human_written->human_written": 4,
+                  "human_written->ai_generated": 20,
+                  "ai_generated->human_written": 3
+                },
+                "label_counts": {
+                  "ai_generated": 55,
+                  "human_written": 24
+                }
+              }
+            },
+            "doc_type": {
+              "wiki_intro": {
+                "row_count": 15446,
+                "accuracy": 0.516832836980448,
+                "confusion": {
+                  "ai_generated->ai_generated": 6097,
+                  "human_written->ai_generated": 6507,
+                  "human_written->human_written": 1886,
+                  "ai_generated->human_written": 956
+                },
+                "label_counts": {
+                  "ai_generated": 7053,
+                  "human_written": 8393
+                }
+              }
+            }
+          }
+        },
+        "calibration_hc3_qa": {
+          "row_count": 3618,
+          "correct_count": 2611,
+          "accuracy": 0.7216694306246545,
+          "confusion": {
+            "ai_generated->human_written": 352,
+            "ai_generated->ai_generated": 1861,
+            "human_written->ai_generated": 655,
+            "human_written->human_written": 750
+          },
+          "vocab_size": 427,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.7216694306246545,
+              "human_false_positive_rate": 0.46619217081850534,
+              "ai_recall": 0.8409399005874378,
+              "confusion": {
+                "ai_generated->human_written": 352,
+                "ai_generated->ai_generated": 1861,
+                "human_written->ai_generated": 655,
+                "human_written->human_written": 750
+              }
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.7064676616915423,
+              "human_false_positive_rate": 0.3594306049822064,
+              "ai_recall": 0.7483054676909173,
+              "confusion": {
+                "ai_generated->human_written": 557,
+                "ai_generated->ai_generated": 1656,
+                "human_written->ai_generated": 505,
+                "human_written->human_written": 900
+              }
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.6782752902155887,
+              "human_false_positive_rate": 0.23060498220640568,
+              "ai_recall": 0.6204247627654768,
+              "confusion": {
+                "ai_generated->human_written": 840,
+                "ai_generated->ai_generated": 1373,
+                "human_written->human_written": 1081,
+                "human_written->ai_generated": 324
+              }
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.619126589275843,
+              "human_false_positive_rate": 0.10177935943060498,
+              "ai_recall": 0.4419340262087664,
+              "confusion": {
+                "ai_generated->human_written": 1235,
+                "human_written->human_written": 1262,
+                "ai_generated->ai_generated": 978,
+                "human_written->ai_generated": 143
+              }
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.4953012714206744,
+              "human_false_positive_rate": 0.024199288256227757,
+              "ai_recall": 0.1902394938996837,
+              "confusion": {
+                "ai_generated->human_written": 1792,
+                "human_written->human_written": 1371,
+                "ai_generated->ai_generated": 421,
+                "human_written->ai_generated": 34
+              }
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "pszemraj/HC3-textgen-qa": {
+                "row_count": 3618,
+                "accuracy": 0.7216694306246545,
+                "confusion": {
+                  "ai_generated->human_written": 352,
+                  "ai_generated->ai_generated": 1861,
+                  "human_written->ai_generated": 655,
+                  "human_written->human_written": 750
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                }
+              }
+            },
+            "domain": {
+              "qa": {
+                "row_count": 3618,
+                "accuracy": 0.7216694306246545,
+                "confusion": {
+                  "ai_generated->human_written": 352,
+                  "ai_generated->ai_generated": 1861,
+                  "human_written->ai_generated": 655,
+                  "human_written->human_written": 750
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                }
+              }
+            },
+            "doc_type": {
+              "qa_response": {
+                "row_count": 3618,
+                "accuracy": 0.7216694306246545,
+                "confusion": {
+                  "ai_generated->human_written": 352,
+                  "ai_generated->ai_generated": 1861,
+                  "human_written->ai_generated": 655,
+                  "human_written->human_written": 750
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "method": "markov_surface",
+      "vocab_size": 30,
+      "min_frequency": 1,
+      "max_features": null,
+      "epochs": 160,
+      "splits": {
+        "supervised_test": {
+          "row_count": 7879,
+          "correct_count": 6456,
+          "accuracy": 0.8193933240258916,
+          "confusion": {
+            "ai_generated->ai_generated": 2838,
+            "ai_generated->human_written": 574,
+            "human_written->human_written": 3618,
+            "human_written->ai_generated": 849
+          },
+          "vocab_size": 30,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.8193933240258916,
+              "human_false_positive_rate": 0.1900604432505037,
+              "ai_recall": 0.8317702227432591,
+              "confusion": {
+                "ai_generated->ai_generated": 2838,
+                "ai_generated->human_written": 574,
+                "human_written->human_written": 3618,
+                "human_written->ai_generated": 849
+              }
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.8234547531412616,
+              "human_false_positive_rate": 0.1302887844190732,
+              "ai_recall": 0.7628956623681126,
+              "confusion": {
+                "ai_generated->human_written": 809,
+                "ai_generated->ai_generated": 2603,
+                "human_written->human_written": 3885,
+                "human_written->ai_generated": 582
+              }
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.8120319837542835,
+              "human_false_positive_rate": 0.08551600626818893,
+              "ai_recall": 0.6779015240328253,
+              "confusion": {
+                "ai_generated->human_written": 1099,
+                "ai_generated->ai_generated": 2313,
+                "human_written->human_written": 4085,
+                "human_written->ai_generated": 382
+              }
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.771925371240005,
+              "human_false_positive_rate": 0.0514886948735169,
+              "ai_recall": 0.5407385697538101,
+              "confusion": {
+                "ai_generated->human_written": 1567,
+                "ai_generated->ai_generated": 1845,
+                "human_written->human_written": 4237,
+                "human_written->ai_generated": 230
+              }
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.69247366417058,
+              "human_false_positive_rate": 0.023729572419968658,
+              "ai_recall": 0.32092614302461897,
+              "confusion": {
+                "ai_generated->human_written": 2317,
+                "ai_generated->ai_generated": 1095,
+                "human_written->human_written": 4361,
+                "human_written->ai_generated": 106
+              }
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "andythetechnerd03/AI-human-text": {
+                "row_count": 5947,
+                "accuracy": 0.839246678997814,
+                "confusion": {
+                  "ai_generated->ai_generated": 1806,
+                  "ai_generated->human_written": 482,
+                  "human_written->human_written": 3185,
+                  "human_written->ai_generated": 474
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                }
+              },
+              "Ateeqq/AI-and-Human-Generated-Text": {
+                "row_count": 1111,
+                "accuracy": 0.7623762376237624,
+                "confusion": {
+                  "ai_generated->ai_generated": 543,
+                  "human_written->ai_generated": 232,
+                  "human_written->human_written": 304,
+                  "ai_generated->human_written": 32
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                }
+              },
+              "silentone0725/ai-human-text-detection-v1": {
+                "row_count": 821,
+                "accuracy": 0.7527405602923264,
+                "confusion": {
+                  "ai_generated->ai_generated": 489,
+                  "human_written->ai_generated": 143,
+                  "human_written->human_written": 129,
+                  "ai_generated->human_written": 60
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                }
+              }
+            },
+            "domain": {
+              "mixed": {
+                "row_count": 5947,
+                "accuracy": 0.839246678997814,
+                "confusion": {
+                  "ai_generated->ai_generated": 1806,
+                  "ai_generated->human_written": 482,
+                  "human_written->human_written": 3185,
+                  "human_written->ai_generated": 474
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                }
+              },
+              "academic": {
+                "row_count": 1111,
+                "accuracy": 0.7623762376237624,
+                "confusion": {
+                  "ai_generated->ai_generated": 543,
+                  "human_written->ai_generated": 232,
+                  "human_written->human_written": 304,
+                  "ai_generated->human_written": 32
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                }
+              },
+              "general": {
+                "row_count": 821,
+                "accuracy": 0.7527405602923264,
+                "confusion": {
+                  "ai_generated->ai_generated": 489,
+                  "human_written->ai_generated": 143,
+                  "human_written->human_written": 129,
+                  "ai_generated->human_written": 60
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                }
+              }
+            },
+            "doc_type": {
+              "long_form_text": {
+                "row_count": 5947,
+                "accuracy": 0.839246678997814,
+                "confusion": {
+                  "ai_generated->ai_generated": 1806,
+                  "ai_generated->human_written": 482,
+                  "human_written->human_written": 3185,
+                  "human_written->ai_generated": 474
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                }
+              },
+              "abstract": {
+                "row_count": 1111,
+                "accuracy": 0.7623762376237624,
+                "confusion": {
+                  "ai_generated->ai_generated": 543,
+                  "human_written->ai_generated": 232,
+                  "human_written->human_written": 304,
+                  "ai_generated->human_written": 32
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                }
+              },
+              "generic_text": {
+                "row_count": 821,
+                "accuracy": 0.7527405602923264,
+                "confusion": {
+                  "ai_generated->ai_generated": 489,
+                  "human_written->ai_generated": 143,
+                  "human_written->human_written": 129,
+                  "ai_generated->human_written": 60
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                }
+              }
+            }
+          }
+        },
+        "calibration_hc3_wiki": {
+          "row_count": 15446,
+          "correct_count": 8379,
+          "accuracy": 0.5424705425352843,
+          "confusion": {
+            "ai_generated->human_written": 4235,
+            "human_written->human_written": 5561,
+            "human_written->ai_generated": 2832,
+            "ai_generated->ai_generated": 2818
+          },
+          "vocab_size": 30,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.5424705425352843,
+              "human_false_positive_rate": 0.33742404384606217,
+              "ai_recall": 0.3995462923578619,
+              "confusion": {
+                "ai_generated->human_written": 4235,
+                "human_written->human_written": 5561,
+                "human_written->ai_generated": 2832,
+                "ai_generated->ai_generated": 2818
+              }
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.5554188786740903,
+              "human_false_positive_rate": 0.25664244012867865,
+              "ai_recall": 0.3317737133134836,
+              "confusion": {
+                "ai_generated->human_written": 4713,
+                "human_written->human_written": 6239,
+                "human_written->ai_generated": 2154,
+                "ai_generated->ai_generated": 2340
+              }
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.560986663213777,
+              "human_false_positive_rate": 0.1842011199809365,
+              "ai_recall": 0.2577626541897065,
+              "confusion": {
+                "ai_generated->human_written": 5235,
+                "human_written->human_written": 6847,
+                "ai_generated->ai_generated": 1818,
+                "human_written->ai_generated": 1546
+              }
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.5648711640554189,
+              "human_false_positive_rate": 0.10925771476230192,
+              "ai_recall": 0.1770877640720261,
+              "confusion": {
+                "ai_generated->human_written": 5804,
+                "human_written->human_written": 7476,
+                "ai_generated->ai_generated": 1249,
+                "human_written->ai_generated": 917
+              }
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.5565842289265829,
+              "human_false_positive_rate": 0.0397950673180031,
+              "ai_recall": 0.0762795973344676,
+              "confusion": {
+                "ai_generated->human_written": 6515,
+                "human_written->human_written": 8059,
+                "human_written->ai_generated": 334,
+                "ai_generated->ai_generated": 538
+              }
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "rajendrabaskota/hc3-wiki-intro-dataset": {
+                "row_count": 15446,
+                "accuracy": 0.5424705425352843,
+                "confusion": {
+                  "ai_generated->human_written": 4235,
+                  "human_written->human_written": 5561,
+                  "human_written->ai_generated": 2832,
+                  "ai_generated->ai_generated": 2818
+                },
+                "label_counts": {
+                  "ai_generated": 7053,
+                  "human_written": 8393
+                }
+              }
+            },
+            "domain": {
+              "wiki-intro": {
+                "row_count": 13462,
+                "accuracy": 0.5216906848908037,
+                "confusion": {
+                  "ai_generated->human_written": 4124,
+                  "human_written->human_written": 5146,
+                  "human_written->ai_generated": 2315,
+                  "ai_generated->ai_generated": 1877
+                },
+                "label_counts": {
+                  "ai_generated": 6001,
+                  "human_written": 7461
+                }
+              },
+              "hc3-reddit_eli5": {
+                "row_count": 1482,
+                "accuracy": 0.6713900134952766,
+                "confusion": {
+                  "human_written->ai_generated": 418,
+                  "ai_generated->ai_generated": 656,
+                  "ai_generated->human_written": 69,
+                  "human_written->human_written": 339
+                },
+                "label_counts": {
+                  "human_written": 757,
+                  "ai_generated": 725
+                }
+              },
+              "hc3-finance": {
+                "row_count": 290,
+                "accuracy": 0.7241379310344828,
+                "confusion": {
+                  "ai_generated->ai_generated": 155,
+                  "human_written->human_written": 55,
+                  "human_written->ai_generated": 60,
+                  "ai_generated->human_written": 20
+                },
+                "label_counts": {
+                  "ai_generated": 175,
+                  "human_written": 115
+                }
+              },
+              "hc3-wiki_csai": {
+                "row_count": 74,
+                "accuracy": 0.6351351351351351,
+                "confusion": {
+                  "ai_generated->ai_generated": 36,
+                  "human_written->ai_generated": 24,
+                  "ai_generated->human_written": 3,
+                  "human_written->human_written": 11
+                },
+                "label_counts": {
+                  "ai_generated": 39,
+                  "human_written": 35
+                }
+              },
+              "hc3-open_qa": {
+                "row_count": 59,
+                "accuracy": 0.711864406779661,
+                "confusion": {
+                  "ai_generated->human_written": 17,
+                  "ai_generated->ai_generated": 41,
+                  "human_written->human_written": 1
+                },
+                "label_counts": {
+                  "ai_generated": 58,
+                  "human_written": 1
+                }
+              },
+              "hc3-medicine": {
+                "row_count": 79,
+                "accuracy": 0.7848101265822784,
+                "confusion": {
+                  "ai_generated->ai_generated": 53,
+                  "human_written->human_written": 9,
+                  "human_written->ai_generated": 15,
+                  "ai_generated->human_written": 2
+                },
+                "label_counts": {
+                  "ai_generated": 55,
+                  "human_written": 24
+                }
+              }
+            },
+            "doc_type": {
+              "wiki_intro": {
+                "row_count": 15446,
+                "accuracy": 0.5424705425352843,
+                "confusion": {
+                  "ai_generated->human_written": 4235,
+                  "human_written->human_written": 5561,
+                  "human_written->ai_generated": 2832,
+                  "ai_generated->ai_generated": 2818
+                },
+                "label_counts": {
+                  "ai_generated": 7053,
+                  "human_written": 8393
+                }
+              }
+            }
+          }
+        },
+        "calibration_hc3_qa": {
+          "row_count": 3618,
+          "correct_count": 2556,
+          "accuracy": 0.7064676616915423,
+          "confusion": {
+            "ai_generated->human_written": 336,
+            "ai_generated->ai_generated": 1877,
+            "human_written->ai_generated": 726,
+            "human_written->human_written": 679
+          },
+          "vocab_size": 30,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.7064676616915423,
+              "human_false_positive_rate": 0.5167259786476869,
+              "ai_recall": 0.8481699051061907,
+              "confusion": {
+                "ai_generated->human_written": 336,
+                "ai_generated->ai_generated": 1877,
+                "human_written->ai_generated": 726,
+                "human_written->human_written": 679
+              }
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.699281370923162,
+              "human_false_positive_rate": 0.4,
+              "ai_recall": 0.7623136014460009,
+              "confusion": {
+                "ai_generated->human_written": 526,
+                "ai_generated->ai_generated": 1687,
+                "human_written->ai_generated": 562,
+                "human_written->human_written": 843
+              }
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.6666666666666666,
+              "human_false_positive_rate": 0.2804270462633452,
+              "ai_recall": 0.6330772706732942,
+              "confusion": {
+                "ai_generated->human_written": 812,
+                "ai_generated->ai_generated": 1401,
+                "human_written->ai_generated": 394,
+                "human_written->human_written": 1011
+              }
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.6111111111111112,
+              "human_false_positive_rate": 0.1480427046263345,
+              "ai_recall": 0.45820153637596023,
+              "confusion": {
+                "ai_generated->human_written": 1199,
+                "human_written->human_written": 1197,
+                "ai_generated->ai_generated": 1014,
+                "human_written->ai_generated": 208
+              }
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.4925373134328358,
+              "human_false_positive_rate": 0.03345195729537367,
+              "ai_recall": 0.19159511974694984,
+              "confusion": {
+                "ai_generated->human_written": 1789,
+                "human_written->human_written": 1358,
+                "ai_generated->ai_generated": 424,
+                "human_written->ai_generated": 47
+              }
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "pszemraj/HC3-textgen-qa": {
+                "row_count": 3618,
+                "accuracy": 0.7064676616915423,
+                "confusion": {
+                  "ai_generated->human_written": 336,
+                  "ai_generated->ai_generated": 1877,
+                  "human_written->ai_generated": 726,
+                  "human_written->human_written": 679
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                }
+              }
+            },
+            "domain": {
+              "qa": {
+                "row_count": 3618,
+                "accuracy": 0.7064676616915423,
+                "confusion": {
+                  "ai_generated->human_written": 336,
+                  "ai_generated->ai_generated": 1877,
+                  "human_written->ai_generated": 726,
+                  "human_written->human_written": 679
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                }
+              }
+            },
+            "doc_type": {
+              "qa_response": {
+                "row_count": 3618,
+                "accuracy": 0.7064676616915423,
+                "confusion": {
+                  "ai_generated->human_written": 336,
+                  "ai_generated->ai_generated": 1877,
+                  "human_written->ai_generated": 726,
+                  "human_written->human_written": 679
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

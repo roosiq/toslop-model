@@ -1,0 +1,56 @@
+{
+  "schema": "corporate.authorship_corpus_v2_report.v1",
+  "inputs": {
+    "andy_rows": 24362,
+    "existing_rows": 8952,
+    "hc3_wiki_rows": 17387,
+    "hc3_qa_rows": 4784
+  },
+  "accepted": {
+    "andy_rows": 23869,
+    "existing_rows": 7916,
+    "hc3_wiki_rows": 15446,
+    "hc3_qa_rows": 3618,
+    "supervised_rows": 27522,
+    "supervised_train_rows": 19643,
+    "supervised_test_rows": 7879,
+    "sample_rows": 100
+  },
+  "rejected": {
+    "rows": 4636,
+    "reasons": {
+      "too_short": 3544,
+      "placeholder_url": 440,
+      "too_long": 423,
+      "exact_duplicate": 176,
+      "assistant_artifact": 118,
+      "url_heavy": 113,
+      "basic_junk": 31,
+      "repeated_tokens": 16,
+      "high_digit_ratio": 2,
+      "low_letter_ratio": 1
+    }
+  },
+  "source_counts": {
+    "andy_supervised": 20359,
+    "existing_supervised": 7163,
+    "hc3_wiki": 15446,
+    "hc3_qa": 3618
+  },
+  "supervised": {
+    "target_andy_existing_ratio": 3.0,
+    "labels_balanced": true,
+    "test_ratio": 0.25,
+    "supervised_split_hash_leakage_groups": 0,
+    "sample100_target": 100
+  },
+  "output_files": {
+    "supervised_train": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/supervised_train_mix.jsonl",
+    "supervised_test": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/supervised_test_mix.jsonl",
+    "calibration_hc3_wiki": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/calibration_hc3_wiki.jsonl",
+    "calibration_hc3_qa": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/calibration_hc3_qa.jsonl",
+    "sample100": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/sample100.jsonl",
+    "rejected": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/rejected.jsonl",
+    "report": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/report.json"
+  }
+}

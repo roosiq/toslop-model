@@ -1,0 +1,2465 @@
+{
+  "schema": "corporate.authorship_corpus_v2_markov_everything.v1",
+  "output_dir": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate",
+  "settings": {
+    "train": "/home/ryan/slopslingers-infra/services/gateway/../evals/corporate_sequence_model/authorship_corpus_v2/supervised_train_mix.jsonl",
+    "test": "/home/ryan/slopslingers-infra/services/gateway/../evals/corporate_sequence_model/authorship_corpus_v2/supervised_test_mix.jsonl",
+    "calibration_hc3_wiki": "/home/ryan/slopslingers-infra/services/gateway/../evals/corporate_sequence_model/authorship_corpus_v2/calibration_hc3_wiki.jsonl",
+    "calibration_hc3_qa": "/home/ryan/slopslingers-infra/services/gateway/../evals/corporate_sequence_model/authorship_corpus_v2/calibration_hc3_qa.jsonl",
+    "min_frequency": 8,
+    "max_features": 12000,
+    "epochs": 160,
+    "limit_per_split": 0
+  },
+  "rows": {
+    "train": 19643,
+    "supervised_test": 7879,
+    "calibration_hc3_wiki": 15446,
+    "calibration_hc3_qa": 3618
+  },
+  "source_summary": {
+    "train": {
+      "dataset": {
+        "andythetechnerd03/AI-human-text": {
+          "row_count": 14412,
+          "label_counts": {
+            "ai_generated": 6831,
+            "human_written": 7581
+          }
+        },
+        "Ateeqq/AI-and-Human-Generated-Text": {
+          "row_count": 3075,
+          "label_counts": {
+            "ai_generated": 1867,
+            "human_written": 1208
+          }
+        },
+        "silentone0725/ai-human-text-detection-v1": {
+          "row_count": 2156,
+          "label_counts": {
+            "ai_generated": 1651,
+            "human_written": 505
+          }
+        }
+      },
+      "domain": {
+        "mixed": {
+          "row_count": 14412,
+          "label_counts": {
+            "ai_generated": 6831,
+            "human_written": 7581
+          }
+        },
+        "academic": {
+          "row_count": 3075,
+          "label_counts": {
+            "ai_generated": 1867,
+            "human_written": 1208
+          }
+        },
+        "general": {
+          "row_count": 2156,
+          "label_counts": {
+            "ai_generated": 1651,
+            "human_written": 505
+          }
+        }
+      },
+      "doc_type": {
+        "long_form_text": {
+          "row_count": 14412,
+          "label_counts": {
+            "ai_generated": 6831,
+            "human_written": 7581
+          }
+        },
+        "abstract": {
+          "row_count": 3075,
+          "label_counts": {
+            "ai_generated": 1867,
+            "human_written": 1208
+          }
+        },
+        "generic_text": {
+          "row_count": 2156,
+          "label_counts": {
+            "ai_generated": 1651,
+            "human_written": 505
+          }
+        }
+      },
+      "label_counts": {
+        "ai_generated": 10349,
+        "human_written": 9294
+      }
+    },
+    "supervised_test": {
+      "dataset": {
+        "andythetechnerd03/AI-human-text": {
+          "row_count": 5947,
+          "label_counts": {
+            "ai_generated": 2288,
+            "human_written": 3659
+          }
+        },
+        "Ateeqq/AI-and-Human-Generated-Text": {
+          "row_count": 1111,
+          "label_counts": {
+            "ai_generated": 575,
+            "human_written": 536
+          }
+        },
+        "silentone0725/ai-human-text-detection-v1": {
+          "row_count": 821,
+          "label_counts": {
+            "ai_generated": 549,
+            "human_written": 272
+          }
+        }
+      },
+      "domain": {
+        "mixed": {
+          "row_count": 5947,
+          "label_counts": {
+            "ai_generated": 2288,
+            "human_written": 3659
+          }
+        },
+        "academic": {
+          "row_count": 1111,
+          "label_counts": {
+            "ai_generated": 575,
+            "human_written": 536
+          }
+        },
+        "general": {
+          "row_count": 821,
+          "label_counts": {
+            "ai_generated": 549,
+            "human_written": 272
+          }
+        }
+      },
+      "doc_type": {
+        "long_form_text": {
+          "row_count": 5947,
+          "label_counts": {
+            "ai_generated": 2288,
+            "human_written": 3659
+          }
+        },
+        "abstract": {
+          "row_count": 1111,
+          "label_counts": {
+            "ai_generated": 575,
+            "human_written": 536
+          }
+        },
+        "generic_text": {
+          "row_count": 821,
+          "label_counts": {
+            "ai_generated": 549,
+            "human_written": 272
+          }
+        }
+      },
+      "label_counts": {
+        "ai_generated": 3412,
+        "human_written": 4467
+      }
+    },
+    "calibration_hc3_wiki": {
+      "dataset": {
+        "rajendrabaskota/hc3-wiki-intro-dataset": {
+          "row_count": 15446,
+          "label_counts": {
+            "ai_generated": 7053,
+            "human_written": 8393
+          }
+        }
+      },
+      "domain": {
+        "wiki-intro": {
+          "row_count": 13462,
+          "label_counts": {
+            "ai_generated": 6001,
+            "human_written": 7461
+          }
+        },
+        "hc3-reddit_eli5": {
+          "row_count": 1482,
+          "label_counts": {
+            "human_written": 757,
+            "ai_generated": 725
+          }
+        },
+        "hc3-finance": {
+          "row_count": 290,
+          "label_counts": {
+            "ai_generated": 175,
+            "human_written": 115
+          }
+        },
+        "hc3-wiki_csai": {
+          "row_count": 74,
+          "label_counts": {
+            "ai_generated": 39,
+            "human_written": 35
+          }
+        },
+        "hc3-open_qa": {
+          "row_count": 59,
+          "label_counts": {
+            "ai_generated": 58,
+            "human_written": 1
+          }
+        },
+        "hc3-medicine": {
+          "row_count": 79,
+          "label_counts": {
+            "ai_generated": 55,
+            "human_written": 24
+          }
+        }
+      },
+      "doc_type": {
+        "wiki_intro": {
+          "row_count": 15446,
+          "label_counts": {
+            "ai_generated": 7053,
+            "human_written": 8393
+          }
+        }
+      },
+      "label_counts": {
+        "ai_generated": 7053,
+        "human_written": 8393
+      }
+    },
+    "calibration_hc3_qa": {
+      "dataset": {
+        "pszemraj/HC3-textgen-qa": {
+          "row_count": 3618,
+          "label_counts": {
+            "ai_generated": 2213,
+            "human_written": 1405
+          }
+        }
+      },
+      "domain": {
+        "qa": {
+          "row_count": 3618,
+          "label_counts": {
+            "ai_generated": 2213,
+            "human_written": 1405
+          }
+        }
+      },
+      "doc_type": {
+        "qa_response": {
+          "row_count": 3618,
+          "label_counts": {
+            "ai_generated": 2213,
+            "human_written": 1405
+          }
+        }
+      },
+      "label_counts": {
+        "ai_generated": 2213,
+        "human_written": 1405
+      }
+    }
+  },
+  "leakage_audit": {
+    "supervised_test": {
+      "row_count": 7879,
+      "unique_hashes": 7879,
+      "duplicate_hash_groups_within_split": 0,
+      "train_overlap_hash_groups": 0,
+      "train_overlap_examples": []
+    },
+    "calibration_hc3_wiki": {
+      "row_count": 15446,
+      "unique_hashes": 15446,
+      "duplicate_hash_groups_within_split": 0,
+      "train_overlap_hash_groups": 0,
+      "train_overlap_examples": []
+    },
+    "calibration_hc3_qa": {
+      "row_count": 3618,
+      "unique_hashes": 3618,
+      "duplicate_hash_groups_within_split": 0,
+      "train_overlap_hash_groups": 0,
+      "train_overlap_examples": []
+    }
+  },
+  "markov_model_summary": {
+    "coarse_order1": {
+      "vocab_size": 11,
+      "ai_context_count": 11,
+      "human_context_count": 11,
+      "top_ai_transitions": [
+        {
+          "transition": "NUM -> CLAIM_VERB",
+          "log_odds_ai_vs_human": 1.949473569057013,
+          "ai_count": 9,
+          "human_count": 3
+        },
+        {
+          "transition": "UNIV -> CLAIM_VERB",
+          "log_odds_ai_vs_human": 1.902484842967595,
+          "ai_count": 7,
+          "human_count": 2
+        },
+        {
+          "transition": "NEG -> PRODUCT",
+          "log_odds_ai_vs_human": 1.8705795405690528,
+          "ai_count": 4,
+          "human_count": 1
+        },
+        {
+          "transition": "ENTITY -> CLAIM_VERB",
+          "log_odds_ai_vs_human": 1.5758788951195424,
+          "ai_count": 15,
+          "human_count": 3
+        },
+        {
+          "transition": "CLAIM_VERB -> PUNCT",
+          "log_odds_ai_vs_human": 1.5753501826505119,
+          "ai_count": 7,
+          "human_count": 1
+        },
+        {
+          "transition": "NUM -> ABSTRACT",
+          "log_odds_ai_vs_human": 1.0140344626436344,
+          "ai_count": 470,
+          "human_count": 408
+        },
+        {
+          "transition": "MODAL -> PUNCT",
+          "log_odds_ai_vs_human": 0.8648272096354495,
+          "ai_count": 57,
+          "human_count": 32
+        },
+        {
+          "transition": "CLAIM_VERB -> ABSTRACT",
+          "log_odds_ai_vs_human": 0.862561327635552,
+          "ai_count": 73,
+          "human_count": 23
+        },
+        {
+          "transition": "ABSTRACT -> CLAIM_VERB",
+          "log_odds_ai_vs_human": 0.8384705122726608,
+          "ai_count": 182,
+          "human_count": 50
+        },
+        {
+          "transition": "PRODUCT -> CONTENT",
+          "log_odds_ai_vs_human": 0.6595180147456473,
+          "ai_count": 42,
+          "human_count": 28
+        },
+        {
+          "transition": "MODAL -> ABSTRACT",
+          "log_odds_ai_vs_human": 0.6466287581779531,
+          "ai_count": 492,
+          "human_count": 344
+        },
+        {
+          "transition": "ENTITY -> MODAL",
+          "log_odds_ai_vs_human": 0.6443822882924821,
+          "ai_count": 476,
+          "human_count": 248
+        }
+      ]
+    },
+    "coarse_order2": {
+      "vocab_size": 11,
+      "ai_context_count": 104,
+      "human_context_count": 103,
+      "top_ai_transitions": [
+        {
+          "transition": "NEG -> CLAIM_VERB -> ABSTRACT",
+          "log_odds_ai_vs_human": 4.752407102677715,
+          "ai_count": 5,
+          "human_count": 0
+        },
+        {
+          "transition": "NEG -> ABSTRACT -> ABSTRACT",
+          "log_odds_ai_vs_human": 4.39318620931639,
+          "ai_count": 4,
+          "human_count": 0
+        },
+        {
+          "transition": "FUNC -> ENTITY -> CLAIM_VERB",
+          "log_odds_ai_vs_human": 3.9362551427266874,
+          "ai_count": 5,
+          "human_count": 0
+        },
+        {
+          "transition": "CLAIM_VERB -> ENTITY -> FUNC",
+          "log_odds_ai_vs_human": 3.713572066704308,
+          "ai_count": 4,
+          "human_count": 0
+        },
+        {
+          "transition": "CLAIM_VERB -> NUM -> ENTITY",
+          "log_odds_ai_vs_human": 3.5936302480604305,
+          "ai_count": 2,
+          "human_count": 0
+        },
+        {
+          "transition": "CONTENT -> CLAIM_VERB -> PUNCT",
+          "log_odds_ai_vs_human": 3.388945511308761,
+          "ai_count": 4,
+          "human_count": 0
+        },
+        {
+          "transition": "MODAL -> UNIV -> CLAIM_VERB",
+          "log_odds_ai_vs_human": 3.2965679687454013,
+          "ai_count": 1,
+          "human_count": 0
+        },
+        {
+          "transition": "ENTITY -> FUNC -> CLAIM_VERB",
+          "log_odds_ai_vs_human": 3.280505935744188,
+          "ai_count": 3,
+          "human_count": 0
+        },
+        {
+          "transition": "ENTITY -> NUM -> UNIV",
+          "log_odds_ai_vs_human": 3.257604889514167,
+          "ai_count": 1,
+          "human_count": 0
+        },
+        {
+          "transition": "NEG -> CLAIM_VERB -> NEG",
+          "log_odds_ai_vs_human": 3.2184767427517595,
+          "ai_count": 1,
+          "human_count": 0
+        },
+        {
+          "transition": "FUNC -> NUM -> CLAIM_VERB",
+          "log_odds_ai_vs_human": 3.181801611178139,
+          "ai_count": 1,
+          "human_count": 0
+        },
+        {
+          "transition": "CLAIM_VERB -> CONTENT -> CLAIM_VERB",
+          "log_odds_ai_vs_human": 3.1108546479166,
+          "ai_count": 2,
+          "human_count": 0
+        }
+      ]
+    },
+    "motif_order1": {
+      "vocab_size": 16,
+      "ai_context_count": 16,
+      "human_context_count": 16,
+      "top_ai_transitions": [
+        {
+          "transition": "NUM_ABSTRACT -> ABSTRACT_CLAIM_VERB",
+          "log_odds_ai_vs_human": 3.9565765245232485,
+          "ai_count": 6,
+          "human_count": 0
+        },
+        {
+          "transition": "UNIV_ENTITY -> UNIV_ENTITY",
+          "log_odds_ai_vs_human": 3.6462354123237364,
+          "ai_count": 2,
+          "human_count": 0
+        },
+        {
+          "transition": "UNIV_ABSTRACT -> SPECIFIC_PRODUCT_CONTENT",
+          "log_odds_ai_vs_human": 3.569653706073855,
+          "ai_count": 2,
+          "human_count": 0
+        },
+        {
+          "transition": "ABSTRACT_ABSTRACT -> ABSTRACT_CLAIM_VERB",
+          "log_odds_ai_vs_human": 3.4472046028277723,
+          "ai_count": 8,
+          "human_count": 0
+        },
+        {
+          "transition": "UNIV_CONTENT -> ABSTRACT_CLAIM_VERB",
+          "log_odds_ai_vs_human": 3.38585796923768,
+          "ai_count": 18,
+          "human_count": 1
+        },
+        {
+          "transition": "NEG_CLAIM_VERB -> SPECIFIC_ENTITY_ENTITY",
+          "log_odds_ai_vs_human": 3.2436722203448674,
+          "ai_count": 1,
+          "human_count": 0
+        },
+        {
+          "transition": "NEG_CLAIM_VERB -> SPECIFIC_ENTITY_CONTENT",
+          "log_odds_ai_vs_human": 3.2436722203448674,
+          "ai_count": 1,
+          "human_count": 0
+        },
+        {
+          "transition": "SPECIFIC_PRODUCT_CONTENT -> ABSTRACT_ABSTRACT",
+          "log_odds_ai_vs_human": 3.228064250922607,
+          "ai_count": 4,
+          "human_count": 0
+        },
+        {
+          "transition": "NEG_ABSTRACT -> MODAL_CLAIM_VERB",
+          "log_odds_ai_vs_human": 3.1857019092093064,
+          "ai_count": 1,
+          "human_count": 0
+        },
+        {
+          "transition": "MODAL_ABSTRACT -> MODAL_CLAIM_VERB",
+          "log_odds_ai_vs_human": 3.139796508405978,
+          "ai_count": 3,
+          "human_count": 0
+        },
+        {
+          "transition": "MODAL_ABSTRACT -> NUM_ABSTRACT",
+          "log_odds_ai_vs_human": 3.139796508405978,
+          "ai_count": 3,
+          "human_count": 0
+        },
+        {
+          "transition": "MODAL_CLAIM_VERB -> MODAL_ABSTRACT",
+          "log_odds_ai_vs_human": 3.1189393856250067,
+          "ai_count": 2,
+          "human_count": 0
+        }
+      ]
+    },
+    "motif_order2": {
+      "vocab_size": 16,
+      "ai_context_count": 179,
+      "human_context_count": 180,
+      "top_ai_transitions": [
+        {
+          "transition": "MODAL_CONTENT -> MODAL_ABSTRACT -> ABSTRACT_ABSTRACT",
+          "log_odds_ai_vs_human": 5.077335165509031,
+          "ai_count": 20,
+          "human_count": 0
+        },
+        {
+          "transition": "UNIV_ABSTRACT -> MODAL_CONTENT -> ABSTRACT_ABSTRACT",
+          "log_odds_ai_vs_human": 5.061906638268425,
+          "ai_count": 9,
+          "human_count": 0
+        },
+        {
+          "transition": "NEG_CONTENT -> NEG_CONTENT -> ABSTRACT_CLAIM_VERB",
+          "log_odds_ai_vs_human": 4.849659365572595,
+          "ai_count": 6,
+          "human_count": 0
+        },
+        {
+          "transition": "NEG_ABSTRACT -> NUM_CONTENT -> UNIV_ABSTRACT",
+          "log_odds_ai_vs_human": 4.673054008973103,
+          "ai_count": 2,
+          "human_count": 0
+        },
+        {
+          "transition": "NUM_CONTENT -> MODAL_CONTENT -> ABSTRACT_CLAIM_VERB",
+          "log_odds_ai_vs_human": 4.6579612857711075,
+          "ai_count": 6,
+          "human_count": 0
+        },
+        {
+          "transition": "NUM_CONTENT -> UNIV_ABSTRACT -> ABSTRACT_ABSTRACT",
+          "log_odds_ai_vs_human": 4.528316831361256,
+          "ai_count": 3,
+          "human_count": 0
+        },
+        {
+          "transition": "SPECIFIC_ENTITY_ENTITY -> SPECIFIC_ENTITY_CONTENT -> MODAL_ABSTRACT",
+          "log_odds_ai_vs_human": 4.517306615578805,
+          "ai_count": 10,
+          "human_count": 0
+        },
+        {
+          "transition": "UNIV_CONTENT -> NEG_CONTENT -> ABSTRACT_CLAIM_VERB",
+          "log_odds_ai_vs_human": 4.381037481725824,
+          "ai_count": 4,
+          "human_count": 0
+        },
+        {
+          "transition": "MODAL_CONTENT -> UNIV_CONTENT -> ABSTRACT_CLAIM_VERB",
+          "log_odds_ai_vs_human": 4.358701008615826,
+          "ai_count": 4,
+          "human_count": 0
+        },
+        {
+          "transition": "MODAL_CONTENT -> UNIV_CONTENT -> SPECIFIC_PRODUCT_CONTENT",
+          "log_odds_ai_vs_human": 4.0791161463966645,
+          "ai_count": 3,
+          "human_count": 0
+        },
+        {
+          "transition": "NEG_ABSTRACT -> NUM_CONTENT -> NUM_ABSTRACT",
+          "log_odds_ai_vs_human": 4.026426844048051,
+          "ai_count": 1,
+          "human_count": 0
+        },
+        {
+          "transition": "NUM_CONTENT -> NEG_CONTENT -> ABSTRACT_CLAIM_VERB",
+          "log_odds_ai_vs_human": 3.9984388733776903,
+          "ai_count": 2,
+          "human_count": 0
+        }
+      ]
+    },
+    "shape_order1": {
+      "vocab_size": 8,
+      "ai_context_count": 8,
+      "human_context_count": 8,
+      "top_ai_transitions": [
+        {
+          "transition": "WORD -> LONG",
+          "log_odds_ai_vs_human": 0.7269716781137651,
+          "ai_count": 110324,
+          "human_count": 61213
+        },
+        {
+          "transition": "FUNC -> LONG",
+          "log_odds_ai_vs_human": 0.6844092917001708,
+          "ai_count": 114995,
+          "human_count": 72744
+        },
+        {
+          "transition": "SHORT -> LONG",
+          "log_odds_ai_vs_human": 0.6529742318887258,
+          "ai_count": 11691,
+          "human_count": 9370
+        },
+        {
+          "transition": "WORD -> PUNCT",
+          "log_odds_ai_vs_human": 0.6238965653244539,
+          "ai_count": 17908,
+          "human_count": 11015
+        },
+        {
+          "transition": "NUM -> LONG",
+          "log_odds_ai_vs_human": 0.5681675243705401,
+          "ai_count": 1013,
+          "human_count": 1382
+        },
+        {
+          "transition": "ALLCAPS -> LONG",
+          "log_odds_ai_vs_human": 0.5197629871860119,
+          "ai_count": 684,
+          "human_count": 766
+        },
+        {
+          "transition": "LONG -> LONG",
+          "log_odds_ai_vs_human": 0.49819006291554524,
+          "ai_count": 28389,
+          "human_count": 10101
+        },
+        {
+          "transition": "FUNC -> CAP",
+          "log_odds_ai_vs_human": 0.46521633290883097,
+          "ai_count": 5843,
+          "human_count": 4602
+        },
+        {
+          "transition": "FUNC -> PUNCT",
+          "log_odds_ai_vs_human": 0.4391746159142728,
+          "ai_count": 741,
+          "human_count": 599
+        },
+        {
+          "transition": "ALLCAPS -> CAP",
+          "log_odds_ai_vs_human": 0.39135501904460046,
+          "ai_count": 267,
+          "human_count": 340
+        },
+        {
+          "transition": "ALLCAPS -> SHORT",
+          "log_odds_ai_vs_human": 0.38813634892598925,
+          "ai_count": 227,
+          "human_count": 290
+        },
+        {
+          "transition": "PUNCT -> SHORT",
+          "log_odds_ai_vs_human": 0.3877695290634106,
+          "ai_count": 839,
+          "human_count": 478
+        }
+      ]
+    },
+    "shape_order2": {
+      "vocab_size": 8,
+      "ai_context_count": 64,
+      "human_context_count": 64,
+      "top_ai_transitions": [
+        {
+          "transition": "ALLCAPS -> PUNCT -> SHORT",
+          "log_odds_ai_vs_human": 1.907336085836438,
+          "ai_count": 7,
+          "human_count": 4
+        },
+        {
+          "transition": "WORD -> PUNCT -> SHORT",
+          "log_odds_ai_vs_human": 1.7016997446901805,
+          "ai_count": 511,
+          "human_count": 59
+        },
+        {
+          "transition": "PUNCT -> SHORT -> SHORT",
+          "log_odds_ai_vs_human": 1.6815044723886496,
+          "ai_count": 158,
+          "human_count": 17
+        },
+        {
+          "transition": "PUNCT -> ALLCAPS -> FUNC",
+          "log_odds_ai_vs_human": 1.6721817572087037,
+          "ai_count": 92,
+          "human_count": 102
+        },
+        {
+          "transition": "LONG -> PUNCT -> SHORT",
+          "log_odds_ai_vs_human": 1.6567340771275887,
+          "ai_count": 99,
+          "human_count": 12
+        },
+        {
+          "transition": "PUNCT -> PUNCT -> LONG",
+          "log_odds_ai_vs_human": 1.5870062432523935,
+          "ai_count": 4,
+          "human_count": 3
+        },
+        {
+          "transition": "PUNCT -> PUNCT -> CAP",
+          "log_odds_ai_vs_human": 1.564805630681214,
+          "ai_count": 66,
+          "human_count": 51
+        },
+        {
+          "transition": "PUNCT -> ALLCAPS -> CAP",
+          "log_odds_ai_vs_human": 1.5531115080453541,
+          "ai_count": 20,
+          "human_count": 25
+        },
+        {
+          "transition": "SHORT -> ALLCAPS -> SHORT",
+          "log_odds_ai_vs_human": 1.361590859968497,
+          "ai_count": 12,
+          "human_count": 4
+        },
+        {
+          "transition": "ALLCAPS -> ALLCAPS -> LONG",
+          "log_odds_ai_vs_human": 1.3251469944127443,
+          "ai_count": 14,
+          "human_count": 16
+        },
+        {
+          "transition": "PUNCT -> PUNCT -> NUM",
+          "log_odds_ai_vs_human": 1.307421381033232,
+          "ai_count": 4,
+          "human_count": 4
+        },
+        {
+          "transition": "LONG -> NUM -> LONG",
+          "log_odds_ai_vs_human": 1.2452710583296909,
+          "ai_count": 118,
+          "human_count": 48
+        }
+      ]
+    }
+  },
+  "results": [
+    {
+      "method": "lexical_shape_plus_markov",
+      "vocab_size": 12000,
+      "min_frequency": 8,
+      "max_features": 12000,
+      "epochs": 160,
+      "top_coefficients": {
+        "toward_human_written": [
+          {
+            "feature": "shape::3=l|S|P",
+            "weight": -0.113695
+          },
+          {
+            "feature": "shape::3=S|P|S",
+            "weight": -0.113142
+          },
+          {
+            "feature": "shape::2=S|P",
+            "weight": -0.107414
+          },
+          {
+            "feature": "lex::2=here|we",
+            "weight": -0.081162
+          },
+          {
+            "feature": "lex::2=this|review",
+            "weight": -0.072659
+          },
+          {
+            "feature": "posish::2=PUNCT|PAST",
+            "weight": -0.071877
+          },
+          {
+            "feature": "posish::2=PAST|PUNCT",
+            "weight": -0.061523
+          },
+          {
+            "feature": "lex::1=n't",
+            "weight": -0.060856
+          },
+          {
+            "feature": "lex::1=although",
+            "weight": -0.059729
+          },
+          {
+            "feature": "shape::3=S|l|P",
+            "weight": -0.054963
+          },
+          {
+            "feature": "lex::1=because",
+            "weight": -0.054649
+          },
+          {
+            "feature": "shape::3=P|l|l",
+            "weight": -0.054447
+          },
+          {
+            "feature": "posish::2=PUNCT|NOUNISH",
+            "weight": -0.051732
+          },
+          {
+            "feature": "lex::1=of",
+            "weight": -0.050672
+          },
+          {
+            "feature": "lex::1=review",
+            "weight": -0.049987
+          },
+          {
+            "feature": "lex::1=disease",
+            "weight": -0.046201
+          },
+          {
+            "feature": "posish::2=NOUNISH|AUX",
+            "weight": -0.045674
+          },
+          {
+            "feature": "lex::2=because|of",
+            "weight": -0.045668
+          },
+          {
+            "feature": "lex::1=probably",
+            "weight": -0.045631
+          },
+          {
+            "feature": "lex::2=do|n't",
+            "weight": -0.044554
+          },
+          {
+            "feature": "posish::2=CONJ|PREP",
+            "weight": -0.044325
+          },
+          {
+            "feature": "lex::1=epidemic",
+            "weight": -0.043828
+          },
+          {
+            "feature": "lex::1=though",
+            "weight": -0.042251
+          },
+          {
+            "feature": "shape::2=P|S",
+            "weight": -0.042084
+          },
+          {
+            "feature": "lex::2=is|very",
+            "weight": -0.041979
+          }
+        ],
+        "toward_ai_generated": [
+          {
+            "feature": "markov::motif::order2::llr_per_transition",
+            "weight": 0.091649
+          },
+          {
+            "feature": "markov::motif::order2::llr_total",
+            "weight": 0.091136
+          },
+          {
+            "feature": "lex::1=it's",
+            "weight": 0.086213
+          },
+          {
+            "feature": "markov::shape::order2::llr_per_transition",
+            "weight": 0.083723
+          },
+          {
+            "feature": "lex::2=this|study",
+            "weight": 0.077962
+          },
+          {
+            "feature": "lex::2=important|to",
+            "weight": 0.068678
+          },
+          {
+            "feature": "markov::shape::order2::llr_total",
+            "weight": 0.064545
+          },
+          {
+            "feature": "lex::2=this|paper",
+            "weight": 0.062481
+          },
+          {
+            "feature": "lex::1=important",
+            "weight": 0.061972
+          },
+          {
+            "feature": "lex::1=additionally",
+            "weight": 0.061166
+          },
+          {
+            "feature": "markov::coarse::order2::llr_per_transition",
+            "weight": 0.059257
+          },
+          {
+            "feature": "lex::2=this|research",
+            "weight": 0.057484
+          },
+          {
+            "feature": "lex::1=examines",
+            "weight": 0.056996
+          },
+          {
+            "feature": "style::alpha_ratio",
+            "weight": 0.05699
+          },
+          {
+            "feature": "lex::1=its",
+            "weight": 0.055277
+          },
+          {
+            "feature": "lex::2=presents|a",
+            "weight": 0.05359
+          },
+          {
+            "feature": "lex::1=treatments",
+            "weight": 0.053372
+          },
+          {
+            "feature": "lex::2=such|as",
+            "weight": 0.051732
+          },
+          {
+            "feature": "lex::2=insight|into",
+            "weight": 0.051654
+          },
+          {
+            "feature": "lex::2=paper|presents",
+            "weight": 0.051509
+          },
+          {
+            "feature": "markov::coarse::order2::llr_total",
+            "weight": 0.051346
+          },
+          {
+            "feature": "lex::2=example|if",
+            "weight": 0.050827
+          },
+          {
+            "feature": "lex::2=me|know",
+            "weight": 0.050796
+          },
+          {
+            "feature": "lex::1=conclusion",
+            "weight": 0.050454
+          },
+          {
+            "feature": "lex::2=it's|important",
+            "weight": 0.050377
+          }
+        ]
+      },
+      "splits": {
+        "supervised_test": {
+          "row_count": 7879,
+          "correct_count": 7737,
+          "accuracy": 0.9819774083005458,
+          "confusion": {
+            "ai_generated->ai_generated": 3374,
+            "human_written->human_written": 4363,
+            "human_written->ai_generated": 104,
+            "ai_generated->human_written": 38
+          },
+          "vocab_size": 12000,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.9819774083005458,
+              "confusion": {
+                "ai_generated->ai_generated": 3374,
+                "human_written->human_written": 4363,
+                "human_written->ai_generated": 104,
+                "ai_generated->human_written": 38
+              },
+              "human_false_positive_rate": 0.023281844638459816,
+              "ai_recall": 0.988862837045721
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.9840081228582307,
+              "confusion": {
+                "ai_generated->ai_generated": 3356,
+                "human_written->human_written": 4397,
+                "ai_generated->human_written": 56,
+                "human_written->ai_generated": 70
+              },
+              "human_false_positive_rate": 0.01567047235280949,
+              "ai_recall": 0.9835873388042204
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.9827389262596776,
+              "confusion": {
+                "ai_generated->ai_generated": 3319,
+                "human_written->human_written": 4424,
+                "ai_generated->human_written": 93,
+                "human_written->ai_generated": 43
+              },
+              "human_false_positive_rate": 0.009626147302440116,
+              "ai_recall": 0.9727432590855803
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.9748699073486483,
+              "confusion": {
+                "ai_generated->ai_generated": 3235,
+                "ai_generated->human_written": 177,
+                "human_written->human_written": 4446,
+                "human_written->ai_generated": 21
+              },
+              "human_false_positive_rate": 0.0047011417058428475,
+              "ai_recall": 0.9481242672919109
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.95316664551339,
+              "confusion": {
+                "ai_generated->ai_generated": 3046,
+                "ai_generated->human_written": 366,
+                "human_written->human_written": 4464,
+                "human_written->ai_generated": 3
+              },
+              "human_false_positive_rate": 0.000671591672263264,
+              "ai_recall": 0.8927315357561547
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "andythetechnerd03/AI-human-text": {
+                "row_count": 5947,
+                "correct_count": 5907,
+                "accuracy": 0.9932739196233396,
+                "confusion": {
+                  "ai_generated->ai_generated": 2267,
+                  "human_written->human_written": 3640,
+                  "human_written->ai_generated": 19,
+                  "ai_generated->human_written": 21
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                },
+                "predicted_counts": {
+                  "ai_generated": 2286,
+                  "human_written": 3661
+                }
+              },
+              "Ateeqq/AI-and-Human-Generated-Text": {
+                "row_count": 1111,
+                "correct_count": 1049,
+                "accuracy": 0.9441944194419442,
+                "confusion": {
+                  "ai_generated->ai_generated": 574,
+                  "human_written->human_written": 475,
+                  "human_written->ai_generated": 61,
+                  "ai_generated->human_written": 1
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                },
+                "predicted_counts": {
+                  "ai_generated": 635,
+                  "human_written": 476
+                }
+              },
+              "silentone0725/ai-human-text-detection-v1": {
+                "row_count": 821,
+                "correct_count": 781,
+                "accuracy": 0.951278928136419,
+                "confusion": {
+                  "ai_generated->ai_generated": 533,
+                  "human_written->human_written": 248,
+                  "human_written->ai_generated": 24,
+                  "ai_generated->human_written": 16
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                },
+                "predicted_counts": {
+                  "ai_generated": 557,
+                  "human_written": 264
+                }
+              }
+            },
+            "domain": {
+              "mixed": {
+                "row_count": 5947,
+                "correct_count": 5907,
+                "accuracy": 0.9932739196233396,
+                "confusion": {
+                  "ai_generated->ai_generated": 2267,
+                  "human_written->human_written": 3640,
+                  "human_written->ai_generated": 19,
+                  "ai_generated->human_written": 21
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                },
+                "predicted_counts": {
+                  "ai_generated": 2286,
+                  "human_written": 3661
+                }
+              },
+              "academic": {
+                "row_count": 1111,
+                "correct_count": 1049,
+                "accuracy": 0.9441944194419442,
+                "confusion": {
+                  "ai_generated->ai_generated": 574,
+                  "human_written->human_written": 475,
+                  "human_written->ai_generated": 61,
+                  "ai_generated->human_written": 1
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                },
+                "predicted_counts": {
+                  "ai_generated": 635,
+                  "human_written": 476
+                }
+              },
+              "general": {
+                "row_count": 821,
+                "correct_count": 781,
+                "accuracy": 0.951278928136419,
+                "confusion": {
+                  "ai_generated->ai_generated": 533,
+                  "human_written->human_written": 248,
+                  "human_written->ai_generated": 24,
+                  "ai_generated->human_written": 16
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                },
+                "predicted_counts": {
+                  "ai_generated": 557,
+                  "human_written": 264
+                }
+              }
+            },
+            "doc_type": {
+              "long_form_text": {
+                "row_count": 5947,
+                "correct_count": 5907,
+                "accuracy": 0.9932739196233396,
+                "confusion": {
+                  "ai_generated->ai_generated": 2267,
+                  "human_written->human_written": 3640,
+                  "human_written->ai_generated": 19,
+                  "ai_generated->human_written": 21
+                },
+                "label_counts": {
+                  "ai_generated": 2288,
+                  "human_written": 3659
+                },
+                "predicted_counts": {
+                  "ai_generated": 2286,
+                  "human_written": 3661
+                }
+              },
+              "abstract": {
+                "row_count": 1111,
+                "correct_count": 1049,
+                "accuracy": 0.9441944194419442,
+                "confusion": {
+                  "ai_generated->ai_generated": 574,
+                  "human_written->human_written": 475,
+                  "human_written->ai_generated": 61,
+                  "ai_generated->human_written": 1
+                },
+                "label_counts": {
+                  "ai_generated": 575,
+                  "human_written": 536
+                },
+                "predicted_counts": {
+                  "ai_generated": 635,
+                  "human_written": 476
+                }
+              },
+              "generic_text": {
+                "row_count": 821,
+                "correct_count": 781,
+                "accuracy": 0.951278928136419,
+                "confusion": {
+                  "ai_generated->ai_generated": 533,
+                  "human_written->human_written": 248,
+                  "human_written->ai_generated": 24,
+                  "ai_generated->human_written": 16
+                },
+                "label_counts": {
+                  "ai_generated": 549,
+                  "human_written": 272
+                },
+                "predicted_counts": {
+                  "ai_generated": 557,
+                  "human_written": 264
+                }
+              }
+            }
+          }
+        },
+        "calibration_hc3_wiki": {
+          "row_count": 15446,
+          "correct_count": 9939,
+          "accuracy": 0.6434675644179723,
+          "confusion": {
+            "ai_generated->human_written": 1786,
+            "ai_generated->ai_generated": 5267,
+            "human_written->ai_generated": 3721,
+            "human_written->human_written": 4672
+          },
+          "vocab_size": 12000,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.6434675644179723,
+              "confusion": {
+                "ai_generated->human_written": 1786,
+                "ai_generated->ai_generated": 5267,
+                "human_written->ai_generated": 3721,
+                "human_written->human_written": 4672
+              },
+              "human_false_positive_rate": 0.44334564518050756,
+              "ai_recall": 0.7467744222316745
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.6564806422374725,
+              "confusion": {
+                "ai_generated->human_written": 2588,
+                "human_written->ai_generated": 2718,
+                "human_written->human_written": 5675,
+                "ai_generated->ai_generated": 4465
+              },
+              "human_false_positive_rate": 0.32384129631836056,
+              "ai_recall": 0.6330639444208138
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.6584876343389875,
+              "confusion": {
+                "ai_generated->human_written": 3448,
+                "human_written->human_written": 6566,
+                "ai_generated->ai_generated": 3605,
+                "human_written->ai_generated": 1827
+              },
+              "human_false_positive_rate": 0.2176814011676397,
+              "ai_recall": 0.5111300155962002
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.6514955328240322,
+              "confusion": {
+                "ai_generated->human_written": 4426,
+                "human_written->human_written": 7436,
+                "ai_generated->ai_generated": 2627,
+                "human_written->ai_generated": 957
+              },
+              "human_false_positive_rate": 0.11402359108781127,
+              "ai_recall": 0.3724656174677442
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.6228797099572705,
+              "confusion": {
+                "ai_generated->human_written": 5536,
+                "human_written->human_written": 8104,
+                "ai_generated->ai_generated": 1517,
+                "human_written->ai_generated": 289
+              },
+              "human_false_positive_rate": 0.034433456451805074,
+              "ai_recall": 0.21508577910109172
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "rajendrabaskota/hc3-wiki-intro-dataset": {
+                "row_count": 15446,
+                "correct_count": 9939,
+                "accuracy": 0.6434675644179723,
+                "confusion": {
+                  "ai_generated->human_written": 1786,
+                  "ai_generated->ai_generated": 5267,
+                  "human_written->ai_generated": 3721,
+                  "human_written->human_written": 4672
+                },
+                "label_counts": {
+                  "ai_generated": 7053,
+                  "human_written": 8393
+                },
+                "predicted_counts": {
+                  "human_written": 6458,
+                  "ai_generated": 8988
+                }
+              }
+            },
+            "domain": {
+              "wiki-intro": {
+                "row_count": 13462,
+                "correct_count": 8137,
+                "accuracy": 0.6044421334125687,
+                "confusion": {
+                  "ai_generated->human_written": 1748,
+                  "ai_generated->ai_generated": 4253,
+                  "human_written->ai_generated": 3577,
+                  "human_written->human_written": 3884
+                },
+                "label_counts": {
+                  "ai_generated": 6001,
+                  "human_written": 7461
+                },
+                "predicted_counts": {
+                  "human_written": 5632,
+                  "ai_generated": 7830
+                }
+              },
+              "hc3-reddit_eli5": {
+                "row_count": 1482,
+                "correct_count": 1341,
+                "accuracy": 0.9048582995951417,
+                "confusion": {
+                  "human_written->human_written": 646,
+                  "ai_generated->ai_generated": 695,
+                  "ai_generated->human_written": 30,
+                  "human_written->ai_generated": 111
+                },
+                "label_counts": {
+                  "human_written": 757,
+                  "ai_generated": 725
+                },
+                "predicted_counts": {
+                  "human_written": 676,
+                  "ai_generated": 806
+                }
+              },
+              "hc3-finance": {
+                "row_count": 290,
+                "correct_count": 278,
+                "accuracy": 0.9586206896551724,
+                "confusion": {
+                  "ai_generated->ai_generated": 174,
+                  "human_written->human_written": 104,
+                  "human_written->ai_generated": 11,
+                  "ai_generated->human_written": 1
+                },
+                "label_counts": {
+                  "ai_generated": 175,
+                  "human_written": 115
+                },
+                "predicted_counts": {
+                  "ai_generated": 185,
+                  "human_written": 105
+                }
+              },
+              "hc3-wiki_csai": {
+                "row_count": 74,
+                "correct_count": 60,
+                "accuracy": 0.8108108108108109,
+                "confusion": {
+                  "ai_generated->ai_generated": 38,
+                  "human_written->human_written": 22,
+                  "human_written->ai_generated": 13,
+                  "ai_generated->human_written": 1
+                },
+                "label_counts": {
+                  "ai_generated": 39,
+                  "human_written": 35
+                },
+                "predicted_counts": {
+                  "ai_generated": 51,
+                  "human_written": 23
+                }
+              },
+              "hc3-open_qa": {
+                "row_count": 59,
+                "correct_count": 53,
+                "accuracy": 0.8983050847457628,
+                "confusion": {
+                  "ai_generated->human_written": 6,
+                  "ai_generated->ai_generated": 52,
+                  "human_written->human_written": 1
+                },
+                "label_counts": {
+                  "ai_generated": 58,
+                  "human_written": 1
+                },
+                "predicted_counts": {
+                  "human_written": 7,
+                  "ai_generated": 52
+                }
+              },
+              "hc3-medicine": {
+                "row_count": 79,
+                "correct_count": 70,
+                "accuracy": 0.8860759493670886,
+                "confusion": {
+                  "ai_generated->ai_generated": 55,
+                  "human_written->human_written": 15,
+                  "human_written->ai_generated": 9
+                },
+                "label_counts": {
+                  "ai_generated": 55,
+                  "human_written": 24
+                },
+                "predicted_counts": {
+                  "ai_generated": 64,
+                  "human_written": 15
+                }
+              }
+            },
+            "doc_type": {
+              "wiki_intro": {
+                "row_count": 15446,
+                "correct_count": 9939,
+                "accuracy": 0.6434675644179723,
+                "confusion": {
+                  "ai_generated->human_written": 1786,
+                  "ai_generated->ai_generated": 5267,
+                  "human_written->ai_generated": 3721,
+                  "human_written->human_written": 4672
+                },
+                "label_counts": {
+                  "ai_generated": 7053,
+                  "human_written": 8393
+                },
+                "predicted_counts": {
+                  "human_written": 6458,
+                  "ai_generated": 8988
+                }
+              }
+            }
+          }
+        },
+        "calibration_hc3_qa": {
+          "row_count": 3618,
+          "correct_count": 3216,
+          "accuracy": 0.8888888888888888,
+          "confusion": {
+            "ai_generated->human_written": 202,
+            "ai_generated->ai_generated": 2011,
+            "human_written->human_written": 1205,
+            "human_written->ai_generated": 200
+          },
+          "vocab_size": 12000,
+          "threshold_sweep": [
+            {
+              "threshold": 0.5,
+              "accuracy": 0.8888888888888888,
+              "confusion": {
+                "ai_generated->human_written": 202,
+                "ai_generated->ai_generated": 2011,
+                "human_written->human_written": 1205,
+                "human_written->ai_generated": 200
+              },
+              "human_false_positive_rate": 0.1423487544483986,
+              "ai_recall": 0.9087211929507456
+            },
+            {
+              "threshold": 0.6,
+              "accuracy": 0.8891652846876728,
+              "confusion": {
+                "ai_generated->human_written": 293,
+                "ai_generated->ai_generated": 1920,
+                "human_written->human_written": 1297,
+                "human_written->ai_generated": 108
+              },
+              "human_false_positive_rate": 0.07686832740213523,
+              "ai_recall": 0.8676005422503389
+            },
+            {
+              "threshold": 0.7,
+              "accuracy": 0.8642896627971255,
+              "confusion": {
+                "ai_generated->human_written": 444,
+                "ai_generated->ai_generated": 1769,
+                "human_written->human_written": 1358,
+                "human_written->ai_generated": 47
+              },
+              "human_false_positive_rate": 0.03345195729537367,
+              "ai_recall": 0.7993673746046092
+            },
+            {
+              "threshold": 0.8,
+              "accuracy": 0.8197899391929243,
+              "confusion": {
+                "ai_generated->human_written": 630,
+                "ai_generated->ai_generated": 1583,
+                "human_written->human_written": 1383,
+                "human_written->ai_generated": 22
+              },
+              "human_false_positive_rate": 0.015658362989323844,
+              "ai_recall": 0.7153185720741075
+            },
+            {
+              "threshold": 0.9,
+              "accuracy": 0.7197346600331676,
+              "confusion": {
+                "ai_generated->human_written": 1009,
+                "ai_generated->ai_generated": 1204,
+                "human_written->human_written": 1400,
+                "human_written->ai_generated": 5
+              },
+              "human_false_positive_rate": 0.0035587188612099642,
+              "ai_recall": 0.54405784003615
+            }
+          ],
+          "source_aware": {
+            "dataset": {
+              "pszemraj/HC3-textgen-qa": {
+                "row_count": 3618,
+                "correct_count": 3216,
+                "accuracy": 0.8888888888888888,
+                "confusion": {
+                  "ai_generated->human_written": 202,
+                  "ai_generated->ai_generated": 2011,
+                  "human_written->human_written": 1205,
+                  "human_written->ai_generated": 200
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                },
+                "predicted_counts": {
+                  "human_written": 1407,
+                  "ai_generated": 2211
+                }
+              }
+            },
+            "domain": {
+              "qa": {
+                "row_count": 3618,
+                "correct_count": 3216,
+                "accuracy": 0.8888888888888888,
+                "confusion": {
+                  "ai_generated->human_written": 202,
+                  "ai_generated->ai_generated": 2011,
+                  "human_written->human_written": 1205,
+                  "human_written->ai_generated": 200
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                },
+                "predicted_counts": {
+                  "human_written": 1407,
+                  "ai_generated": 2211
+                }
+              }
+            },
+            "doc_type": {
+              "qa_response": {
+                "row_count": 3618,
+                "correct_count": 3216,
+                "accuracy": 0.8888888888888888,
+                "confusion": {
+                  "ai_generated->human_written": 202,
+                  "ai_generated->ai_generated": 2011,
+                  "human_written->human_written": 1205,
+                  "human_written->ai_generated": 200
+                },
+                "label_counts": {
+                  "ai_generated": 2213,
+                  "human_written": 1405
+                },
+                "predicted_counts": {
+                  "human_written": 1407,
+                  "ai_generated": 2211
+                }
+              }
+            }
+          }
+        }
+      },
+      "files": {
+        "model": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate/lexical_shape_plus_markov_model.json",
+        "predictions_supervised_test": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate/lexical_shape_plus_markov_predictions_supervised_test.jsonl",
+        "predictions_calibration_hc3_wiki": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate/lexical_shape_plus_markov_predictions_calibration_hc3_wiki.jsonl",
+        "predictions_calibration_hc3_qa": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate/lexical_shape_plus_markov_predictions_calibration_hc3_qa.jsonl"
+      }
+    }
+  ],
+  "best_supervised_test": {
+    "method": "lexical_shape_plus_markov",
+    "vocab_size": 12000,
+    "min_frequency": 8,
+    "max_features": 12000,
+    "epochs": 160,
+    "top_coefficients": {
+      "toward_human_written": [
+        {
+          "feature": "shape::3=l|S|P",
+          "weight": -0.113695
+        },
+        {
+          "feature": "shape::3=S|P|S",
+          "weight": -0.113142
+        },
+        {
+          "feature": "shape::2=S|P",
+          "weight": -0.107414
+        },
+        {
+          "feature": "lex::2=here|we",
+          "weight": -0.081162
+        },
+        {
+          "feature": "lex::2=this|review",
+          "weight": -0.072659
+        },
+        {
+          "feature": "posish::2=PUNCT|PAST",
+          "weight": -0.071877
+        },
+        {
+          "feature": "posish::2=PAST|PUNCT",
+          "weight": -0.061523
+        },
+        {
+          "feature": "lex::1=n't",
+          "weight": -0.060856
+        },
+        {
+          "feature": "lex::1=although",
+          "weight": -0.059729
+        },
+        {
+          "feature": "shape::3=S|l|P",
+          "weight": -0.054963
+        },
+        {
+          "feature": "lex::1=because",
+          "weight": -0.054649
+        },
+        {
+          "feature": "shape::3=P|l|l",
+          "weight": -0.054447
+        },
+        {
+          "feature": "posish::2=PUNCT|NOUNISH",
+          "weight": -0.051732
+        },
+        {
+          "feature": "lex::1=of",
+          "weight": -0.050672
+        },
+        {
+          "feature": "lex::1=review",
+          "weight": -0.049987
+        },
+        {
+          "feature": "lex::1=disease",
+          "weight": -0.046201
+        },
+        {
+          "feature": "posish::2=NOUNISH|AUX",
+          "weight": -0.045674
+        },
+        {
+          "feature": "lex::2=because|of",
+          "weight": -0.045668
+        },
+        {
+          "feature": "lex::1=probably",
+          "weight": -0.045631
+        },
+        {
+          "feature": "lex::2=do|n't",
+          "weight": -0.044554
+        },
+        {
+          "feature": "posish::2=CONJ|PREP",
+          "weight": -0.044325
+        },
+        {
+          "feature": "lex::1=epidemic",
+          "weight": -0.043828
+        },
+        {
+          "feature": "lex::1=though",
+          "weight": -0.042251
+        },
+        {
+          "feature": "shape::2=P|S",
+          "weight": -0.042084
+        },
+        {
+          "feature": "lex::2=is|very",
+          "weight": -0.041979
+        }
+      ],
+      "toward_ai_generated": [
+        {
+          "feature": "markov::motif::order2::llr_per_transition",
+          "weight": 0.091649
+        },
+        {
+          "feature": "markov::motif::order2::llr_total",
+          "weight": 0.091136
+        },
+        {
+          "feature": "lex::1=it's",
+          "weight": 0.086213
+        },
+        {
+          "feature": "markov::shape::order2::llr_per_transition",
+          "weight": 0.083723
+        },
+        {
+          "feature": "lex::2=this|study",
+          "weight": 0.077962
+        },
+        {
+          "feature": "lex::2=important|to",
+          "weight": 0.068678
+        },
+        {
+          "feature": "markov::shape::order2::llr_total",
+          "weight": 0.064545
+        },
+        {
+          "feature": "lex::2=this|paper",
+          "weight": 0.062481
+        },
+        {
+          "feature": "lex::1=important",
+          "weight": 0.061972
+        },
+        {
+          "feature": "lex::1=additionally",
+          "weight": 0.061166
+        },
+        {
+          "feature": "markov::coarse::order2::llr_per_transition",
+          "weight": 0.059257
+        },
+        {
+          "feature": "lex::2=this|research",
+          "weight": 0.057484
+        },
+        {
+          "feature": "lex::1=examines",
+          "weight": 0.056996
+        },
+        {
+          "feature": "style::alpha_ratio",
+          "weight": 0.05699
+        },
+        {
+          "feature": "lex::1=its",
+          "weight": 0.055277
+        },
+        {
+          "feature": "lex::2=presents|a",
+          "weight": 0.05359
+        },
+        {
+          "feature": "lex::1=treatments",
+          "weight": 0.053372
+        },
+        {
+          "feature": "lex::2=such|as",
+          "weight": 0.051732
+        },
+        {
+          "feature": "lex::2=insight|into",
+          "weight": 0.051654
+        },
+        {
+          "feature": "lex::2=paper|presents",
+          "weight": 0.051509
+        },
+        {
+          "feature": "markov::coarse::order2::llr_total",
+          "weight": 0.051346
+        },
+        {
+          "feature": "lex::2=example|if",
+          "weight": 0.050827
+        },
+        {
+          "feature": "lex::2=me|know",
+          "weight": 0.050796
+        },
+        {
+          "feature": "lex::1=conclusion",
+          "weight": 0.050454
+        },
+        {
+          "feature": "lex::2=it's|important",
+          "weight": 0.050377
+        }
+      ]
+    },
+    "splits": {
+      "supervised_test": {
+        "row_count": 7879,
+        "correct_count": 7737,
+        "accuracy": 0.9819774083005458,
+        "confusion": {
+          "ai_generated->ai_generated": 3374,
+          "human_written->human_written": 4363,
+          "human_written->ai_generated": 104,
+          "ai_generated->human_written": 38
+        },
+        "vocab_size": 12000,
+        "threshold_sweep": [
+          {
+            "threshold": 0.5,
+            "accuracy": 0.9819774083005458,
+            "confusion": {
+              "ai_generated->ai_generated": 3374,
+              "human_written->human_written": 4363,
+              "human_written->ai_generated": 104,
+              "ai_generated->human_written": 38
+            },
+            "human_false_positive_rate": 0.023281844638459816,
+            "ai_recall": 0.988862837045721
+          },
+          {
+            "threshold": 0.6,
+            "accuracy": 0.9840081228582307,
+            "confusion": {
+              "ai_generated->ai_generated": 3356,
+              "human_written->human_written": 4397,
+              "ai_generated->human_written": 56,
+              "human_written->ai_generated": 70
+            },
+            "human_false_positive_rate": 0.01567047235280949,
+            "ai_recall": 0.9835873388042204
+          },
+          {
+            "threshold": 0.7,
+            "accuracy": 0.9827389262596776,
+            "confusion": {
+              "ai_generated->ai_generated": 3319,
+              "human_written->human_written": 4424,
+              "ai_generated->human_written": 93,
+              "human_written->ai_generated": 43
+            },
+            "human_false_positive_rate": 0.009626147302440116,
+            "ai_recall": 0.9727432590855803
+          },
+          {
+            "threshold": 0.8,
+            "accuracy": 0.9748699073486483,
+            "confusion": {
+              "ai_generated->ai_generated": 3235,
+              "ai_generated->human_written": 177,
+              "human_written->human_written": 4446,
+              "human_written->ai_generated": 21
+            },
+            "human_false_positive_rate": 0.0047011417058428475,
+            "ai_recall": 0.9481242672919109
+          },
+          {
+            "threshold": 0.9,
+            "accuracy": 0.95316664551339,
+            "confusion": {
+              "ai_generated->ai_generated": 3046,
+              "ai_generated->human_written": 366,
+              "human_written->human_written": 4464,
+              "human_written->ai_generated": 3
+            },
+            "human_false_positive_rate": 0.000671591672263264,
+            "ai_recall": 0.8927315357561547
+          }
+        ],
+        "source_aware": {
+          "dataset": {
+            "andythetechnerd03/AI-human-text": {
+              "row_count": 5947,
+              "correct_count": 5907,
+              "accuracy": 0.9932739196233396,
+              "confusion": {
+                "ai_generated->ai_generated": 2267,
+                "human_written->human_written": 3640,
+                "human_written->ai_generated": 19,
+                "ai_generated->human_written": 21
+              },
+              "label_counts": {
+                "ai_generated": 2288,
+                "human_written": 3659
+              },
+              "predicted_counts": {
+                "ai_generated": 2286,
+                "human_written": 3661
+              }
+            },
+            "Ateeqq/AI-and-Human-Generated-Text": {
+              "row_count": 1111,
+              "correct_count": 1049,
+              "accuracy": 0.9441944194419442,
+              "confusion": {
+                "ai_generated->ai_generated": 574,
+                "human_written->human_written": 475,
+                "human_written->ai_generated": 61,
+                "ai_generated->human_written": 1
+              },
+              "label_counts": {
+                "ai_generated": 575,
+                "human_written": 536
+              },
+              "predicted_counts": {
+                "ai_generated": 635,
+                "human_written": 476
+              }
+            },
+            "silentone0725/ai-human-text-detection-v1": {
+              "row_count": 821,
+              "correct_count": 781,
+              "accuracy": 0.951278928136419,
+              "confusion": {
+                "ai_generated->ai_generated": 533,
+                "human_written->human_written": 248,
+                "human_written->ai_generated": 24,
+                "ai_generated->human_written": 16
+              },
+              "label_counts": {
+                "ai_generated": 549,
+                "human_written": 272
+              },
+              "predicted_counts": {
+                "ai_generated": 557,
+                "human_written": 264
+              }
+            }
+          },
+          "domain": {
+            "mixed": {
+              "row_count": 5947,
+              "correct_count": 5907,
+              "accuracy": 0.9932739196233396,
+              "confusion": {
+                "ai_generated->ai_generated": 2267,
+                "human_written->human_written": 3640,
+                "human_written->ai_generated": 19,
+                "ai_generated->human_written": 21
+              },
+              "label_counts": {
+                "ai_generated": 2288,
+                "human_written": 3659
+              },
+              "predicted_counts": {
+                "ai_generated": 2286,
+                "human_written": 3661
+              }
+            },
+            "academic": {
+              "row_count": 1111,
+              "correct_count": 1049,
+              "accuracy": 0.9441944194419442,
+              "confusion": {
+                "ai_generated->ai_generated": 574,
+                "human_written->human_written": 475,
+                "human_written->ai_generated": 61,
+                "ai_generated->human_written": 1
+              },
+              "label_counts": {
+                "ai_generated": 575,
+                "human_written": 536
+              },
+              "predicted_counts": {
+                "ai_generated": 635,
+                "human_written": 476
+              }
+            },
+            "general": {
+              "row_count": 821,
+              "correct_count": 781,
+              "accuracy": 0.951278928136419,
+              "confusion": {
+                "ai_generated->ai_generated": 533,
+                "human_written->human_written": 248,
+                "human_written->ai_generated": 24,
+                "ai_generated->human_written": 16
+              },
+              "label_counts": {
+                "ai_generated": 549,
+                "human_written": 272
+              },
+              "predicted_counts": {
+                "ai_generated": 557,
+                "human_written": 264
+              }
+            }
+          },
+          "doc_type": {
+            "long_form_text": {
+              "row_count": 5947,
+              "correct_count": 5907,
+              "accuracy": 0.9932739196233396,
+              "confusion": {
+                "ai_generated->ai_generated": 2267,
+                "human_written->human_written": 3640,
+                "human_written->ai_generated": 19,
+                "ai_generated->human_written": 21
+              },
+              "label_counts": {
+                "ai_generated": 2288,
+                "human_written": 3659
+              },
+              "predicted_counts": {
+                "ai_generated": 2286,
+                "human_written": 3661
+              }
+            },
+            "abstract": {
+              "row_count": 1111,
+              "correct_count": 1049,
+              "accuracy": 0.9441944194419442,
+              "confusion": {
+                "ai_generated->ai_generated": 574,
+                "human_written->human_written": 475,
+                "human_written->ai_generated": 61,
+                "ai_generated->human_written": 1
+              },
+              "label_counts": {
+                "ai_generated": 575,
+                "human_written": 536
+              },
+              "predicted_counts": {
+                "ai_generated": 635,
+                "human_written": 476
+              }
+            },
+            "generic_text": {
+              "row_count": 821,
+              "correct_count": 781,
+              "accuracy": 0.951278928136419,
+              "confusion": {
+                "ai_generated->ai_generated": 533,
+                "human_written->human_written": 248,
+                "human_written->ai_generated": 24,
+                "ai_generated->human_written": 16
+              },
+              "label_counts": {
+                "ai_generated": 549,
+                "human_written": 272
+              },
+              "predicted_counts": {
+                "ai_generated": 557,
+                "human_written": 264
+              }
+            }
+          }
+        }
+      },
+      "calibration_hc3_wiki": {
+        "row_count": 15446,
+        "correct_count": 9939,
+        "accuracy": 0.6434675644179723,
+        "confusion": {
+          "ai_generated->human_written": 1786,
+          "ai_generated->ai_generated": 5267,
+          "human_written->ai_generated": 3721,
+          "human_written->human_written": 4672
+        },
+        "vocab_size": 12000,
+        "threshold_sweep": [
+          {
+            "threshold": 0.5,
+            "accuracy": 0.6434675644179723,
+            "confusion": {
+              "ai_generated->human_written": 1786,
+              "ai_generated->ai_generated": 5267,
+              "human_written->ai_generated": 3721,
+              "human_written->human_written": 4672
+            },
+            "human_false_positive_rate": 0.44334564518050756,
+            "ai_recall": 0.7467744222316745
+          },
+          {
+            "threshold": 0.6,
+            "accuracy": 0.6564806422374725,
+            "confusion": {
+              "ai_generated->human_written": 2588,
+              "human_written->ai_generated": 2718,
+              "human_written->human_written": 5675,
+              "ai_generated->ai_generated": 4465
+            },
+            "human_false_positive_rate": 0.32384129631836056,
+            "ai_recall": 0.6330639444208138
+          },
+          {
+            "threshold": 0.7,
+            "accuracy": 0.6584876343389875,
+            "confusion": {
+              "ai_generated->human_written": 3448,
+              "human_written->human_written": 6566,
+              "ai_generated->ai_generated": 3605,
+              "human_written->ai_generated": 1827
+            },
+            "human_false_positive_rate": 0.2176814011676397,
+            "ai_recall": 0.5111300155962002
+          },
+          {
+            "threshold": 0.8,
+            "accuracy": 0.6514955328240322,
+            "confusion": {
+              "ai_generated->human_written": 4426,
+              "human_written->human_written": 7436,
+              "ai_generated->ai_generated": 2627,
+              "human_written->ai_generated": 957
+            },
+            "human_false_positive_rate": 0.11402359108781127,
+            "ai_recall": 0.3724656174677442
+          },
+          {
+            "threshold": 0.9,
+            "accuracy": 0.6228797099572705,
+            "confusion": {
+              "ai_generated->human_written": 5536,
+              "human_written->human_written": 8104,
+              "ai_generated->ai_generated": 1517,
+              "human_written->ai_generated": 289
+            },
+            "human_false_positive_rate": 0.034433456451805074,
+            "ai_recall": 0.21508577910109172
+          }
+        ],
+        "source_aware": {
+          "dataset": {
+            "rajendrabaskota/hc3-wiki-intro-dataset": {
+              "row_count": 15446,
+              "correct_count": 9939,
+              "accuracy": 0.6434675644179723,
+              "confusion": {
+                "ai_generated->human_written": 1786,
+                "ai_generated->ai_generated": 5267,
+                "human_written->ai_generated": 3721,
+                "human_written->human_written": 4672
+              },
+              "label_counts": {
+                "ai_generated": 7053,
+                "human_written": 8393
+              },
+              "predicted_counts": {
+                "human_written": 6458,
+                "ai_generated": 8988
+              }
+            }
+          },
+          "domain": {
+            "wiki-intro": {
+              "row_count": 13462,
+              "correct_count": 8137,
+              "accuracy": 0.6044421334125687,
+              "confusion": {
+                "ai_generated->human_written": 1748,
+                "ai_generated->ai_generated": 4253,
+                "human_written->ai_generated": 3577,
+                "human_written->human_written": 3884
+              },
+              "label_counts": {
+                "ai_generated": 6001,
+                "human_written": 7461
+              },
+              "predicted_counts": {
+                "human_written": 5632,
+                "ai_generated": 7830
+              }
+            },
+            "hc3-reddit_eli5": {
+              "row_count": 1482,
+              "correct_count": 1341,
+              "accuracy": 0.9048582995951417,
+              "confusion": {
+                "human_written->human_written": 646,
+                "ai_generated->ai_generated": 695,
+                "ai_generated->human_written": 30,
+                "human_written->ai_generated": 111
+              },
+              "label_counts": {
+                "human_written": 757,
+                "ai_generated": 725
+              },
+              "predicted_counts": {
+                "human_written": 676,
+                "ai_generated": 806
+              }
+            },
+            "hc3-finance": {
+              "row_count": 290,
+              "correct_count": 278,
+              "accuracy": 0.9586206896551724,
+              "confusion": {
+                "ai_generated->ai_generated": 174,
+                "human_written->human_written": 104,
+                "human_written->ai_generated": 11,
+                "ai_generated->human_written": 1
+              },
+              "label_counts": {
+                "ai_generated": 175,
+                "human_written": 115
+              },
+              "predicted_counts": {
+                "ai_generated": 185,
+                "human_written": 105
+              }
+            },
+            "hc3-wiki_csai": {
+              "row_count": 74,
+              "correct_count": 60,
+              "accuracy": 0.8108108108108109,
+              "confusion": {
+                "ai_generated->ai_generated": 38,
+                "human_written->human_written": 22,
+                "human_written->ai_generated": 13,
+                "ai_generated->human_written": 1
+              },
+              "label_counts": {
+                "ai_generated": 39,
+                "human_written": 35
+              },
+              "predicted_counts": {
+                "ai_generated": 51,
+                "human_written": 23
+              }
+            },
+            "hc3-open_qa": {
+              "row_count": 59,
+              "correct_count": 53,
+              "accuracy": 0.8983050847457628,
+              "confusion": {
+                "ai_generated->human_written": 6,
+                "ai_generated->ai_generated": 52,
+                "human_written->human_written": 1
+              },
+              "label_counts": {
+                "ai_generated": 58,
+                "human_written": 1
+              },
+              "predicted_counts": {
+                "human_written": 7,
+                "ai_generated": 52
+              }
+            },
+            "hc3-medicine": {
+              "row_count": 79,
+              "correct_count": 70,
+              "accuracy": 0.8860759493670886,
+              "confusion": {
+                "ai_generated->ai_generated": 55,
+                "human_written->human_written": 15,
+                "human_written->ai_generated": 9
+              },
+              "label_counts": {
+                "ai_generated": 55,
+                "human_written": 24
+              },
+              "predicted_counts": {
+                "ai_generated": 64,
+                "human_written": 15
+              }
+            }
+          },
+          "doc_type": {
+            "wiki_intro": {
+              "row_count": 15446,
+              "correct_count": 9939,
+              "accuracy": 0.6434675644179723,
+              "confusion": {
+                "ai_generated->human_written": 1786,
+                "ai_generated->ai_generated": 5267,
+                "human_written->ai_generated": 3721,
+                "human_written->human_written": 4672
+              },
+              "label_counts": {
+                "ai_generated": 7053,
+                "human_written": 8393
+              },
+              "predicted_counts": {
+                "human_written": 6458,
+                "ai_generated": 8988
+              }
+            }
+          }
+        }
+      },
+      "calibration_hc3_qa": {
+        "row_count": 3618,
+        "correct_count": 3216,
+        "accuracy": 0.8888888888888888,
+        "confusion": {
+          "ai_generated->human_written": 202,
+          "ai_generated->ai_generated": 2011,
+          "human_written->human_written": 1205,
+          "human_written->ai_generated": 200
+        },
+        "vocab_size": 12000,
+        "threshold_sweep": [
+          {
+            "threshold": 0.5,
+            "accuracy": 0.8888888888888888,
+            "confusion": {
+              "ai_generated->human_written": 202,
+              "ai_generated->ai_generated": 2011,
+              "human_written->human_written": 1205,
+              "human_written->ai_generated": 200
+            },
+            "human_false_positive_rate": 0.1423487544483986,
+            "ai_recall": 0.9087211929507456
+          },
+          {
+            "threshold": 0.6,
+            "accuracy": 0.8891652846876728,
+            "confusion": {
+              "ai_generated->human_written": 293,
+              "ai_generated->ai_generated": 1920,
+              "human_written->human_written": 1297,
+              "human_written->ai_generated": 108
+            },
+            "human_false_positive_rate": 0.07686832740213523,
+            "ai_recall": 0.8676005422503389
+          },
+          {
+            "threshold": 0.7,
+            "accuracy": 0.8642896627971255,
+            "confusion": {
+              "ai_generated->human_written": 444,
+              "ai_generated->ai_generated": 1769,
+              "human_written->human_written": 1358,
+              "human_written->ai_generated": 47
+            },
+            "human_false_positive_rate": 0.03345195729537367,
+            "ai_recall": 0.7993673746046092
+          },
+          {
+            "threshold": 0.8,
+            "accuracy": 0.8197899391929243,
+            "confusion": {
+              "ai_generated->human_written": 630,
+              "ai_generated->ai_generated": 1583,
+              "human_written->human_written": 1383,
+              "human_written->ai_generated": 22
+            },
+            "human_false_positive_rate": 0.015658362989323844,
+            "ai_recall": 0.7153185720741075
+          },
+          {
+            "threshold": 0.9,
+            "accuracy": 0.7197346600331676,
+            "confusion": {
+              "ai_generated->human_written": 1009,
+              "ai_generated->ai_generated": 1204,
+              "human_written->human_written": 1400,
+              "human_written->ai_generated": 5
+            },
+            "human_false_positive_rate": 0.0035587188612099642,
+            "ai_recall": 0.54405784003615
+          }
+        ],
+        "source_aware": {
+          "dataset": {
+            "pszemraj/HC3-textgen-qa": {
+              "row_count": 3618,
+              "correct_count": 3216,
+              "accuracy": 0.8888888888888888,
+              "confusion": {
+                "ai_generated->human_written": 202,
+                "ai_generated->ai_generated": 2011,
+                "human_written->human_written": 1205,
+                "human_written->ai_generated": 200
+              },
+              "label_counts": {
+                "ai_generated": 2213,
+                "human_written": 1405
+              },
+              "predicted_counts": {
+                "human_written": 1407,
+                "ai_generated": 2211
+              }
+            }
+          },
+          "domain": {
+            "qa": {
+              "row_count": 3618,
+              "correct_count": 3216,
+              "accuracy": 0.8888888888888888,
+              "confusion": {
+                "ai_generated->human_written": 202,
+                "ai_generated->ai_generated": 2011,
+                "human_written->human_written": 1205,
+                "human_written->ai_generated": 200
+              },
+              "label_counts": {
+                "ai_generated": 2213,
+                "human_written": 1405
+              },
+              "predicted_counts": {
+                "human_written": 1407,
+                "ai_generated": 2211
+              }
+            }
+          },
+          "doc_type": {
+            "qa_response": {
+              "row_count": 3618,
+              "correct_count": 3216,
+              "accuracy": 0.8888888888888888,
+              "confusion": {
+                "ai_generated->human_written": 202,
+                "ai_generated->ai_generated": 2011,
+                "human_written->human_written": 1205,
+                "human_written->ai_generated": 200
+              },
+              "label_counts": {
+                "ai_generated": 2213,
+                "human_written": 1405
+              },
+              "predicted_counts": {
+                "human_written": 1407,
+                "ai_generated": 2211
+              }
+            }
+          }
+        }
+      }
+    },
+    "files": {
+      "model": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate/lexical_shape_plus_markov_model.json",
+      "predictions_supervised_test": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate/lexical_shape_plus_markov_predictions_supervised_test.jsonl",
+      "predictions_calibration_hc3_wiki": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate/lexical_shape_plus_markov_predictions_calibration_hc3_wiki.jsonl",
+      "predictions_calibration_hc3_qa": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate/lexical_shape_plus_markov_predictions_calibration_hc3_qa.jsonl"
+    }
+  },
+  "edge_candidate_export": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate/lexical_shape_plus_markov_edge_candidate.json"
+}
