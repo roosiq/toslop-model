@@ -239,9 +239,9 @@ The first question is a model problem. The second is a measurement problem. Keep
 
 ## Replication Protocol
 
-The public replication package should be published as a clean repo, not by making the private infrastructure monorepo public as-is. The private repo currently contains unrelated infrastructure, local `.env` files, generated artifacts, and dirty worktree state. The publishable surface should contain only the detector code, corpus scripts, model artifacts, reports, checksums, and documentation needed to reproduce the article.
+The public replication package is published at [`roosiq/toslop-model`](https://github.com/roosiq/toslop-model). It is a clean repo, not a public copy of the private infrastructure monorepo. The private repo contains unrelated infrastructure, local `.env` files, generated artifacts, and dirty worktree state, so making it public as-is would be sloppy in exactly the wrong direction. The public replication repo contains only the detector code, corpus scripts, model artifacts, reports, checksums, and documentation needed to reproduce the article.
 
-The replication repo should include:
+The replication repo includes:
 
 - corpus normalization and cleaning scripts;
 - `corporate_ai_authorship_feature_spike.py`;
@@ -336,4 +336,4 @@ The key generated artifact hashes are:
 | `surface_markov_models.json` | `01e0cedf41b484a36cbe186c50e76b9d75cf996a931466ef9bdcc63777ab2b13` |
 | `lexical_shape_plus_markov_edge_candidate.json` | `82686f957bb3b791777a2ab6625b4f3e360fc1cd38f4985b5067078c121a4956` |
 
-If the public repo does not publish either the frozen generated JSONL splits or a downloader that reconstructs the exact source files above, the article is only method-reproducible, not byte-reproducible. For full replication, readers need enough material to regenerate those hashes or compare against them.
+The public repo does not redistribute the frozen generated JSONL splits because those files contain source dataset text. Instead, it publishes the downloader, source revision pins, source-file checksums, and generated split checksums. That makes the method reproducible from public datasets and lets readers verify whether their regenerated files match the original run byte-for-byte.
