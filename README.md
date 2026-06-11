@@ -79,7 +79,7 @@ Train and evaluate the model family:
 python run_authorship_corpus_v2_markov_everything.py \
   --output ../evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate \
   --min-frequency 8 \
-  --max-features 12000 \
+  --max-features 30000 \
   --epochs 160 \
   --methods lexical_style,shape_ngrams,shape_ngrams_plus_markov,markov_surface,lexical_shape_plus_markov \
   --export-edge-candidate lexical_shape_plus_markov \

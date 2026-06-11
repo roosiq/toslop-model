@@ -59,14 +59,14 @@ The production model is:
 - training rows: 21,005;
 - supervised test rows: 8,993;
 - calibration rows: 15,446 HC3 wiki rows and 3,618 HC3 QA rows;
-- feature cap: 12,000;
+- feature cap: 30,000;
 - minimum feature frequency: 8;
 - epochs: 160;
 - learning rate: 0.1;
 - L2 penalty: 0.02;
 - production threshold: 0.6.
 
-At the default 0.5 evaluation threshold, the combined model reached 97.93% accuracy on the held-out supervised test split. At Toslop's deployed 0.6 threshold, it reached 97.94% accuracy, with a 2.10% human false-positive rate and 97.99% AI recall.
+At the default 0.5 evaluation threshold, the combined model reached 97.92% accuracy on the held-out supervised test split. At Toslop's deployed 0.6 threshold, it reached 98.13% accuracy, with a 2.24% human false-positive rate and 98.50% AI recall.
 
 ## Training Data
 
@@ -144,7 +144,7 @@ P(next | context, label) =
   / (context_count(label, context) + alpha * vocab_size)
 ```
 
-The artifact contains twelve Markov pairs: `shape`, `coarse`, `posish`, `true_pos`, `motif`, and `semantic`, each at order 1 and order 2. The candidate model trains all twelve, and the final 12,000-feature logistic vocabulary selected 30 direct Markov features from `shape`, `coarse`, `true_pos`, and `motif`. The semantic and posish Markov models remain in the artifact for ablations and compatibility, but their direct `markov::` features were not selected into the production candidate vocabulary.
+The artifact contains twelve Markov pairs: `shape`, `coarse`, `posish`, `true_pos`, `motif`, and `semantic`, each at order 1 and order 2. The candidate model trains all twelve, and the final 30,000-feature logistic vocabulary selected all 60 direct Markov summary features: five measurements for each of the six views at both order 1 and order 2.
 
 One actual row from the deployed `shape_order1` matrix is the `WORD` context:
 
@@ -204,11 +204,11 @@ markov::coarse::order1::ai_cross_entropy
 markov::motif::order2::human_cross_entropy
 ```
 
-The final logistic model selected 30 such Markov features. The largest positive direct Markov weights point toward AI when the sample's sequence has a higher AI-vs-human likelihood ratio, especially in order-2 shape, coarse, and motif views. This is exactly the role we wanted: not a standalone detector, but a sequence-rhythm correction layered on top of lexical evidence.
+The final logistic model selected 60 such Markov features. The largest positive direct Markov weights point toward AI when the sample's sequence has a higher AI-vs-human likelihood ratio, especially in order-2 shape, coarse, and motif views. This is exactly the role we wanted: not a standalone detector, but a sequence-rhythm correction layered on top of lexical evidence.
 
 ## The Logistic Model
 
-After feature extraction, the detector trains a logistic regression model. The vocabulary is built from feature keys that appear at least eight times in training, sorted by frequency and key name, then capped at 12,000 features.
+After feature extraction, the detector trains a logistic regression model. The vocabulary is built from feature keys that appear at least eight times in training, sorted by frequency and key name, then capped at 30,000 features.
 
 For every selected feature, training stores a mean and standard deviation. At runtime, the detector computes:
 
@@ -228,18 +228,18 @@ On the 8,993-row supervised test split, the combined model was the strongest int
 
 | Method | Feature count | Supervised test accuracy | Human false positives | AI false negatives |
 | --- | ---: | ---: | ---: | ---: |
-| `lexical_shape_plus_markov` | 12,000 | 97.93% | 135 | 51 |
+| `lexical_shape_plus_markov` | 30,000 | 97.92% | 143 | 44 |
 | `lexical_style` | 12,000 | 97.29% | 182 | 62 |
 | `shape_ngrams_plus_markov` | 3,020 | 92.59% | 374 | 292 |
 | `shape_ngrams` | 424 | 88.01% | 668 | 410 |
 | `markov_surface` | 2,596 | 90.40% | 494 | 369 |
 
-Those numbers use the standard 0.5 probability cutoff for apples-to-apples comparison. The deployed candidate uses a stricter 0.6 threshold for binary labeling. At that production threshold, the same model reached 97.94% supervised-test accuracy:
+Those numbers use the standard 0.5 probability cutoff for apples-to-apples comparison. The deployed candidate uses a stricter 0.6 threshold for binary labeling. At that production threshold, the same model reached 98.13% supervised-test accuracy:
 
 | Method | Threshold | Accuracy | Human false-positive rate | AI recall | Confusion |
 | --- | ---: | ---: | ---: | ---: | --- |
-| `lexical_shape_plus_markov` | 0.5 | 97.93% | 3.02% | 98.87% | 4,475 TP / 4,332 TN / 135 FP / 51 FN |
-| `lexical_shape_plus_markov` | 0.6 | 97.94% | 2.10% | 97.99% | 4,435 TP / 4,373 TN / 94 FP / 91 FN |
+| `lexical_shape_plus_markov` | 0.5 | 97.92% | 3.20% | 99.03% | 4,482 TP / 4,324 TN / 143 FP / 44 FN |
+| `lexical_shape_plus_markov` | 0.6 | 98.13% | 2.24% | 98.50% | 4,458 TP / 4,367 TN / 100 FP / 68 FN |
 | `lexical_style` | 0.6 | 97.40% | 2.87% | 97.66% | 4,420 TP / 4,339 TN / 128 FP / 106 FN |
 | `shape_ngrams_plus_markov` | 0.6 | 92.37% | 6.27% | 91.03% | 4,120 TP / 4,187 TN / 280 FP / 406 FN |
 | `shape_ngrams` | 0.6 | 88.00% | 9.63% | 85.66% | 3,877 TP / 4,037 TN / 430 FP / 649 FN |
@@ -253,7 +253,7 @@ The model was also checked against held-out HC3 calibration sets that were not p
 
 | Method | Supervised test | HC3 wiki calibration | HC3 QA calibration |
 | --- | ---: | ---: | ---: |
-| `lexical_shape_plus_markov` | 97.93% | 51.28% | 77.56% |
+| `lexical_shape_plus_markov` | 97.92% | 50.05% | 78.28% |
 | `lexical_style` | 97.29% | 52.21% | 75.40% |
 | `shape_ngrams_plus_markov` | 92.59% | 49.80% | 67.72% |
 | `shape_ngrams` | 88.01% | 48.30% | 66.89% |
@@ -261,7 +261,9 @@ The model was also checked against held-out HC3 calibration sets that were not p
 
 The combined model did not win every calibration slice. Lexical-style did slightly better on HC3 wiki, while lexical-style+Markov won HC3 QA. We still chose the combined candidate because it won the supervised mixture, improved the conservative-threshold operating point, and provided a richer set of interpretable signals. The calibration result is also a useful warning: AI-writing detection is domain-sensitive. A model that looks excellent on a supervised split can become much less certain on a different genre.
 
-At the 0.6 production threshold, HC3 wiki accuracy for the primary candidate was 52.51%, with an 81.14% human false-positive rate and 92.54% AI recall. HC3 QA accuracy was 79.80%, with a 36.87% human false-positive rate and 90.38% AI recall. That is why Toslop treats the score as measurement, not identity. The public site should be read as "this crawl sample contains this much AI-like writing according to this detector," not "these pages were definitely written by AI."
+At the 0.6 production threshold, HC3 wiki accuracy for the primary candidate was 51.17%, with an 86.02% human false-positive rate and 95.43% AI recall. HC3 QA accuracy was 80.15%, with a 38.51% human false-positive rate and 92.00% AI recall. That is why Toslop treats the score as measurement, not identity. The public site should be read as "this crawl sample contains this much AI-like writing according to this detector," not "these pages were definitely written by AI."
+
+We also tested whether the model should use every eligible feature rather than a cap. With `--max-features 0`, the vocabulary expanded to 108,954 features: 104,626 lexical features, 3,815 sequence n-grams, 237 shape features, 132 posish features, 60 direct Markov features, and small token/semantic/style groups. That full-size model was slower, produced an 11 MB logistic artifact before the edge wrapper, and regressed on the held-out sets: 97.28% supervised-test accuracy at threshold 0.5, 97.64% at threshold 0.6, 48.27% HC3 wiki accuracy, and 72.28% HC3 QA accuracy. The 30,000-feature cap is therefore not just a size compromise; it is the best tested operating point so far.
 
 ## Why Not Use A Bigger AI Detector?
 
@@ -334,7 +336,7 @@ python scripts_build_authorship_corpus_v2.py \
 python run_authorship_corpus_v2_markov_everything.py \
   --output ../evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate \
   --min-frequency 8 \
-  --max-features 12000 \
+  --max-features 30000 \
   --epochs 160 \
   --methods lexical_style,shape_ngrams,shape_ngrams_plus_markov,markov_surface,lexical_shape_plus_markov \
   --export-edge-candidate lexical_shape_plus_markov \
@@ -390,9 +392,12 @@ The key generated artifact hashes are:
 | `calibration_hc3_wiki.jsonl` | `5dec28fd2446ad0d4d5500085e3a294e1ce7d2aaae9b3d71981c7b77ca700de7` |
 | `calibration_hc3_qa.jsonl` | `0d157f533323c751eb29a40c1edcb13ad73a41921dbafbb7b5704ac8fb2de6f4` |
 | `authorship_corpus_v2/report.json` | `af962c191f3f4a4d82155e8436d0beba9a316a1d09e8f49f5c201d0a7450c90c` |
-| `method_comparison.json` | `f6a2019f0b0053db5eab973e41b4264fd38e111882a42aa882cadb720027f686` |
-| `lexical_shape_plus_markov_model.json` | `ae37768fe01c98d9608630212026d8c29becd3a0a1b330a5f33eafab756a691c` |
+| `method_comparison.json` | `1a479814bdb1d3f0900addc24a54cacbb3d24dd1aafa4db401d34b916a36ed5f` |
+| `lexical_shape_plus_markov_model.json` | `c8c82dc7f75db94ccd02f76b881a7bd70c2a6261931ac6ca227c132d56a8ac80` |
+| `lexical_shape_plus_markov_edge_candidate.json` | `23cee3fa5d16cc5554c647426601cc95449bdf0dc78e00a9a6fe327d66cbce31` |
+| `lexical_shape_plus_markov_predictions_supervised_test.jsonl` | `beb3ec9c0d6694e83b303e3c2035479160f4970e039f2d817f662a6444789cfe` |
+| `lexical_shape_plus_markov_predictions_calibration_hc3_wiki.jsonl` | `2f86592dff4e1952457685a754b209f8d756eced7cd3c0329fee3fb4c6f532ba` |
+| `lexical_shape_plus_markov_predictions_calibration_hc3_qa.jsonl` | `de580a398bdc6f4b78a13990c60f939f548b5bd02a1fe128077a463b4c279717` |
 | `surface_markov_models.json` | `01e0cedf41b484a36cbe186c50e76b9d75cf996a931466ef9bdcc63777ab2b13` |
-| `lexical_shape_plus_markov_edge_candidate.json` | `82686f957bb3b791777a2ab6625b4f3e360fc1cd38f4985b5067078c121a4956` |
 
 The public repo does not redistribute the frozen generated JSONL splits because those files contain source dataset text. Instead, it publishes the downloader, source revision pins, source-file checksums, and generated split checksums. That makes the method reproducible from public datasets and lets readers verify whether their regenerated files match the original run byte-for-byte.
