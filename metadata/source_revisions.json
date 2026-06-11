@@ -66,7 +66,25 @@
           "sha256": "48c7d3134af475362aa11d53a5492a167a6632ef956eaf1a6695fc8ba77eef39"
         }
       ]
+    },
+    {
+      "repo_id": "phxdev/corporate-speak-dataset",
+      "revision": "e45ef4962cee017f22dabea6a36d30f04131355b",
+      "license": "unknown",
+      "source_files": [
+        {
+          "path": "data/train-00000-of-00001.parquet",
+          "sha256": "384a521684fc9cee1891042caa87ff66961a93b5996ab80f2412ca620996f3a5"
+        },
+        {
+          "path": "data/test-00000-of-00001.parquet",
+          "sha256": "52dc32649ce55b9bdc2dd56cded604e5694b815c12d427134a5273bc2029c877"
+        },
+        {
+          "path": "data/validation-00000-of-00001.parquet",
+          "sha256": "98aed4a23f227c0ebfe426298e256491e4d4ec193d541b2493c44338ebb60db9"
+        }
+      ]
     }
   ]
 }
-

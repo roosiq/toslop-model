@@ -239,7 +239,7 @@ The first question is a model problem. The second is a measurement problem. Keep
 
 ## Replication Protocol
 
-The public replication package is published at [`roosiq/toslop-model`](https://github.com/roosiq/toslop-model). It is a clean repo, not a public copy of the private infrastructure monorepo. The private repo contains unrelated infrastructure, local `.env` files, generated artifacts, and dirty worktree state, so making it public as-is would be sloppy in exactly the wrong direction. The public replication repo contains only the detector code, corpus scripts, model artifacts, reports, checksums, and documentation needed to reproduce the article.
+The public replication package is published at [`roosiq/toslop-model`](https://github.com/roosiq/toslop-model). It is a clean repo, not a public copy of the private infrastructure monorepo. The private repo contains unrelated infrastructure, local `.env` files, generated artifacts, and dirty worktree state, so making it public as-is would expose unrelated private material. The public replication repo contains only the detector code, corpus scripts, model artifacts, reports, checksums, and documentation needed to reproduce the article.
 
 The replication repo includes:
 
@@ -308,6 +308,7 @@ The public package should pin these source dataset revisions:
 | `silentone0725/ai-human-text-detection-v1` | `a303611a074f8f6736302126e8f06c51273f4562` |
 | `rajendrabaskota/hc3-wiki-intro-dataset` | `58f59eb06ad91e4f8fad1a86d40877661f0d63d9` |
 | `pszemraj/HC3-textgen-qa` | `4cddc2b69948c9dba7ded91ed73f0a2b1a318340` |
+| `phxdev/corporate-speak-dataset` | `e45ef4962cee017f22dabea6a36d30f04131355b` |
 
 The key local source-file hashes used in the current run are:
 
@@ -321,6 +322,9 @@ The key local source-file hashes used in the current run are:
 | `andy/test parquet` | `3a465bec1d49c3a37dca52393aa4cd43085de6da8ba991505a7b3f3034583b69` |
 | `HC3 wiki parquet` | `beb81dd0276732ef957f1874eea47e1f1c93cbcf93f6724e272377fbedeed61f` |
 | `HC3 QA csv` | `48c7d3134af475362aa11d53a5492a167a6632ef956eaf1a6695fc8ba77eef39` |
+| `phxdev/train parquet` | `384a521684fc9cee1891042caa87ff66961a93b5996ab80f2412ca620996f3a5` |
+| `phxdev/test parquet` | `52dc32649ce55b9bdc2dd56cded604e5694b815c12d427134a5273bc2029c877` |
+| `phxdev/validation parquet` | `98aed4a23f227c0ebfe426298e256491e4d4ec193d541b2493c44338ebb60db9` |
 
 The key generated artifact hashes are:
 
