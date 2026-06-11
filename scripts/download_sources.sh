@@ -5,10 +5,14 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 AI_DEST="$ROOT/services/data/hf-corpora/ai_human_detection"
 CORP_DEST="$ROOT/services/data/hf-corpora/corporate_speak"
 
-command -v huggingface-cli >/dev/null 2>&1 || {
+if command -v huggingface-cli >/dev/null 2>&1; then
+  HF_CLI="huggingface-cli"
+elif command -v hf >/dev/null 2>&1; then
+  HF_CLI="hf"
+else
   echo "huggingface-cli is required. Install with: pip install huggingface_hub" >&2
   exit 1
-}
+fi
 
 download_dataset() {
   local repo_id="$1"
@@ -17,7 +21,7 @@ download_dataset() {
   local dest_root="$4"
   shift 4
   mkdir -p "$dest_root/$local_name"
-  huggingface-cli download "$repo_id" "$@" \
+  "$HF_CLI" download "$repo_id" "$@" \
     --repo-type dataset \
     --revision "$revision" \
     --local-dir "$dest_root/$local_name"
@@ -38,11 +42,36 @@ download_dataset \
   "train.csv" "test.csv" "README.md"
 
 download_dataset \
+  "harsh4248/human_vs_llm" \
+  "e2783b28b72aad5cd87f47715be737d82753d6bd" \
+  "harsh4248__human_vs_llm" \
+  "$AI_DEST" \
+  "data/train-00000-of-00005.parquet" \
+  "data/train-00001-of-00005.parquet" \
+  "data/train-00002-of-00005.parquet" \
+  "data/train-00003-of-00005.parquet" \
+  "data/train-00004-of-00005.parquet" \
+  "README.md"
+
+download_dataset \
   "silentone0725/ai-human-text-detection-v1" \
   "a303611a074f8f6736302126e8f06c51273f4562" \
   "silentone0725__ai-human-text-detection-v1" \
   "$AI_DEST" \
   "train.csv" "validation.csv" "test.csv" "README.md"
+
+download_dataset \
+  "sunorme/human-vs-llm-text-corpus" \
+  "62e8e0729acc6134569d125be337526bc937840c" \
+  "sunorme__human-vs-llm-text-corpus" \
+  "$AI_DEST" \
+  "text_chunk_0001.txt" \
+  "text_chunk_0002.txt" \
+  "text_chunk_0003.txt" \
+  "text_chunk_0004.txt" \
+  "text_chunk_0005.txt" \
+  "text_chunk_0006.txt" \
+  "README.md"
 
 download_dataset \
   "rajendrabaskota/hc3-wiki-intro-dataset" \

@@ -31,6 +31,15 @@ def _source_from_text_label(label: str) -> str:
     return "ai_generated" if lowered in {"ai", "machine", "generated", "1"} else "human_written"
 
 
+def _source_from_harsh_label(label: str) -> str:
+    lowered = str(label).strip().lower()
+    if not lowered:
+        return "unknown"
+    if lowered == "human":
+        return "human_written"
+    return "ai_generated"
+
+
 def _limit_append(docs: list[dict[str, Any]], doc: dict[str, Any], source_counts: dict[str, int], max_docs_per_source: int | None) -> None:
     source_key = str(doc.get("dataset", "unknown"))
     if max_docs_per_source is not None and source_counts.get(source_key, 0) >= max_docs_per_source:
@@ -64,6 +73,18 @@ def _iter_corporate_speak_rows(local: Path) -> Iterable[tuple[str, dict[str, Any
             yield split, row
 
 
+def _iter_text_file_rows(local: Path) -> Iterable[tuple[str, str]]:
+    if not local.exists():
+        return
+    for text_file in sorted(local.glob("*.txt")):
+        split = text_file.stem
+        with text_file.open(newline="", encoding="utf-8", errors="replace") as handle:
+            for row in handle:
+                text = _clean_text(row)
+                if text:
+                    yield split, text
+
+
 def normalize_hf_corpora(root: Path | str, max_docs_per_source: int | None = None) -> list[dict[str, Any]]:
     root = Path(root)
     docs: list[dict[str, Any]] = []
@@ -87,6 +108,24 @@ def normalize_hf_corpora(root: Path | str, max_docs_per_source: int | None = Non
             }
             _limit_append(docs, doc, source_counts, max_docs_per_source)
 
+    harsh = root / "ai_human_detection" / "harsh4248__human_vs_llm"
+    for file in sorted((harsh / "data").glob("*.parquet")):
+        for index, row in enumerate(_load_corporate_parquet_rows(file)):
+            text = _clean_text(row.get("title"))
+            if not text:
+                continue
+            doc = {
+                "doc_id": f"harsh_{file.stem}_{index:06d}",
+                "dataset": "harsh4248/human_vs_llm",
+                "source_type": _source_from_harsh_label(str(row.get("label", ""))),
+                "quality_label": "unknown",
+                "domain": "misc",
+                "doc_type": "title",
+                "title": text,
+                "text": text,
+            }
+            _limit_append(docs, doc, source_counts, max_docs_per_source)
+
     silentone = root / "ai_human_detection" / "silentone0725__ai-human-text-detection-v1"
     for split in ("train", "validation", "test"):
         for index, row in enumerate(_read_csv(silentone / f"{split}.csv")):
@@ -103,6 +142,21 @@ def normalize_hf_corpora(root: Path | str, max_docs_per_source: int | None = Non
                 "text": text,
             }
             _limit_append(docs, doc, source_counts, max_docs_per_source)
+
+    sunorme = root / "ai_human_detection" / "sunorme__human-vs-llm-text-corpus"
+    sunorme_index = 0
+    for split, text in _iter_text_file_rows(sunorme):
+        doc = {
+            "doc_id": f"sunorme_{split}_{sunorme_index:06d}",
+            "dataset": "sunorme/human-vs-llm-text-corpus",
+            "source_type": "unknown",
+            "quality_label": "unknown",
+            "domain": "general",
+            "doc_type": "generic_text",
+            "text": text,
+        }
+        sunorme_index += 1
+        _limit_append(docs, doc, source_counts, max_docs_per_source)
 
     corporate = root / "corporate_speak" / "phxdev__corporate-speak-dataset"
     corporate_index = 0

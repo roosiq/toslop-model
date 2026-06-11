@@ -2,38 +2,38 @@
   "schema": "corporate.authorship_corpus_v2_report.v1",
   "inputs": {
     "andy_rows": 24362,
-    "existing_rows": 8952,
+    "existing_rows": 13786,
     "hc3_wiki_rows": 17387,
     "hc3_qa_rows": 4784
   },
   "accepted": {
     "andy_rows": 23869,
-    "existing_rows": 7916,
+    "existing_rows": 12387,
     "hc3_wiki_rows": 15446,
     "hc3_qa_rows": 3618,
-    "supervised_rows": 27522,
-    "supervised_train_rows": 19643,
-    "supervised_test_rows": 7879,
+    "supervised_rows": 29998,
+    "supervised_train_rows": 21005,
+    "supervised_test_rows": 8993,
     "sample_rows": 100
   },
   "rejected": {
-    "rows": 4636,
+    "rows": 4999,
     "reasons": {
-      "too_short": 3544,
+      "too_short": 3899,
       "placeholder_url": 440,
       "too_long": 423,
       "exact_duplicate": 176,
-      "assistant_artifact": 118,
+      "assistant_artifact": 125,
       "url_heavy": 113,
-      "basic_junk": 31,
+      "basic_junk": 32,
       "repeated_tokens": 16,
       "high_digit_ratio": 2,
       "low_letter_ratio": 1
     }
   },
   "source_counts": {
-    "andy_supervised": 20359,
-    "existing_supervised": 7163,
+    "andy_supervised": 22042,
+    "existing_supervised": 7956,
     "hc3_wiki": 15446,
     "hc3_qa": 3618
   },
@@ -45,12 +45,12 @@
     "sample100_target": 100
   },
   "output_files": {
-    "supervised_train": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/supervised_train_mix.jsonl",
-    "supervised_test": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/supervised_test_mix.jsonl",
-    "calibration_hc3_wiki": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/calibration_hc3_wiki.jsonl",
-    "calibration_hc3_qa": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/calibration_hc3_qa.jsonl",
-    "sample100": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/sample100.jsonl",
-    "rejected": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/rejected.jsonl",
-    "report": "/home/ryan/slopslingers-infra/services/evals/corporate_sequence_model/authorship_corpus_v2/report.json"
+    "supervised_train": "../evals/corporate_sequence_model/authorship_corpus_v2/supervised_train_mix.jsonl",
+    "supervised_test": "../evals/corporate_sequence_model/authorship_corpus_v2/supervised_test_mix.jsonl",
+    "calibration_hc3_wiki": "../evals/corporate_sequence_model/authorship_corpus_v2/calibration_hc3_wiki.jsonl",
+    "calibration_hc3_qa": "../evals/corporate_sequence_model/authorship_corpus_v2/calibration_hc3_qa.jsonl",
+    "sample100": "../evals/corporate_sequence_model/authorship_corpus_v2/sample100.jsonl",
+    "rejected": "../evals/corporate_sequence_model/authorship_corpus_v2/rejected.jsonl",
+    "report": "../evals/corporate_sequence_model/authorship_corpus_v2/report.json"
   }
 }

@@ -68,6 +68,72 @@
       ]
     },
     {
+      "repo_id": "harsh4248/human_vs_llm",
+      "revision": "e2783b28b72aad5cd87f47715be737d82753d6bd",
+      "license": "mit",
+      "source_files": [
+        {
+          "path": "data/train-00000-of-00005.parquet",
+          "sha256": "6d2fc57e3a58c9227e74ca01c57929b56b9397564875bbebc8dc3fded6dcbdca"
+        },
+        {
+          "path": "data/train-00001-of-00005.parquet",
+          "sha256": "f54eeee5d323aae195858d2cba8d7801162f8c929a686e708f4ced4ef4979494"
+        },
+        {
+          "path": "data/train-00002-of-00005.parquet",
+          "sha256": "3170720aef0c343731d8c443ff69ffb91fc588b7172ff5881f3a12a40bee87f6"
+        },
+        {
+          "path": "data/train-00003-of-00005.parquet",
+          "sha256": "2aa6ef7a23ff01e0fc8823663b62adea9184acbdc5c1ae4230ce32fb0cc4dbd7"
+        },
+        {
+          "path": "data/train-00004-of-00005.parquet",
+          "sha256": "cc078d87c2bc2d1b3339b4521381539e04823c884fc0245974b8628a21922bce"
+        },
+        {
+          "path": "README.md",
+          "sha256": "bbc664f028482693e212bde147320c57d5a827e04774804ef3a50aff973a4fee"
+        }
+      ]
+    },
+    {
+      "repo_id": "sunorme/human-vs-llm-text-corpus",
+      "revision": "62e8e0729acc6134569d125be337526bc937840c",
+      "license": "mit",
+      "source_files": [
+        {
+          "path": "text_chunk_0001.txt",
+          "sha256": "94545c50801f4a99dfbe746de05bc898a6cdff32f581d523e931e6517f376505"
+        },
+        {
+          "path": "text_chunk_0002.txt",
+          "sha256": "0cb6fdb4a7aec40087455569e94d35db7100bfd6bcea78359f4751c71c054413"
+        },
+        {
+          "path": "text_chunk_0003.txt",
+          "sha256": "86f594a46f1a319bd7adbb4902555c316803132fcbf0f9a6fd2d9aab479a13ba"
+        },
+        {
+          "path": "text_chunk_0004.txt",
+          "sha256": "3a759b99369f011dd9c5b44047ea30a956543e0d09b70029dd3ee31a25abd4d6"
+        },
+        {
+          "path": "text_chunk_0005.txt",
+          "sha256": "f7c6f056fac8358eb9f95a641664b99e90cd429af075ef7be220593db755a017"
+        },
+        {
+          "path": "text_chunk_0006.txt",
+          "sha256": "b574a9e9a08cd7b3cb820d62f276c3ae8716630ad39a429267a21225ab6bb901"
+        },
+        {
+          "path": "README.md",
+          "sha256": "6f57af510b0b3756a9f376d52edb7913433c5962b1c124d5aa93e1f4337b3e7d"
+        }
+      ]
+    },
+    {
       "repo_id": "phxdev/corporate-speak-dataset",
       "revision": "e45ef4962cee017f22dabea6a36d30f04131355b",
       "license": "unknown",

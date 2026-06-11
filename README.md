@@ -37,7 +37,7 @@ Download pinned source datasets:
 ./scripts/download_sources.sh
 ```
 
-Normalize the Ateeqq and silentone sources:
+Normalize the Ateeqq, silentone, harsh/human-vs-llm, and optional sunorme raw-text sources:
 
 ```bash
 PYTHONPATH=services/gateway \
@@ -91,4 +91,3 @@ Compare generated files with `metadata/artifact_checksums.sha256`.
 ## Publication Note
 
 This repo is the intended public artifact. Do not make the private `slopslingers-infra` repo public without a separate security and licensing audit.
-

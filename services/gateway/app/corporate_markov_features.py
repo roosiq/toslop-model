@@ -5,6 +5,11 @@ import re
 from collections import Counter
 from typing import Any
 
+try:
+    from nltk import pos_tag as _nltk_pos_tag
+except Exception:  # pragma: no cover - optional NLP dependency for an experimental feature.
+    _nltk_pos_tag = None
+
 LABELS = ("human_written", "ai_generated")
 
 ABSTRACT_TERMS = {
@@ -130,6 +135,80 @@ def posish_state(token: str) -> str:
     if low.endswith(("ive", "ous", "al", "ic", "able", "ible", "less", "ful")):
         return "ADJISH"
     return "CONTENT"
+
+
+def _true_pos_state(tag: str, token: str) -> str:
+    if token == "." or token == "," or token in {"?", "!", ";", ":", "-", "—"}:
+        return "PUNCT"
+    if not tag:
+        return "OTHER"
+    tag = tag.upper()
+    if tag.startswith("NN"):
+        return "NOUN"
+    if tag.startswith("VB"):
+        return "VERB"
+    if tag.startswith("JJ"):
+        return "ADJ"
+    if tag.startswith("RB"):
+        return "ADV"
+    if tag in {"PRP", "PRP$", "WP", "WP$"}:
+        return "PRON"
+    if tag in {"DT", "WDT"}:
+        return "DET"
+    if tag in {"IN"}:
+        return "ADP"
+    if tag in {"CC"}:
+        return "CONJ"
+    if tag in {"MD"}:
+        return "MODAL"
+    if tag in {"CD"}:
+        return "NUM"
+    if tag in {"UH"}:
+        return "INTJ"
+    if tag in {"TO", "RP", "POS"}:
+        return "FUNC"
+    return "OTHER"
+
+
+def _fallback_true_pos_state(token: str) -> str:
+    state = posish_state(token)
+    if state in {"PUNCT", "NUM", "NEG", "UNIV", "MODAL", "CLAIM_VERB"}:
+        return state
+    if state == "ACRONYM":
+        return "OTHER"
+    if state == "TITLE":
+        return "NOUN"
+    if state == "ADVISH":
+        return "ADV"
+    if state == "VERBISH":
+        return "VERB"
+    if state == "NOUN_ABSTRACT":
+        return "NOUN"
+    if state == "ADJISH":
+        return "ADJ"
+    if state == "FUNC":
+        return "DET"
+    return "OTHER"
+
+
+def true_pos_sequence(tokens: list[str]) -> list[str]:
+    if not tokens:
+        return []
+    if _nltk_pos_tag is None:
+        return [_fallback_true_pos_state(token) for token in tokens]
+    try:
+        tagged = _nltk_pos_tag(tokens)
+    except LookupError:
+        return [_fallback_true_pos_state(token) for token in tokens]
+    except Exception:
+        return [_fallback_true_pos_state(token) for token in tokens]
+    states: list[str] = []
+    for token, tag in tagged:
+        if token:
+            states.append(_true_pos_state(str(tag), str(token)))
+        else:
+            states.append(_fallback_true_pos_state(str(token)))
+    return states
 
 
 def semantic_pattern_sequence(text: str) -> list[str]:
@@ -260,11 +339,13 @@ def surface_sequences(source: str | dict[str, Any]) -> dict[str, list[str]]:
     coarse = [coarse_state(token) for token in tokens]
     shape = [shape_state(token) for token in tokens]
     posish = [posish_state(token) for token in tokens]
+    true_pos = true_pos_sequence(tokens)
     semantic = semantic_sequence_from_row(source) if isinstance(source, dict) else semantic_pattern_sequence(text)
     return {
         "shape": shape,
         "coarse": coarse,
         "posish": posish,
+        "true_pos": true_pos,
         "motif": motif_sequence(coarse),
         "semantic": semantic,
     }
@@ -399,7 +480,11 @@ class MarkovPair:
 
 
 def fit_surface_markov_models(rows: list[dict[str, Any]], *, label_key: str = "source_type") -> dict[tuple[str, int], MarkovPair]:
-    models = {(view, order): MarkovPair(order=order) for view in ("shape", "coarse", "posish", "motif", "semantic") for order in (1, 2)}
+    models = {
+        (view, order): MarkovPair(order=order)
+        for view in ("shape", "coarse", "posish", "motif", "semantic", "true_pos")
+        for order in (1, 2)
+    }
     for row in rows:
         label = str(row.get(label_key) or "")
         if label not in LABELS:
@@ -417,12 +502,21 @@ def fit_surface_markov_models(rows: list[dict[str, Any]], *, label_key: str = "s
     return models
 
 
-def surface_markov_features(source: str | dict[str, Any], models: dict[tuple[str, int], MarkovPair]) -> dict[str, float]:
+def surface_markov_features(
+    source: str | dict[str, Any],
+    models: dict[tuple[str, int], MarkovPair],
+    *,
+    include_views: set[str] | None = None,
+) -> dict[str, float]:
     sequences = surface_sequences(source)
     features: dict[str, float] = {}
     for (view, order), model in sorted(models.items()):
+        if include_views is not None and view not in include_views:
+            continue
         features.update(model.feature_values(view, sequences.get(view, [])))
-    for view in ("coarse", "posish", "semantic"):
+    for view in ("coarse", "posish", "true_pos", "semantic"):
+        if include_views is not None and view not in include_views:
+            continue
         features.update(sequence_ngram_features(view, sequences.get(view, []), max_per_order=48))
     features.update(semantic_features_from_sequence(sequences.get("semantic", [])))
     return features

@@ -20,8 +20,8 @@ The production model is:
 
 - model family: standardized logistic regression;
 - primary method: `lexical_shape_plus_markov`;
-- training rows: 19,643;
-- supervised test rows: 7,879;
+- training rows: 21,005;
+- supervised test rows: 8,993;
 - calibration rows: 15,446 HC3 wiki rows and 3,618 HC3 QA rows;
 - feature cap: 12,000;
 - minimum feature frequency: 8;
@@ -30,36 +30,39 @@ The production model is:
 - L2 penalty: 0.02;
 - production threshold: 0.6.
 
-At the default 0.5 evaluation threshold, the combined model reached 98.20% accuracy on the held-out supervised test split. At Toslop's deployed 0.6 threshold, it reached 98.40% accuracy, with a 1.57% human false-positive rate and 98.36% AI recall.
+At the default 0.5 evaluation threshold, the combined model reached 97.93% accuracy on the held-out supervised test split. At Toslop's deployed 0.6 threshold, it reached 97.94% accuracy, with a 2.10% human false-positive rate and 97.99% AI recall.
 
 ## Training Data
 
-The supervised training corpus was built from public AI/human authorship datasets and then filtered aggressively. The v2 corpus accepted 27,522 supervised examples, split into 19,643 training rows and 7,879 held-out supervised test rows. The split was deterministic and hash-audited: the saved report shows zero train/test overlap hash groups.
+The supervised training corpus was built from public AI/human authorship datasets and then filtered aggressively. The v2 corpus accepted 29,998 supervised examples, split into 21,005 training rows and 8,993 held-out supervised test rows. The split was deterministic and hash-audited: the saved report shows zero train/test overlap hash groups.
 
-The supervised mix came from three sources:
+The supervised mix came from four sources:
 
 - [`andythetechnerd03/AI-human-text`](https://huggingface.co/datasets/andythetechnerd03/AI-human-text), an Apache-2.0 Hugging Face dataset derived from a Kaggle AI-vs-human text dataset;
 - [`Ateeqq/AI-and-Human-Generated-Text`](https://huggingface.co/datasets/Ateeqq/AI-and-Human-Generated-Text), an MIT-licensed AI/human academic abstract dataset;
 - [`silentone0725/ai-human-text-detection-v1`](https://huggingface.co/datasets/silentone0725/ai-human-text-detection-v1), a CC BY 4.0 combined AI/human detection corpus.
+- [`harsh4248/human_vs_llm`](https://huggingface.co/datasets/harsh4248/human_vs_llm), a labeled title-only human-vs-LLM corpus (mapped so `human` is human and all other model tags are treated as AI-generated).
+
+An additional unlabeled text corpus, [`sunorme/human-vs-llm-text-corpus`](https://huggingface.co/datasets/sunorme/human-vs-llm-text-corpus), is available as optional raw text but is not currently included in the supervised mix because it does not provide explicit binary labels.
 
 Two additional HC3-derived sets were kept as calibration data rather than training data:
 
 - 15,446 rows from [`rajendrabaskota/hc3-wiki-intro-dataset`](https://huggingface.co/datasets/rajendrabaskota/hc3-wiki-intro-dataset);
 - 3,618 rows from [`pszemraj/HC3-textgen-qa`](https://huggingface.co/datasets/pszemraj/HC3-textgen-qa), an Apache-2.0 dataset.
 
-The builder rejected 4,636 v2 candidate rows after loading the primary sources. The largest rejection reasons were `too_short` (3,544), `placeholder_url` (440), `too_long` (423), `exact_duplicate` (176), `assistant_artifact` (118), and `url_heavy` (113). Exact duplicates were detected with a normalized SHA-256 text hash.
+The builder rejected 4,999 v2 candidate rows after loading the primary sources. The largest rejection reasons were `too_short` (3,899), `placeholder_url` (440), `too_long` (423), `exact_duplicate` (176), `assistant_artifact` (125), and `url_heavy` (113). Exact duplicates were detected with a normalized SHA-256 text hash.
 
-The earlier normalized-corpus stage accepted 8,952 Ateeqq/silentone rows from 15,000 normalized inputs. It intentionally rejected the `phxdev/corporate-speak-dataset` rows as `corporate_speak_label_shortcut`, because those examples are useful for studying corporate slop style but too label-leaky for authorship training.
+In the current committed run, the earlier normalized-corpus stage accepted 14,901 rows from 25,000 normalized inputs. It intentionally rejected the `phxdev/corporate-speak-dataset` rows as `corporate_speak_label_shortcut`, because those examples are useful for studying corporate slop style but too label-leaky for authorship training.
 
 ## Corpus Construction
 
 The corpus pipeline has three reproducible stages.
 
-First, downloaded Hugging Face files are normalized into a common JSONL schema. The normalizer reads Ateeqq CSV rows, silentone CSV rows, and optional corporate-speak rows, then emits fields such as `doc_id`, `dataset`, `source_type`, `domain`, `doc_type`, and `text`.
+First, downloaded Hugging Face files are normalized into a common JSONL schema. The normalizer reads Ateeqq CSV rows, silentone CSV rows, `harsh4248` title rows, optional `sunorme` raw chunks, and optional corporate-speak rows, then emits fields such as `doc_id`, `dataset`, `source_type`, `domain`, `doc_type`, and `text`.
 
 Second, the normalized authorship corpus is cleaned. Rows are rejected if they are empty, too short, too long, URL-heavy, duplicate, mostly punctuation, mostly uppercase, repeated-token junk, or contain obvious assistant artifacts. At this stage, corporate-speak rows are excluded from supervised truth.
 
-Third, the v2 corpus builder combines the clean Ateeqq/silentone pool with the Andy dataset and keeps HC3 as calibration. It applies an Andy-to-existing source ratio target of 3:1, balances labels, and assigns train/test by hash bucket:
+Third, the v2 corpus builder combines the clean Ateeqq/silentone/harsh title pool with the Andy dataset and keeps HC3 as calibration. It applies an Andy-to-existing source ratio target of 3:1, balances labels, and assigns train/test by hash bucket:
 
 ```text
 bucket = int(text_hash[:8], 16) / 0xffffffff
@@ -76,7 +79,7 @@ The first family is lexical/style evidence. This includes word unigrams and bigr
 
 The second family is shape n-grams. Instead of looking only at words, the model maps text into abstract sequences: token types, rough part-of-speech-like buckets, and character shapes. For example, it tracks whether a token looks like lowercase text, title case, punctuation, a determiner, a modal, a preposition, or a noun-like word. It also tracks character-level shapes such as lowercase letters, uppercase letters, digits, spaces, and punctuation. These features help the detector see writing rhythm without memorizing only specific phrases.
 
-The third family is the surface Markov layer. This is a set of Markov transition matrices stored in sparse form. The model maps text into several symbolic views and compares how likely those sequences are under AI-trained and human-trained transition matrices. The deployed logistic model uses matrix-derived features from the shape, coarse, and motif views. For each view and order, it derives AI cross-entropy, human cross-entropy, total log-likelihood ratio, per-transition log-likelihood ratio, and transition count.
+The third family is the surface Markov layer. This is a set of Markov transition matrices stored in sparse form. The model maps text into several symbolic views and compares how likely those sequences are under AI-trained and human-trained transition matrices. The deployed logistic model uses matrix-derived features from the shape, coarse, true_pos, and motif views. For each view and order, it derives AI cross-entropy, human cross-entropy, total log-likelihood ratio, per-transition log-likelihood ratio, and transition count.
 
 The Markov layer is intentionally shallow. It does not try to understand the document the way a large language model would. It asks a narrower question: does the sequence of surface states move like the AI examples or like the human examples?
 
@@ -101,7 +104,7 @@ P(next | context, label) =
   / (context_count(label, context) + alpha * vocab_size)
 ```
 
-The artifact contains ten Markov pairs: `shape`, `coarse`, `posish`, `motif`, and `semantic`, each at order 1 and order 2. The candidate model trains all ten, but the final 12,000-feature logistic vocabulary selected 30 direct Markov probability features from `shape`, `coarse`, and `motif`. The semantic and posish Markov models remain in the artifact for ablations and compatibility, but their direct `markov::` features were not selected into the production candidate vocabulary.
+The artifact contains twelve Markov pairs: `shape`, `coarse`, `posish`, `true_pos`, `motif`, and `semantic`, each at order 1 and order 2. The candidate model trains all twelve, and the final 12,000-feature logistic vocabulary selected 30 direct Markov features from `shape`, `coarse`, `true_pos`, and `motif`. The semantic and posish Markov models remain in the artifact for ablations and compatibility, but their direct `markov::` features were not selected into the production candidate vocabulary.
 
 One actual row from the deployed `shape_order1` matrix is the `WORD` context:
 
@@ -181,26 +184,26 @@ Because the model is linear, Toslop can show the strongest contributing features
 
 ## Accuracy Against Internal Methods
 
-On the 7,879-row supervised test split, the combined model was the strongest internal method we evaluated with the same corpus and metric.
+On the 8,993-row supervised test split, the combined model was the strongest internal method we evaluated with the same corpus and metric.
 
 | Method | Feature count | Supervised test accuracy | Human false positives | AI false negatives |
 | --- | ---: | ---: | ---: | ---: |
-| `lexical_shape_plus_markov` | 12,000 | 98.20% | 104 | 38 |
-| `lexical_style_fast` | 15,000 | 97.82% | 117 | 55 |
-| `wordnet_only` | 15,378 | 95.10% | 261 | 125 |
-| `shape_ngrams_plus_markov` | 457 | 88.44% | 571 | 340 |
-| `shape_ngrams` | 427 | 86.22% | 758 | 328 |
-| `markov_surface` | 30 | 81.94% | 849 | 574 |
+| `lexical_shape_plus_markov` | 12,000 | 97.93% | 135 | 51 |
+| `lexical_style` | 12,000 | 97.29% | 182 | 62 |
+| `shape_ngrams_plus_markov` | 3,020 | 92.59% | 374 | 292 |
+| `shape_ngrams` | 424 | 88.01% | 668 | 410 |
+| `markov_surface` | 2,596 | 90.40% | 494 | 369 |
 
-Those numbers use the standard 0.5 probability cutoff for apples-to-apples comparison. The deployed candidate uses a stricter 0.6 threshold for binary labeling. At that production threshold, the same model reached 98.40% supervised-test accuracy:
+Those numbers use the standard 0.5 probability cutoff for apples-to-apples comparison. The deployed candidate uses a stricter 0.6 threshold for binary labeling. At that production threshold, the same model reached 97.94% supervised-test accuracy:
 
-| Threshold | Accuracy | Human false-positive rate | AI recall | Confusion |
-| ---: | ---: | ---: | ---: | --- |
-| 0.5 | 98.20% | 2.33% | 98.89% | 3,374 TP / 4,363 TN / 104 FP / 38 FN |
-| 0.6 | 98.40% | 1.57% | 98.36% | 3,356 TP / 4,397 TN / 70 FP / 56 FN |
-| 0.7 | 98.27% | 0.96% | 97.27% | 3,319 TP / 4,424 TN / 43 FP / 93 FN |
-| 0.8 | 97.49% | 0.47% | 94.81% | 3,235 TP / 4,446 TN / 21 FP / 177 FN |
-| 0.9 | 95.32% | 0.07% | 89.27% | 3,046 TP / 4,464 TN / 3 FP / 366 FN |
+| Method | Threshold | Accuracy | Human false-positive rate | AI recall | Confusion |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `lexical_shape_plus_markov` | 0.5 | 97.93% | 3.02% | 98.87% | 4,475 TP / 4,332 TN / 135 FP / 51 FN |
+| `lexical_shape_plus_markov` | 0.6 | 97.94% | 2.10% | 97.99% | 4,435 TP / 4,373 TN / 94 FP / 91 FN |
+| `lexical_style` | 0.6 | 97.40% | 2.87% | 97.66% | 4,420 TP / 4,339 TN / 128 FP / 106 FN |
+| `shape_ngrams_plus_markov` | 0.6 | 92.37% | 6.27% | 91.03% | 4,120 TP / 4,187 TN / 280 FP / 406 FN |
+| `shape_ngrams` | 0.6 | 88.00% | 9.63% | 85.66% | 3,877 TP / 4,037 TN / 430 FP / 649 FN |
+| `markov_surface` | 0.6 | 89.98% | 8.44% | 88.42% | 4,002 TP / 4,090 TN / 377 FP / 524 FN |
 
 That threshold choice is important. For Toslop, a false positive is worse than a false negative. Missing some AI-generated pages makes the aggregate estimate conservative. Accusing human writing of being AI-written damages trust. The 0.6 threshold was selected for that tradeoff.
 
@@ -210,16 +213,15 @@ The model was also checked against held-out HC3 calibration sets that were not p
 
 | Method | Supervised test | HC3 wiki calibration | HC3 QA calibration |
 | --- | ---: | ---: | ---: |
-| `lexical_shape_plus_markov` | 98.20% | 64.35% | 88.89% |
-| `lexical_style_fast` | 97.82% | 66.22% | 88.92% |
-| `wordnet_only` | 95.10% | 62.94% | 74.74% |
-| `shape_ngrams_plus_markov` | 88.44% | 56.36% | 70.81% |
-| `shape_ngrams` | 86.22% | 51.68% | 72.17% |
-| `markov_surface` | 81.94% | 54.25% | 70.65% |
+| `lexical_shape_plus_markov` | 97.93% | 51.28% | 77.56% |
+| `lexical_style` | 97.29% | 52.21% | 75.40% |
+| `shape_ngrams_plus_markov` | 92.59% | 49.80% | 67.72% |
+| `shape_ngrams` | 88.01% | 48.30% | 66.89% |
+| `markov_surface` | 90.40% | 50.19% | 65.81% |
 
-The combined model did not win every calibration slice. Lexical-only did slightly better on HC3 wiki and was effectively tied on HC3 QA. We still chose the combined candidate because it won the supervised mixture, improved the conservative-threshold operating point, and provided a richer set of interpretable signals. The calibration result is also a useful warning: AI-writing detection is domain-sensitive. A model that looks excellent on a supervised split can become much less certain on a different genre.
+The combined model did not win every calibration slice. Lexical-style did slightly better on HC3 wiki, while lexical-style+Markov won HC3 QA. We still chose the combined candidate because it won the supervised mixture, improved the conservative-threshold operating point, and provided a richer set of interpretable signals. The calibration result is also a useful warning: AI-writing detection is domain-sensitive. A model that looks excellent on a supervised split can become much less certain on a different genre.
 
-At the 0.6 production threshold, HC3 wiki accuracy rose to 65.65%, but with a 32.38% human false-positive rate and 63.31% AI recall. HC3 QA accuracy was 88.92%, with a 7.69% human false-positive rate and 86.76% AI recall. That is why Toslop treats the score as measurement, not identity. The public site should be read as "this crawl sample contains this much AI-like writing according to this detector," not "these pages were definitely written by AI."
+At the 0.6 production threshold, HC3 wiki accuracy for the primary candidate was 52.51%, with an 81.14% human false-positive rate and 92.54% AI recall. HC3 QA accuracy was 79.80%, with a 36.87% human false-positive rate and 90.38% AI recall. That is why Toslop treats the score as measurement, not identity. The public site should be read as "this crawl sample contains this much AI-like writing according to this detector," not "these pages were definitely written by AI."
 
 ## Why Not Use A Bigger AI Detector?
 
@@ -306,6 +308,8 @@ The public package should pin these source dataset revisions:
 | `andythetechnerd03/AI-human-text` | `0387d82c81d6af6caaa6d792b48c9d07afa704d7` |
 | `Ateeqq/AI-and-Human-Generated-Text` | `e0627b3f39fe0a27725889239067868797a4db40` |
 | `silentone0725/ai-human-text-detection-v1` | `a303611a074f8f6736302126e8f06c51273f4562` |
+| `harsh4248/human_vs_llm` | `e2783b28b72aad5cd87f47715be737d82753d6bd` |
+| `sunorme/human-vs-llm-text-corpus` | `62e8e0729acc6134569d125be337526bc937840c` |
 | `rajendrabaskota/hc3-wiki-intro-dataset` | `58f59eb06ad91e4f8fad1a86d40877661f0d63d9` |
 | `pszemraj/HC3-textgen-qa` | `4cddc2b69948c9dba7ded91ed73f0a2b1a318340` |
 | `phxdev/corporate-speak-dataset` | `e45ef4962cee017f22dabea6a36d30f04131355b` |
@@ -319,6 +323,17 @@ The key local source-file hashes used in the current run are:
 | `silentone/train.csv` | `2d851c99faf7f2b42edb87973b6e66b0122add284e40e695a2eff59ff1f89002` |
 | `silentone/validation.csv` | `96a4153bffd14f3dd703252e5b477e81ce8cb8ccb1a8d252d4875be8d5232652` |
 | `silentone/test.csv` | `6d11a782e93320792ae0ef28b198f951de69db7ea8720ad6b841b2a81f85a8db` |
+| `harsh/train-00000-of-00005.parquet` | `6d2fc57e3a58c9227e74ca01c57929b56b9397564875bbebc8dc3fded6dcbdca` |
+| `harsh/train-00001-of-00005.parquet` | `f54eeee5d323aae195858d2cba8d7801162f8c929a686e708f4ced4ef4979494` |
+| `harsh/train-00002-of-00005.parquet` | `3170720aef0c343731d8c443ff69ffb91fc588b7172ff5881f3a12a40bee87f6` |
+| `harsh/train-00003-of-00005.parquet` | `2aa6ef7a23ff01e0fc8823663b62adea9184acbdc5c1ae4230ce32fb0cc4dbd7` |
+| `harsh/train-00004-of-00005.parquet` | `cc078d87c2bc2d1b3339b4521381539e04823c884fc0245974b8628a21922bce` |
+| `sunorme/text_chunk_0001.txt` | `94545c50801f4a99dfbe746de05bc898a6cdff32f581d523e931e6517f376505` |
+| `sunorme/text_chunk_0002.txt` | `0cb6fdb4a7aec40087455569e94d35db7100bfd6bcea78359f4751c71c054413` |
+| `sunorme/text_chunk_0003.txt` | `86f594a46f1a319bd7adbb4902555c316803132fcbf0f9a6fd2d9aab479a13ba` |
+| `sunorme/text_chunk_0004.txt` | `3a759b99369f011dd9c5b44047ea30a956543e0d09b70029dd3ee31a25abd4d6` |
+| `sunorme/text_chunk_0005.txt` | `f7c6f056fac8358eb9f95a641664b99e90cd429af075ef7be220593db755a017` |
+| `sunorme/text_chunk_0006.txt` | `b574a9e9a08cd7b3cb820d62f276c3ae8716630ad39a429267a21225ab6bb901` |
 | `andy/test parquet` | `3a465bec1d49c3a37dca52393aa4cd43085de6da8ba991505a7b3f3034583b69` |
 | `HC3 wiki parquet` | `beb81dd0276732ef957f1874eea47e1f1c93cbcf93f6724e272377fbedeed61f` |
 | `HC3 QA csv` | `48c7d3134af475362aa11d53a5492a167a6632ef956eaf1a6695fc8ba77eef39` |

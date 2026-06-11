@@ -29,11 +29,13 @@ DEFAULT_HC3_QA_PATH = DATA_ROOT / "pszemraj__HC3-textgen-qa"
 DEFAULT_EXISTING_CLEAN = EVAL_DIR / "hf_normalized_authorship_clean_v1.jsonl"
 
 ANDY_DATASET = "andythetechnerd03/AI-human-text"
+HARSH_DATASET = "harsh4248/human_vs_llm"
 ANDY_LICENSE = "apache-2.0"
 HC3_WIKI_DATASET = "rajendrabaskota/hc3-wiki-intro-dataset"
 HC3_QA_DATASET = "pszemraj/HC3-textgen-qa"
 ALLOWED_EXISTING_DATASETS = {
     "Ateeqq/AI-and-Human-Generated-Text",
+    HARSH_DATASET,
     "silentone0725/ai-human-text-detection-v1",
 }
 
