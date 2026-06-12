@@ -706,6 +706,14 @@ def semantic_markov_only_features(row: dict[str, Any], markov_features: dict[str
     }
 
 
+def markov_view_features(
+    row: dict[str, Any],
+    markov_models: dict[tuple[str, int], Any],
+    views: set[str],
+) -> dict[str, float]:
+    return surface_markov_features(row, markov_models, include_views=views)
+
+
 def make_method_builders(
     train_rows: list[dict[str, Any]],
 ) -> tuple[dict[str, Callable[[dict[str, Any]], dict[str, float]]], dict[tuple[str, int], Any]]:
@@ -714,6 +722,18 @@ def make_method_builders(
     def markov_builder(row: dict[str, Any]) -> dict[str, float]:
         return surface_markov_features(row, markov_models)
 
+    def markov_shape_builder(row: dict[str, Any]) -> dict[str, float]:
+        return markov_view_features(row, markov_models, {"shape"})
+
+    def markov_posish_builder(row: dict[str, Any]) -> dict[str, float]:
+        return markov_view_features(row, markov_models, {"posish"})
+
+    def markov_true_pos_builder(row: dict[str, Any]) -> dict[str, float]:
+        return markov_view_features(row, markov_models, {"true_pos"})
+
+    def markov_core_builder(row: dict[str, Any]) -> dict[str, float]:
+        return markov_view_features(row, markov_models, {"shape", "posish", "true_pos"})
+
     def semantic_markov_builder(row: dict[str, Any]) -> dict[str, float]:
         return semantic_markov_only_features(row, markov_builder(row))
 
@@ -721,6 +741,10 @@ def make_method_builders(
         "lexical_style": lexical_features,
         "wordnet_only": wordnet_features,
         "markov_surface": markov_builder,
+        "markov_shape": markov_shape_builder,
+        "markov_posish": markov_posish_builder,
+        "markov_true_pos": markov_true_pos_builder,
+        "markov_core": markov_core_builder,
         "semantic_markov_only": semantic_markov_builder,
         "wordnet_concepts_only": lambda row: concept_sequence_features(row, lane="wordnet"),
         "wordnet_sumo_concepts_only": lambda row: concept_sequence_features(row, lane="wordnet_sumo"),
@@ -728,6 +752,7 @@ def make_method_builders(
         "all_concepts_only": lambda row: concept_sequence_features(row, lane="all"),
         "shape_ngrams": shape_ngram_features,
         "lexical_plus_markov": merge_builders(lexical_features, markov_builder),
+        "lexical_plus_core_markov": merge_builders(lexical_features, markov_core_builder),
         "lexical_semantic_markov": merge_builders(lexical_features, semantic_markov_builder),
         "wordnet_plus_markov": merge_builders(wordnet_features, markov_builder),
         "wordnet_semantic_markov": merge_builders(wordnet_features, semantic_markov_builder),
@@ -735,6 +760,7 @@ def make_method_builders(
         "wordnet_plus_lexical": merge_builders(wordnet_features, lexical_features),
         "lexical_shape": lexical_shape_features,
         "lexical_shape_plus_markov": merge_builders(lexical_shape_features, markov_builder),
+        "lexical_shape_plus_core_markov": merge_builders(lexical_shape_features, markov_core_builder),
         "wordnet_lexical_markov": merge_builders(wordnet_features, lexical_features, markov_builder),
         "wordnet_lexical_semantic_markov": merge_builders(wordnet_features, lexical_features, semantic_markov_builder),
         "wordnet_lexical_shape_markov": merge_builders(wordnet_features, lexical_shape_features, markov_builder),

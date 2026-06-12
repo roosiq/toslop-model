@@ -7,6 +7,7 @@ It is intentionally smaller than the private infrastructure monorepo. It include
 ## What Is Included
 
 - `docs/toslop-scoring-model-and-accuracy.md`: the public methods article.
+- `docs/xgboost-feature-path-experiments.md`: optional XGBoost feature-path experiment notes.
 - `services/gateway/app/corporate_markov_features.py`: surface Markov matrix implementation.
 - `services/gateway/app/corporate_ai_authorship_feature_spike.py`: feature extraction, logistic regression, prediction, and evaluation helpers.
 - `services/gateway/app/corporate_authorship_detector.py`: runtime detector wrapper used by Toslop.
@@ -123,6 +124,10 @@ The generated `method_comparison.json` records both the baseline
 `lexical_shape_plus_markov_xgboost` result with the same supervised, HC3 wiki,
 and HC3 QA threshold sweeps. Edge export intentionally still rejects XGBoost
 results until the gateway has a tree-model runtime path.
+
+Additional XGBoost feature-path screens, including `markov_core` and
+`lexical_shape_plus_core_markov`, are documented in
+`docs/xgboost-feature-path-experiments.md`.
 
 ## Publication Note
 

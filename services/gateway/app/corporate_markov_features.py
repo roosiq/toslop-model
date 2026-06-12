@@ -518,7 +518,8 @@ def surface_markov_features(
         if include_views is not None and view not in include_views:
             continue
         features.update(sequence_ngram_features(view, sequences.get(view, []), max_per_order=48))
-    features.update(semantic_features_from_sequence(sequences.get("semantic", [])))
+    if include_views is None or "semantic" in include_views:
+        features.update(semantic_features_from_sequence(sequences.get("semantic", [])))
     return features
 
 
