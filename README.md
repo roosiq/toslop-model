@@ -92,6 +92,38 @@ python run_authorship_corpus_v2_markov_everything.py \
 
 This run starts from the same supervised v2 train/test split, deterministically moves a capped 25% per-label slice of HC3 wiki and HC3 QA rows into training, and evaluates on the remaining HC3 holdout rows with a zero-overlap hash audit. The operating target is AI recall greater than 80% and human false-positive rate below 20% on the supervised test, HC3 wiki holdout, and HC3 QA holdout. Compare generated files with `metadata/artifact_checksums.sha256`.
 
+## XGBoost Alternative
+
+The primary production artifact is a linear JSON model because the gateway can
+score it without a native ML runtime. To compare a tree-boosted alternative on
+the same features and splits, install the optional dependency and run the same
+method through the XGBoost trainer:
+
+```bash
+pip install scipy xgboost
+
+cd services/gateway
+python run_authorship_corpus_v2_markov_everything.py \
+  --output ../evals/corporate_sequence_model/authorship_corpus_v2_xgboost_candidate \
+  --min-frequency 8 \
+  --max-features 30000 \
+  --methods lexical_shape_plus_markov \
+  --trainer both \
+  --xgboost-rounds 350 \
+  --xgboost-max-depth 4 \
+  --xgboost-eta 0.06 \
+  --defensive-calibration-train-ratio 0.25 \
+  --defensive-calibration-wiki-max-per-label 1800 \
+  --defensive-calibration-qa-max-per-label 450 \
+  --edge-threshold 0.6
+```
+
+The generated `method_comparison.json` records both the baseline
+`lexical_shape_plus_markov` result and the
+`lexical_shape_plus_markov_xgboost` result with the same supervised, HC3 wiki,
+and HC3 QA threshold sweeps. Edge export intentionally still rejects XGBoost
+results until the gateway has a tree-model runtime path.
+
 ## Publication Note
 
 This repo is the intended public artifact. Do not make the private `slopslingers-infra` repo public without a separate security and licensing audit.

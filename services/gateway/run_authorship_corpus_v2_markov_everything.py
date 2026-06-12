@@ -10,6 +10,7 @@ from typing import Any, Callable
 
 from app.corporate_ai_authorship_feature_spike import (
     INT_TO_LABEL,
+    build_vocab,
     char_shape_sequence_features,
     evaluate,
     posish_sequence_features,
@@ -1005,6 +1006,96 @@ def strip_predictions(metrics: dict[str, Any]) -> dict[str, Any]:
     return {key: value for key, value in metrics.items() if key != "predictions"}
 
 
+def print_method_summary(method: dict[str, Any]) -> None:
+    print(json.dumps({
+        "method": method["method"],
+        "supervised_test_accuracy": method["splits"]["supervised_test"]["accuracy"],
+        "supervised_test_confusion": method["splits"]["supervised_test"]["confusion"],
+        "vocab_size": method["vocab_size"],
+    }, indent=2), flush=True)
+
+
+def _optional_xgboost_modules():
+    try:
+        import scipy.sparse as sparse  # type: ignore[import-not-found]
+        import xgboost as xgb  # type: ignore[import-not-found]
+    except ImportError as exc:
+        raise RuntimeError(
+            "XGBoost trainer requires optional dependencies. Install them with "
+            "`pip install xgboost scipy` before running `--trainer xgboost`."
+        ) from exc
+    return sparse, xgb
+
+
+def build_sparse_feature_matrix(rows_features: list[dict[str, float]], vocab: list[str]):
+    sparse, _ = _optional_xgboost_modules()
+    idx = {key: i for i, key in enumerate(vocab)}
+    row_indices: list[int] = []
+    col_indices: list[int] = []
+    values: list[float] = []
+    for row_i, row_features in enumerate(rows_features):
+        for key, raw_value in row_features.items():
+            col_i = idx.get(key)
+            if col_i is None:
+                continue
+            value = float(raw_value)
+            if not value:
+                continue
+            row_indices.append(row_i)
+            col_indices.append(col_i)
+            values.append(value)
+    return sparse.csr_matrix((values, (row_indices, col_indices)), shape=(len(rows_features), len(vocab)))
+
+
+def evaluate_probabilities(rows: list[dict[str, Any]], probabilities: list[float], *, vocab_size: int) -> dict[str, Any]:
+    correct = 0
+    confusion: Counter[str] = Counter()
+    predictions: list[dict[str, Any]] = []
+    for row, prob in zip(rows, probabilities, strict=True):
+        actual_i = int(row["ai_generated_label"])
+        pred_i = int(prob >= 0.5)
+        actual = INT_TO_LABEL[actual_i]
+        pred = INT_TO_LABEL[pred_i]
+        ok = actual_i == pred_i
+        correct += int(ok)
+        confusion[f"{actual}->{pred}"] += 1
+        predictions.append(
+            {
+                "doc_id": row.get("doc_id"),
+                "dataset": row.get("dataset"),
+                "domain": row.get("domain"),
+                "doc_type": row.get("doc_type"),
+                "actual": actual,
+                "predicted": pred,
+                "ai_generated_probability": round(float(prob), 6),
+                "correct": bool(ok),
+            }
+        )
+    return {
+        "row_count": len(rows),
+        "correct_count": correct,
+        "accuracy": correct / max(1, len(rows)),
+        "confusion": dict(confusion),
+        "predictions": predictions,
+        "vocab_size": vocab_size,
+    }
+
+
+def feature_importance_summary(booster: Any, vocab: list[str], *, limit: int = 25) -> dict[str, list[dict[str, Any]]]:
+    importance = booster.get_score(importance_type="gain")
+    rows: list[dict[str, Any]] = []
+    for raw_key, value in importance.items():
+        match = re.fullmatch(r"f(\d+)", str(raw_key))
+        if not match:
+            feature = str(raw_key)
+        else:
+            index = int(match.group(1))
+            feature = vocab[index] if 0 <= index < len(vocab) else str(raw_key)
+        rows.append({"feature": feature, "gain": float(value)})
+    rows.sort(key=lambda item: float(item["gain"]), reverse=True)
+    return {"by_gain": [{"feature": item["feature"], "gain": round(float(item["gain"]), 6)} for item in rows[:limit]]}
+
+
 def top_coefficients(model: dict[str, Any], limit: int = 20) -> dict[str, list[dict[str, Any]]]:
     pairs = sorted(zip(model.get("vocab", []), model.get("weights", []), strict=True), key=lambda x: x[1])
     return {
@@ -1035,6 +1126,11 @@ def build_edge_candidate_artifact(report: dict[str, Any], method: str, *, thresh
     if method not in methods:
         raise ValueError(f"method {method!r} not found in report results")
     result = methods[method]
+    if str(result.get("trainer", "lr")) != "lr":
+        raise ValueError(
+            f"edge candidate export currently supports only the linear JSON runtime model; "
+            f"{method!r} uses trainer={result.get('trainer')!r}"
+        )
     model_path = Path(str(result.get("files", {}).get("model") or ""))
     if not model_path.exists():
         raise FileNotFoundError(f"model file for {method!r} not found: {model_path}")
@@ -1124,6 +1220,7 @@ def evaluate_method(
                 full_eval_splits[split_name] = rows
     result: dict[str, Any] = {
         "method": name,
+        "trainer": "lr",
         "vocab_size": len(model.get("vocab", [])),
         "min_frequency": min_frequency,
         "max_features": max_features,
@@ -1139,6 +1236,118 @@ def evaluate_method(
         metrics = evaluate(rows, features, model)
         metrics["predictions"] = attach_context(rows, metrics["predictions"])
         pred_path = output_dir / f"{name}_predictions_{split_name}.jsonl"
+        write_jsonl(pred_path, metrics["predictions"])
+        result["files"][f"predictions_{split_name}"] = str(pred_path)
+        split_report = strip_predictions(metrics)
+        split_report["threshold_sweep"] = threshold_metrics(metrics["predictions"], [0.5, 0.6, 0.7, 0.8, 0.9])
+        split_report["source_aware"] = {
+            "dataset": grouped_metrics(metrics["predictions"], "dataset"),
+            "domain": grouped_metrics(metrics["predictions"], "domain"),
+            "doc_type": grouped_metrics(metrics["predictions"], "doc_type"),
+        }
+        result["splits"][split_name] = split_report
+    return result
+
+
+def evaluate_method_xgboost(
+    name: str,
+    builder: Callable[[dict[str, Any]], dict[str, float]],
+    train_rows: list[dict[str, Any]],
+    eval_splits: dict[str, list[dict[str, Any]]],
+    *,
+    extra_splits: dict[str, list[dict[str, Any]] | None] = None,
+    output_dir: Path,
+    min_frequency: int,
+    max_features: int,
+    xgboost_rounds: int,
+    xgboost_max_depth: int,
+    xgboost_eta: float,
+    xgboost_subsample: float,
+    xgboost_colsample_bytree: float,
+    xgboost_min_child_weight: float,
+    xgboost_reg_lambda: float,
+    xgboost_reg_alpha: float,
+    xgboost_nthread: int,
+) -> dict[str, Any]:
+    print(f"=== {name}_xgboost ===", flush=True)
+    _, xgb = _optional_xgboost_modules()
+    train_features = [builder(row) for row in train_rows]
+    labels = [int(row["ai_generated_label"]) for row in train_rows]
+    counter: Counter[str] = Counter()
+    for row in train_features:
+        counter.update(row.keys())
+    vocab = build_vocab(counter, min_frequency=min_frequency, max_features=max_features)
+    train_matrix = build_sparse_feature_matrix(train_features, vocab)
+    dtrain = xgb.DMatrix(train_matrix, label=labels)
+    positives = sum(labels)
+    negatives = len(labels) - positives
+    params = {
+        "objective": "binary:logistic",
+        "eval_metric": "logloss",
+        "tree_method": "hist",
+        "max_depth": xgboost_max_depth,
+        "eta": xgboost_eta,
+        "subsample": xgboost_subsample,
+        "colsample_bytree": xgboost_colsample_bytree,
+        "min_child_weight": xgboost_min_child_weight,
+        "lambda": xgboost_reg_lambda,
+        "alpha": xgboost_reg_alpha,
+        "seed": 13,
+    }
+    if positives and negatives:
+        params["scale_pos_weight"] = negatives / positives
+    if xgboost_nthread:
+        params["nthread"] = xgboost_nthread
+    booster = xgb.train(params, dtrain, num_boost_round=xgboost_rounds)
+
+    model_path = output_dir / f"{name}_xgboost_model.json"
+    booster.save_model(str(model_path))
+    metadata = {
+        "schema": "corporate.authorship_xgboost_model.v1",
+        "trainer": "xgboost",
+        "method": name,
+        "vocab": vocab,
+        "vocab_size": len(vocab),
+        "min_frequency": min_frequency,
+        "max_features": max_features,
+        "xgboost_params": params,
+        "xgboost_rounds": xgboost_rounds,
+        "model_file": str(model_path),
+        "feature_importance": feature_importance_summary(booster, vocab, limit=50),
+    }
+    metadata_path = output_dir / f"{name}_xgboost_model_metadata.json"
+    write_json(metadata_path, metadata)
+
+    full_eval_splits = dict(eval_splits)
+    if extra_splits:
+        for split_name, rows in extra_splits.items():
+            if rows is not None:
+                full_eval_splits[split_name] = rows
+    result: dict[str, Any] = {
+        "method": f"{name}_xgboost",
+        "base_method": name,
+        "trainer": "xgboost",
+        "vocab_size": len(vocab),
+        "min_frequency": min_frequency,
+        "max_features": max_features,
+        "epochs": None,
+        "xgboost_rounds": xgboost_rounds,
+        "xgboost_params": params,
+        "top_coefficients": {},
+        "feature_importance": metadata["feature_importance"],
+        "splits": {},
+        "files": {
+            "model": str(model_path),
+            "model_metadata": str(metadata_path),
+        },
+    }
+    for split_name, rows in full_eval_splits.items():
+        features = [builder(row) for row in rows]
+        matrix = build_sparse_feature_matrix(features, vocab)
+        probabilities = booster.predict(xgb.DMatrix(matrix)).tolist()
+        metrics = evaluate_probabilities(rows, probabilities, vocab_size=len(vocab))
+        metrics["predictions"] = attach_context(rows, metrics["predictions"])
+        pred_path = output_dir / f"{name}_xgboost_predictions_{split_name}.jsonl"
         write_jsonl(pred_path, metrics["predictions"])
         result["files"][f"predictions_{split_name}"] = str(pred_path)
         split_report = strip_predictions(metrics)
@@ -1259,18 +1468,42 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         method_real_world_split = None
         if real_world_rows_raw and name in real_world_methods:
             method_real_world_split = real_world_rows if "wordnet" in name else real_world_rows_raw
-        method = evaluate_method(
-            name,
-            builder,
-            train_rows,
-            eval_splits,
-            extra_splits={"real_world_calibration": method_real_world_split} if method_real_world_split else None,
-            output_dir=output_dir,
-            min_frequency=args.min_frequency,
-            max_features=args.max_features,
-            epochs=args.epochs,
-        )
-        results.append(method)
+        if args.trainer in {"lr", "both"}:
+            method = evaluate_method(
+                name,
+                builder,
+                train_rows,
+                eval_splits,
+                extra_splits={"real_world_calibration": method_real_world_split} if method_real_world_split else None,
+                output_dir=output_dir,
+                min_frequency=args.min_frequency,
+                max_features=args.max_features,
+                epochs=args.epochs,
+            )
+            results.append(method)
+            print_method_summary(method)
+        if args.trainer in {"xgboost", "both"}:
+            method = evaluate_method_xgboost(
+                name,
+                builder,
+                train_rows,
+                eval_splits,
+                extra_splits={"real_world_calibration": method_real_world_split} if method_real_world_split else None,
+                output_dir=output_dir,
+                min_frequency=args.min_frequency,
+                max_features=args.max_features,
+                xgboost_rounds=args.xgboost_rounds,
+                xgboost_max_depth=args.xgboost_max_depth,
+                xgboost_eta=args.xgboost_eta,
+                xgboost_subsample=args.xgboost_subsample,
+                xgboost_colsample_bytree=args.xgboost_colsample_bytree,
+                xgboost_min_child_weight=args.xgboost_min_child_weight,
+                xgboost_reg_lambda=args.xgboost_reg_lambda,
+                xgboost_reg_alpha=args.xgboost_reg_alpha,
+                xgboost_nthread=args.xgboost_nthread,
+            )
+            results.append(method)
+            print_method_summary(method)
         summary = build_report(
             args,
             output_dir,
@@ -1285,12 +1518,6 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             defensive_training_summary=defensive_training_summary,
         )
         write_json(output_dir / "method_comparison.json", summary)
-        print(json.dumps({
-            "method": name,
-            "supervised_test_accuracy": method["splits"]["supervised_test"]["accuracy"],
-            "supervised_test_confusion": method["splits"]["supervised_test"]["confusion"],
-            "vocab_size": method["vocab_size"],
-        }, indent=2), flush=True)
     summary = build_report(
         args,
         output_dir,
@@ -1346,6 +1573,16 @@ def build_report(
             "min_frequency": args.min_frequency,
             "max_features": args.max_features,
             "epochs": args.epochs,
+            "trainer": args.trainer,
+            "xgboost_rounds": args.xgboost_rounds,
+            "xgboost_max_depth": args.xgboost_max_depth,
+            "xgboost_eta": args.xgboost_eta,
+            "xgboost_subsample": args.xgboost_subsample,
+            "xgboost_colsample_bytree": args.xgboost_colsample_bytree,
+            "xgboost_min_child_weight": args.xgboost_min_child_weight,
+            "xgboost_reg_lambda": args.xgboost_reg_lambda,
+            "xgboost_reg_alpha": args.xgboost_reg_alpha,
+            "xgboost_nthread": args.xgboost_nthread,
             "limit_per_split": args.limit_per_split,
             "real_world_calibration": [str(path) for path in args.real_world_calibration],
             "real_world_chunking_strategy": args.real_world_chunking_strategy,
@@ -1397,6 +1634,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-frequency", type=int, default=8)
     parser.add_argument("--max-features", type=int, default=30000)
     parser.add_argument("--epochs", type=int, default=220)
+    parser.add_argument(
+        "--trainer",
+        choices=("lr", "xgboost", "both"),
+        default="lr",
+        help="Model trainer to use for each requested feature method. XGBoost appends an _xgboost method result.",
+    )
+    parser.add_argument("--xgboost-rounds", type=int, default=350)
+    parser.add_argument("--xgboost-max-depth", type=int, default=4)
+    parser.add_argument("--xgboost-eta", type=float, default=0.06)
+    parser.add_argument("--xgboost-subsample", type=float, default=0.9)
+    parser.add_argument("--xgboost-colsample-bytree", type=float, default=0.85)
+    parser.add_argument("--xgboost-min-child-weight", type=float, default=2.0)
+    parser.add_argument("--xgboost-reg-lambda", type=float, default=1.0)
+    parser.add_argument("--xgboost-reg-alpha", type=float, default=0.0)
+    parser.add_argument("--xgboost-nthread", type=int, default=0, help="Optional XGBoost thread count. Default lets XGBoost choose.")
     parser.add_argument("--limit-per-split", type=int, default=0, help="Optional smoke cap per split, balanced by label.")
     parser.add_argument("--methods", default="", help="Comma-separated method subset.")
     parser.add_argument("--real-world-calibration", type=Path, nargs="*", default=[], help="Optional real-world calibration JSONL fixtures.")
