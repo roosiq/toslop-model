@@ -23,6 +23,7 @@ from app.corporate_ai_authorship_feature_spike import (
 )
 from app.corporate_markov_features import (
     fit_surface_markov_models,
+    serialize_surface_markov_models,
     surface_markov_features,
     surface_markov_model_summary,
 )
@@ -48,6 +49,9 @@ WORDNET_PREFIXES = (
 
 REAL_WORLD_DEFAULT_MIN_CHUNK_WORDS = 100
 REAL_WORLD_DEFAULT_MAX_CHUNK_WORDS = 320
+OPERATING_TARGET_MIN_AI_RECALL = 0.80
+OPERATING_TARGET_MAX_HUMAN_FALSE_POSITIVE_RATE = 0.20
+OPERATING_TARGET_SPLITS = ("supervised_test", "calibration_hc3_wiki", "calibration_hc3_qa")
 
 ARTICLE_SECTION_HEADINGS = {
     "abstract",
@@ -759,6 +763,82 @@ def normalized_hash(text: str) -> str:
     return hashlib.sha256(normalized.encode("utf-8")).hexdigest()
 
 
+def row_stable_hash(row: dict[str, Any]) -> str:
+    """Stable row key for deterministic local train/holdout partitioning."""
+    key = str(row.get("text_hash") or row.get("doc_id") or "")
+    if key:
+        return hashlib.sha256(key.encode("utf-8")).hexdigest()
+    return normalized_hash(str(row.get("text") or ""))
+
+
+def defensive_calibration_split(
+    rows: list[dict[str, Any]],
+    *,
+    train_ratio: float,
+    max_train_per_label: int = 0,
+    source_name: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, Any]]:
+    """Move a deterministic label-balanced slice of calibration rows into training.
+
+    This is for domain adaptation experiments. The remaining rows are the only
+    valid calibration holdout for that run.
+    """
+    if train_ratio <= 0:
+        return [], rows, {
+            "source": source_name,
+            "enabled": False,
+            "input_rows": len(rows),
+            "train_rows": 0,
+            "holdout_rows": len(rows),
+            "train_ratio": train_ratio,
+            "max_train_per_label": max_train_per_label,
+            "train_label_counts": {},
+            "holdout_label_counts": label_counts(rows),
+        }
+
+    ratio = max(0.0, min(1.0, float(train_ratio)))
+    by_label: dict[int, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        label = parse_label(row)
+        if label in {0, 1}:
+            by_label[int(label)].append(row)
+
+    selected_hashes: set[str] = set()
+    for group_rows in by_label.values():
+        ordered = sorted(group_rows, key=row_stable_hash)
+        train_count = round(len(ordered) * ratio)
+        if max_train_per_label > 0:
+            train_count = min(train_count, max_train_per_label)
+        for row in ordered[:train_count]:
+            selected_hashes.add(row_stable_hash(row))
+
+    train_rows: list[dict[str, Any]] = []
+    holdout_rows: list[dict[str, Any]] = []
+    for row in rows:
+        row_hash = row_stable_hash(row)
+        if row_hash in selected_hashes:
+            copy = dict(row)
+            copy["corpus_role"] = f"{source_name}_defensive_train"
+            copy["defensive_training_source"] = source_name
+            train_rows.append(copy)
+        else:
+            copy = dict(row)
+            copy["corpus_role"] = f"{source_name}_holdout"
+            holdout_rows.append(copy)
+
+    return train_rows, holdout_rows, {
+        "source": source_name,
+        "enabled": True,
+        "input_rows": len(rows),
+        "train_rows": len(train_rows),
+        "holdout_rows": len(holdout_rows),
+        "train_ratio": ratio,
+        "max_train_per_label": max_train_per_label,
+        "train_label_counts": label_counts(train_rows),
+        "holdout_label_counts": label_counts(holdout_rows),
+    }
+
+
 def leakage_audit(train_rows: list[dict[str, Any]], named_splits: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
     train_hashes = defaultdict(list)
     for row in train_rows:
@@ -855,14 +935,70 @@ def threshold_metrics(predictions: list[dict[str, Any]], thresholds: list[float]
         tn = confusion.get("human_written->human_written", 0)
         tp = confusion.get("ai_generated->ai_generated", 0)
         fn = confusion.get("ai_generated->human_written", 0)
+        human_total = fp + tn
+        ai_total = tp + fn
         out.append({
             "threshold": threshold,
             "accuracy": correct / max(1, len(predictions)),
             "confusion": dict(confusion),
-            "human_false_positive_rate": fp / max(1, fp + tn),
-            "ai_recall": tp / max(1, tp + fn),
+            "human_false_positive_count": fp,
+            "human_true_negative_count": tn,
+            "ai_true_positive_count": tp,
+            "ai_false_negative_count": fn,
+            "human_false_positive_rate": fp / max(1, human_total),
+            "ai_recall": tp / max(1, ai_total),
+            "false_positive_weighted_cost": (4.0 * fp / max(1, human_total)) + (fn / max(1, ai_total)),
         })
     return out
+
+
+def operating_target_config(threshold: float) -> dict[str, Any]:
+    return {
+        "threshold": threshold,
+        "ai_detection_metric": "ai_recall",
+        "minimum_ai_recall": OPERATING_TARGET_MIN_AI_RECALL,
+        "minimum_ai_recall_comparison": ">",
+        "human_false_positive_metric": "human_false_positive_rate",
+        "maximum_human_false_positive_rate": OPERATING_TARGET_MAX_HUMAN_FALSE_POSITIVE_RATE,
+        "maximum_human_false_positive_rate_comparison": "<",
+        "required_splits": list(OPERATING_TARGET_SPLITS),
+    }
+
+
+def threshold_metric_for(split_report: dict[str, Any], threshold: float) -> dict[str, Any] | None:
+    for item in split_report.get("threshold_sweep", []):
+        if abs(float(item.get("threshold", -1.0)) - threshold) < 1e-9:
+            return item
+    return None
+
+
+def evaluate_operating_target(result: dict[str, Any], threshold: float) -> dict[str, Any]:
+    split_results: dict[str, Any] = {}
+    for split_name in OPERATING_TARGET_SPLITS:
+        split_report = result.get("splits", {}).get(split_name, {})
+        metric = threshold_metric_for(split_report, threshold)
+        if metric is None:
+            split_results[split_name] = {
+                "passed": False,
+                "reason": "threshold_metric_missing",
+                "threshold": threshold,
+            }
+            continue
+        ai_recall = float(metric.get("ai_recall", 0.0))
+        human_fpr = float(metric.get("human_false_positive_rate", 1.0))
+        split_results[split_name] = {
+            "passed": ai_recall > OPERATING_TARGET_MIN_AI_RECALL and human_fpr < OPERATING_TARGET_MAX_HUMAN_FALSE_POSITIVE_RATE,
+            "threshold": threshold,
+            "ai_recall": ai_recall,
+            "human_false_positive_rate": human_fpr,
+            "accuracy": metric.get("accuracy"),
+            "confusion": metric.get("confusion"),
+        }
+    return {
+        **operating_target_config(threshold),
+        "passed": all(bool(item.get("passed")) for item in split_results.values()),
+        "splits": split_results,
+    }
 
 
 def strip_predictions(metrics: dict[str, Any]) -> dict[str, Any]:
@@ -910,8 +1046,15 @@ def build_edge_candidate_artifact(report: dict[str, Any], method: str, *, thresh
             selected_threshold = item
             break
     feature_families = ["lexical_style", "shape_ngrams", "surface_markov"] if method == "lexical_shape_plus_markov" else [method]
+    defensive_enabled = bool(report.get("defensive_training", {}).get("enabled"))
+    model_version = (
+        "corporate-lexical-shape-markov-authorship-v2-defensive-hc3"
+        if defensive_enabled
+        else "corporate-lexical-shape-markov-authorship-v2-candidate"
+    )
+    operating_target = evaluate_operating_target(result, threshold)
     return {
-        "modelVersion": "corporate-lexical-shape-markov-authorship-v2-candidate",
+        "modelVersion": model_version,
         "primaryMethod": method,
         "primaryModel": model,
         "decisionPolicy": {
@@ -919,12 +1062,19 @@ def build_edge_candidate_artifact(report: dict[str, Any], method: str, *, thresh
             "selectedThresholdMetrics": selected_threshold,
             "labelAtOrAboveThreshold": "ai_generated",
             "labelBelowThreshold": "human_written",
-            "falsePositivePolicy": "favor threshold 0.6+ to reduce false AI accusations",
+            "operatingTarget": operating_target_config(threshold),
+            "passesOperatingTarget": operating_target["passed"],
+            "falsePositivePolicy": (
+                "defensive HC3 domain training plus threshold selection to reduce human false positives"
+                if defensive_enabled
+                else "favor threshold 0.6+ to reduce false AI accusations"
+            ),
         },
         "featureFamilies": feature_families,
         "featureSource": {
             "modelDirectory": str(Path(str(report.get("output_dir", model_path.parent))).resolve()),
             "modelFile": model_path.name,
+            "markovFile": "surface_markov_models.json",
             "comparisonFile": "method_comparison.json",
         },
         "evaluation": {
@@ -938,6 +1088,7 @@ def build_edge_candidate_artifact(report: dict[str, Any], method: str, *, thresh
             },
             "calibrationHc3Wiki": result.get("splits", {}).get("calibration_hc3_wiki"),
             "calibrationHc3Qa": result.get("splits", {}).get("calibration_hc3_qa"),
+            "operatingTarget": operating_target,
         },
         "metadata": {
             "schema": "corporate.edge_candidate_detector.v1",
@@ -1008,6 +1159,41 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     test_rows_raw = coerce_rows(args.test, "supervised_test")
     wiki_rows_raw = coerce_rows(args.calibration_hc3_wiki, "calibration_hc3_wiki")
     qa_rows_raw = coerce_rows(args.calibration_hc3_qa, "calibration_hc3_qa")
+    defensive_training_summary = {
+        "enabled": False,
+        "train_ratio": args.defensive_calibration_train_ratio,
+        "max_train_per_label": args.defensive_calibration_max_per_label,
+        "sources": {},
+        "added_train_rows": 0,
+    }
+    if args.defensive_calibration_train_ratio > 0:
+        wiki_train, wiki_holdout, wiki_summary = defensive_calibration_split(
+            wiki_rows_raw,
+            train_ratio=args.defensive_calibration_train_ratio,
+            max_train_per_label=args.defensive_calibration_wiki_max_per_label or args.defensive_calibration_max_per_label,
+            source_name="calibration_hc3_wiki",
+        )
+        qa_train, qa_holdout, qa_summary = defensive_calibration_split(
+            qa_rows_raw,
+            train_ratio=args.defensive_calibration_train_ratio,
+            max_train_per_label=args.defensive_calibration_qa_max_per_label or args.defensive_calibration_max_per_label,
+            source_name="calibration_hc3_qa",
+        )
+        train_rows_raw = train_rows_raw + wiki_train + qa_train
+        wiki_rows_raw = wiki_holdout
+        qa_rows_raw = qa_holdout
+        defensive_training_summary = {
+            "enabled": True,
+            "train_ratio": args.defensive_calibration_train_ratio,
+            "max_train_per_label": args.defensive_calibration_max_per_label,
+            "wiki_max_train_per_label": args.defensive_calibration_wiki_max_per_label,
+            "qa_max_train_per_label": args.defensive_calibration_qa_max_per_label,
+            "sources": {
+                "calibration_hc3_wiki": wiki_summary,
+                "calibration_hc3_qa": qa_summary,
+            },
+            "added_train_rows": len(wiki_train) + len(qa_train),
+        }
     real_world_rows_raw: list[dict[str, Any]] = []
     for fixture_path in args.real_world_calibration:
         real_world_rows_raw.extend(
@@ -1056,6 +1242,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         real_world_rows = build_wordnet_rows(real_world_rows) if real_world_rows else real_world_rows
 
     builders, markov_models = make_method_builders(train_rows)
+    markov_path = output_dir / "surface_markov_models.json"
+    write_json(markov_path, serialize_surface_markov_models(markov_models))
     markov_summary = surface_markov_model_summary(markov_models, limit=12)
     if args.methods:
         wanted = set(args.methods.split(","))
@@ -1094,6 +1282,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             markov_summary,
             real_world_rows=real_world_rows_raw,
             real_world_summary=summarize_real_world_rows(real_world_rows_raw),
+            defensive_training_summary=defensive_training_summary,
         )
         write_json(output_dir / "method_comparison.json", summary)
         print(json.dumps({
@@ -1113,6 +1302,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         markov_summary,
         real_world_rows=real_world_rows_raw,
         real_world_summary=summarize_real_world_rows(real_world_rows_raw),
+        defensive_training_summary=defensive_training_summary,
     )
     write_json(output_dir / "method_comparison.json", summary)
     if args.export_edge_candidate:
@@ -1136,10 +1326,15 @@ def build_report(
     *,
     real_world_rows: list[dict[str, Any]] | None = None,
     real_world_summary: dict[str, Any] | None = None,
+    defensive_training_summary: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     ordered = sorted(results, key=lambda item: float(item["splits"]["supervised_test"].get("accuracy", 0.0)), reverse=True)
     safe_real_world_rows = real_world_rows if real_world_rows is not None else []
     safe_real_world_summary = real_world_summary if real_world_summary is not None else summarize_real_world_rows(safe_real_world_rows)
+    operating_target_evaluation = {
+        str(item.get("method")): evaluate_operating_target(item, args.edge_threshold)
+        for item in ordered
+    }
     return {
         "schema": "corporate.authorship_corpus_v2_markov_everything.v1",
         "output_dir": str(output_dir),
@@ -1158,6 +1353,10 @@ def build_report(
             "real_world_max_chunk_words": args.real_world_max_chunk_words,
             "real_world_allow_isolated_short_chunks": args.real_world_allow_isolated_short_chunks,
             "real_world_methods": str(args.real_world_methods),
+            "defensive_calibration_train_ratio": args.defensive_calibration_train_ratio,
+            "defensive_calibration_max_per_label": args.defensive_calibration_max_per_label,
+            "defensive_calibration_wiki_max_per_label": args.defensive_calibration_wiki_max_per_label,
+            "defensive_calibration_qa_max_per_label": args.defensive_calibration_qa_max_per_label,
         },
         "rows": {
             "train": len(train_rows),
@@ -1173,9 +1372,16 @@ def build_report(
             "calibration_hc3_qa": source_summary(qa_rows),
             "real_world_calibration": source_summary(safe_real_world_rows),
         },
+        "defensive_training": defensive_training_summary or {
+            "enabled": False,
+            "added_train_rows": 0,
+            "sources": {},
+        },
         "leakage_audit": leakage_audit(train_rows, {"supervised_test": test_rows, "calibration_hc3_wiki": wiki_rows, "calibration_hc3_qa": qa_rows}),
         "real_world_calibration_summary": safe_real_world_summary,
         "markov_model_summary": markov_summary,
+        "operating_target": operating_target_config(args.edge_threshold),
+        "operating_target_evaluation": operating_target_evaluation,
         "results": ordered,
         "best_supervised_test": ordered[0] if ordered else None,
     }
@@ -1206,6 +1412,30 @@ def parse_args() -> argparse.Namespace:
         "--real-world-allow-isolated-short-chunks",
         action="store_true",
         help="Allow scoring isolated short chunks in real-world chunking.",
+    )
+    parser.add_argument(
+        "--defensive-calibration-train-ratio",
+        type=float,
+        default=0.0,
+        help="Deterministically move this per-label ratio of HC3 calibration rows into training and evaluate only on the remaining holdout.",
+    )
+    parser.add_argument(
+        "--defensive-calibration-max-per-label",
+        type=int,
+        default=0,
+        help="Optional cap per label per HC3 calibration source when defensive calibration training is enabled.",
+    )
+    parser.add_argument(
+        "--defensive-calibration-wiki-max-per-label",
+        type=int,
+        default=0,
+        help="Optional per-label cap for HC3 wiki defensive training rows. Overrides --defensive-calibration-max-per-label for wiki.",
+    )
+    parser.add_argument(
+        "--defensive-calibration-qa-max-per-label",
+        type=int,
+        default=0,
+        help="Optional per-label cap for HC3 QA defensive training rows. Overrides --defensive-calibration-max-per-label for QA.",
     )
     parser.add_argument(
         "--real-world-methods",

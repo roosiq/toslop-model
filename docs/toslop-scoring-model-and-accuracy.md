@@ -4,7 +4,7 @@ Toslop measures how much AI-shaped writing appears in the public web crawl it wa
 
 That distinction matters. LLM-as-judge systems can be useful for qualitative review, but they are expensive, slower to run at crawl scale, and harder to reproduce. Toslop needs something closer to an instrument: the same input should produce the same score, the model should be cheap enough to run repeatedly, and the score should expose enough evidence to audit why it moved.
 
-The current Toslop score uses the Corporate Slop authorship detector, specifically the `lexical_shape_plus_markov` candidate model. It turns a text sample into deterministic features, runs a logistic regression model, and reports the model's AI-generated probability as a 0-100 score.
+The current Toslop score uses the Corporate Slop authorship detector, specifically the defensive HC3 version of the `lexical_shape_plus_markov` candidate model. It turns a text sample into deterministic features, runs a logistic regression model, and reports the model's AI-generated probability as a 0-100 score.
 
 ## What The Score Means
 
@@ -56,21 +56,26 @@ The production model is:
 
 - model family: standardized logistic regression;
 - primary method: `lexical_shape_plus_markov`;
-- training rows: 21,005;
+- training rows: 25,369;
 - supervised test rows: 8,993;
-- calibration rows: 15,446 HC3 wiki rows and 3,618 HC3 QA rows;
+- defensive HC3 holdout rows: 11,883 HC3 wiki rows and 2,817 HC3 QA rows;
 - feature cap: 30,000;
 - minimum feature frequency: 8;
 - epochs: 160;
 - learning rate: 0.1;
 - L2 penalty: 0.02;
-- production threshold: 0.6.
+- production threshold: 0.6;
+- operating target: AI recall greater than 80% and human false-positive rate below 20% on the supervised test, HC3 wiki holdout, and HC3 QA holdout.
 
-At the default 0.5 evaluation threshold, the combined model reached 97.92% accuracy on the held-out supervised test split. At Toslop's deployed 0.6 threshold, it reached 98.13% accuracy, with a 2.24% human false-positive rate and 98.50% AI recall.
+At the default 0.5 evaluation threshold, the defensive combined model reached 97.97% accuracy on the held-out supervised test split. At Toslop's deployed 0.6 threshold, it reached 97.89% accuracy, with a 1.52% human false-positive rate and 97.30% AI recall. The small recall reduction is intentional: the retrain is designed to reduce false AI accusations on polished human writing.
+
+This clears the operating target. At threshold 0.6, AI recall is 97.30% on the supervised test split, 88.24% on HC3 wiki holdout, and 84.97% on HC3 QA holdout. Human false-positive rate is 1.52%, 10.66%, and 8.44% respectively.
 
 ## Training Data
 
 The supervised training corpus was built from public AI/human authorship datasets and then filtered aggressively. The v2 corpus accepted 29,998 supervised examples, split into 21,005 training rows and 8,993 held-out supervised test rows. The split was deterministic and hash-audited: the saved report shows zero train/test overlap hash groups.
+
+The current defensive model then adds 4,364 HC3 rows to training as domain hard negatives and hard positives. This is not a random manual patch. The runner deterministically sorts HC3 rows within each label by a stable row hash, moves a capped 25% per-label slice into training, and leaves the rest as holdout. The final training set is therefore 25,369 rows: 21,005 supervised v2 rows plus 3,563 HC3 wiki rows and 801 HC3 QA rows.
 
 The supervised mix came from four sources:
 
@@ -81,10 +86,12 @@ The supervised mix came from four sources:
 
 An additional unlabeled text corpus, [`sunorme/human-vs-llm-text-corpus`](https://huggingface.co/datasets/sunorme/human-vs-llm-text-corpus), is available as optional raw text but is not currently included in the supervised mix because it does not provide explicit binary labels.
 
-Two additional HC3-derived sets were kept as calibration data rather than training data:
+Two additional HC3-derived sets are used for defensive domain adaptation and holdout testing:
 
 - 15,446 rows from [`rajendrabaskota/hc3-wiki-intro-dataset`](https://huggingface.co/datasets/rajendrabaskota/hc3-wiki-intro-dataset);
 - 3,618 rows from [`pszemraj/HC3-textgen-qa`](https://huggingface.co/datasets/pszemraj/HC3-textgen-qa), an Apache-2.0 dataset.
+
+For the current defensive run, HC3 wiki contributes 1,800 human and 1,763 AI rows to training; its remaining holdout has 6,593 human and 5,290 AI rows. HC3 QA contributes 351 human and 450 AI rows to training; its remaining holdout has 1,054 human and 1,763 AI rows. The defensive report's leakage audit shows zero train-overlap hash groups for the supervised test split, HC3 wiki holdout, and HC3 QA holdout.
 
 The builder rejected 4,999 v2 candidate rows after loading the primary sources. The largest rejection reasons were `too_short` (3,899), `placeholder_url` (440), `too_long` (423), `exact_duplicate` (176), `assistant_artifact` (125), and `url_heavy` (113). Exact duplicates were detected with a normalized SHA-256 text hash.
 
@@ -98,7 +105,7 @@ First, downloaded Hugging Face files are normalized into a common JSONL schema. 
 
 Second, the normalized authorship corpus is cleaned. Rows are rejected if they are empty, too short, too long, URL-heavy, duplicate, mostly punctuation, mostly uppercase, repeated-token junk, or contain obvious assistant artifacts. At this stage, corporate-speak rows are excluded from supervised truth.
 
-Third, the v2 corpus builder combines the clean Ateeqq/silentone/harsh title pool with the Andy dataset and keeps HC3 as calibration. It applies an Andy-to-existing source ratio target of 3:1, balances labels, and assigns train/test by hash bucket:
+Third, the v2 corpus builder combines the clean Ateeqq/silentone/harsh title pool with the Andy dataset and keeps HC3 separate. It applies an Andy-to-existing source ratio target of 3:1, balances labels, and assigns train/test by hash bucket:
 
 ```text
 bucket = int(text_hash[:8], 16) / 0xffffffff
@@ -106,6 +113,17 @@ split = "test" if bucket < 0.25 else "train"
 ```
 
 Because the split is based on normalized text hash, duplicate text cannot land in both train and test unless the hash audit catches it. The saved report shows `supervised_split_hash_leakage_groups = 0`.
+
+Fourth, the defensive training runner optionally performs a second deterministic split inside the HC3 calibration sets:
+
+```text
+row_key = sha256(text_hash or doc_id or normalized_text)
+sort rows within each label by row_key
+move round(label_count * 0.25) rows into training, capped per label
+evaluate only on the remaining HC3 rows
+```
+
+That fourth stage is the main model fix. The old model treated polished wiki-style human text as too AI-like. The defensive stage gives the logistic model and Markov matrices a controlled dose of that domain while preserving a large HC3 holdout to measure whether false positives improved.
 
 ## Features
 
@@ -150,14 +168,14 @@ One actual row from the deployed `shape_order1` matrix is the `WORD` context:
 
 | Matrix | Context | Next state | Count | Smoothed probability |
 | --- | --- | --- | ---: | ---: |
-| AI | `WORD` | `FUNC` | 621,687 | 0.4518 |
-| AI | `WORD` | `WORD` | 529,021 | 0.3844 |
-| AI | `WORD` | `LONG` | 110,297 | 0.0801 |
-| AI | `WORD` | `SHORT` | 88,937 | 0.0646 |
-| Human | `WORD` | `FUNC` | 749,254 | 0.4754 |
-| Human | `WORD` | `WORD` | 615,384 | 0.3905 |
-| Human | `WORD` | `SHORT` | 123,983 | 0.0787 |
-| Human | `WORD` | `LONG` | 61,062 | 0.0387 |
+| AI | `WORD` | `FUNC` | 721,376 | 0.4385 |
+| AI | `WORD` | `WORD` | 638,224 | 0.3880 |
+| AI | `WORD` | `LONG` | 118,638 | 0.0721 |
+| AI | `WORD` | `SHORT` | 104,816 | 0.0637 |
+| Human | `WORD` | `FUNC` | 954,611 | 0.4761 |
+| Human | `WORD` | `WORD` | 776,533 | 0.3873 |
+| Human | `WORD` | `SHORT` | 154,848 | 0.0772 |
+| Human | `WORD` | `LONG` | 75,004 | 0.0374 |
 
 That row shows the kind of signal the Markov layer contributes. After a `WORD` state, AI examples moved into `LONG` nearly twice as often as human examples in this training corpus, while human examples moved into `SHORT` more often. The detector does not use that row directly as a standalone verdict. It scores the whole observed sequence against the AI and human matrices, then passes the resulting likelihood-ratio and cross-entropy features into the logistic regression.
 
@@ -165,14 +183,14 @@ Another row, from `coarse_order1`, shows the abstract rhetorical pattern the mod
 
 | Matrix | Context | Next state | Count | Smoothed probability |
 | --- | --- | --- | ---: | ---: |
-| AI | `ABSTRACT` | `FUNC` | 69,410 | 0.5876 |
-| AI | `ABSTRACT` | `CONTENT` | 38,329 | 0.3245 |
-| AI | `ABSTRACT` | `PUNCT` | 3,092 | 0.0262 |
-| AI | `ABSTRACT` | `ABSTRACT` | 3,089 | 0.0262 |
-| Human | `ABSTRACT` | `FUNC` | 44,476 | 0.5918 |
-| Human | `ABSTRACT` | `CONTENT` | 23,978 | 0.3190 |
-| Human | `ABSTRACT` | `MODAL` | 2,469 | 0.0329 |
-| Human | `ABSTRACT` | `PUNCT` | 1,906 | 0.0254 |
+| AI | `ABSTRACT` | `FUNC` | 72,814 | 0.5733 |
+| AI | `ABSTRACT` | `CONTENT` | 41,634 | 0.3278 |
+| AI | `ABSTRACT` | `PUNCT` | 4,498 | 0.0354 |
+| AI | `ABSTRACT` | `ABSTRACT` | 3,181 | 0.0250 |
+| Human | `ABSTRACT` | `FUNC` | 54,821 | 0.5904 |
+| Human | `ABSTRACT` | `CONTENT` | 29,494 | 0.3177 |
+| Human | `ABSTRACT` | `MODAL` | 3,012 | 0.0324 |
+| Human | `ABSTRACT` | `PUNCT` | 2,684 | 0.0289 |
 
 The differences are small per transition. That is why the model uses aggregate log-likelihood over the whole sequence. A single transition is weak evidence. A page-length sequence of transitions can be strong evidence.
 
@@ -224,7 +242,7 @@ Because the model is linear, Toslop can show the strongest contributing features
 
 ## Accuracy Against Internal Methods
 
-On the 8,993-row supervised test split, the combined model was the strongest internal method we evaluated with the same corpus and metric.
+Before the defensive HC3 retrain, we ran an internal ablation on the 8,993-row supervised test split. The combined model was the strongest method we evaluated with the same corpus and metric.
 
 | Method | Feature count | Supervised test accuracy | Human false positives | AI false negatives |
 | --- | ---: | ---: | ---: | ---: |
@@ -234,7 +252,7 @@ On the 8,993-row supervised test split, the combined model was the strongest int
 | `shape_ngrams` | 424 | 88.01% | 668 | 410 |
 | `markov_surface` | 2,596 | 90.40% | 494 | 369 |
 
-Those numbers use the standard 0.5 probability cutoff for apples-to-apples comparison. The deployed candidate uses a stricter 0.6 threshold for binary labeling. At that production threshold, the same model reached 98.13% supervised-test accuracy:
+Those numbers use the standard 0.5 probability cutoff for apples-to-apples comparison. At a stricter 0.6 threshold, the same pre-defensive ablation looked excellent on the supervised test split:
 
 | Method | Threshold | Accuracy | Human false-positive rate | AI recall | Confusion |
 | --- | ---: | ---: | ---: | ---: | --- |
@@ -247,9 +265,18 @@ Those numbers use the standard 0.5 probability cutoff for apples-to-apples compa
 
 That threshold choice is important. For Toslop, a false positive is worse than a false negative. Missing some AI-generated pages makes the aggregate estimate conservative. Accusing human writing of being AI-written damages trust. The 0.6 threshold was selected for that tradeoff.
 
+The current deployed candidate keeps the same feature family and threshold but retrains with the defensive HC3 slice described above. Its supervised-test operating points are:
+
+| Model | Threshold | Accuracy | Human false-positive rate | AI recall | Confusion |
+| --- | ---: | ---: | ---: | ---: | --- |
+| defensive `lexical_shape_plus_markov` | 0.5 | 97.97% | 2.22% | 98.14% | 4,442 TP / 4,368 TN / 99 FP / 84 FN |
+| defensive `lexical_shape_plus_markov` | 0.6 | 97.89% | 1.52% | 97.30% | 4,404 TP / 4,399 TN / 68 FP / 122 FN |
+
+Compared with the previous production candidate at threshold 0.6, supervised-test human false positives dropped from 100 to 68, while AI false negatives rose from 68 to 122. That is the intended tradeoff.
+
 ## Calibration Results
 
-The model was also checked against held-out HC3 calibration sets that were not part of training. This is where the story becomes more nuanced.
+The original model looked strong on the supervised split but failed badly on a different human-writing domain. At the 0.6 production threshold, the pre-defensive candidate scored HC3 wiki human rows as AI at an unacceptable rate.
 
 | Method | Supervised test | HC3 wiki calibration | HC3 QA calibration |
 | --- | ---: | ---: | ---: |
@@ -259,11 +286,28 @@ The model was also checked against held-out HC3 calibration sets that were not p
 | `shape_ngrams` | 88.01% | 48.30% | 66.89% |
 | `markov_surface` | 90.40% | 50.19% | 65.81% |
 
-The combined model did not win every calibration slice. Lexical-style did slightly better on HC3 wiki, while lexical-style+Markov won HC3 QA. We still chose the combined candidate because it won the supervised mixture, improved the conservative-threshold operating point, and provided a richer set of interpretable signals. The calibration result is also a useful warning: AI-writing detection is domain-sensitive. A model that looks excellent on a supervised split can become much less certain on a different genre.
+The combined model did not win every calibration slice. Lexical-style did slightly better on HC3 wiki, while lexical-style+Markov won HC3 QA. More importantly, all methods were domain-sensitive. A model that looked excellent on the supervised split became much less reliable on polished encyclopedia-like human prose.
 
-At the 0.6 production threshold, HC3 wiki accuracy for the primary candidate was 51.17%, with an 86.02% human false-positive rate and 95.43% AI recall. HC3 QA accuracy was 80.15%, with a 38.51% human false-positive rate and 92.00% AI recall. That is why Toslop treats the score as measurement, not identity. The public site should be read as "this crawl sample contains this much AI-like writing according to this detector," not "these pages were definitely written by AI."
+The fix was not reinforcement learning. There is no interactive environment or reward signal here. The safer correction is supervised hard-negative training: put a small, deterministic, auditable portion of the problematic domain into training and reserve the rest for holdout evaluation.
 
-We also tested whether the model should use every eligible feature rather than a cap. With `--max-features 0`, the vocabulary expanded to 108,954 features: 104,626 lexical features, 3,815 sequence n-grams, 237 shape features, 132 posish features, 60 direct Markov features, and small token/semantic/style groups. That full-size model was slower, produced an 11 MB logistic artifact before the edge wrapper, and regressed on the held-out sets: 97.28% supervised-test accuracy at threshold 0.5, 97.64% at threshold 0.6, 48.27% HC3 wiki accuracy, and 72.28% HC3 QA accuracy. The 30,000-feature cap is therefore not just a size compromise; it is the best tested operating point so far.
+At the 0.6 production threshold, the before/after looks like this:
+
+| Model | Evaluation split | Rows | Accuracy | Human false-positive rate | AI recall | Confusion |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| pre-defensive | supervised test | 8,993 | 98.13% | 2.24% | 98.50% | 4,458 TP / 4,367 TN / 100 FP / 68 FN |
+| defensive HC3 | supervised test | 8,993 | 97.89% | 1.52% | 97.30% | 4,404 TP / 4,399 TN / 68 FP / 122 FN |
+| pre-defensive | HC3 wiki full calibration | 15,446 | 51.17% | 86.02% | 95.43% | 6,731 TP / 1,173 TN / 7,220 FP / 322 FN |
+| defensive HC3 | HC3 wiki holdout | 11,883 | 88.85% | 10.66% | 88.24% | 4,668 TP / 5,890 TN / 703 FP / 622 FN |
+| pre-defensive | HC3 QA full calibration | 3,618 | 80.15% | 38.51% | 92.00% | 2,036 TP / 864 TN / 541 FP / 177 FN |
+| defensive HC3 | HC3 QA holdout | 2,817 | 87.43% | 8.44% | 84.97% | 1,498 TP / 965 TN / 89 FP / 265 FN |
+
+The HC3 rows are not directly apples-to-apples because the defensive run consumes 4,364 HC3 rows for training and evaluates on the remaining holdout. That is the correct way to read the result: we gave the model a controlled amount of the domain it was failing, then measured on rows it did not see. The hash audit reports zero overlap between the expanded training set and the supervised test, HC3 wiki holdout, and HC3 QA holdout.
+
+These three audited splits are the acceptance gate for the current model: AI recall must stay greater than 80%, and human false-positive rate must stay below 20%. The defensive HC3 model passes that gate at the deployed 0.6 threshold.
+
+This is still not proof of authorship. It is a better-calibrated measurement instrument. The public site should be read as "this crawl sample contains this much AI-like writing according to this detector," not "these pages were definitely written by AI."
+
+We also tested whether the pre-defensive model should use every eligible feature rather than a cap. With `--max-features 0`, the vocabulary expanded to 108,954 features: 104,626 lexical features, 3,815 sequence n-grams, 237 shape features, 132 posish features, 60 direct Markov features, and small token/semantic/style groups. That full-size model was slower, produced an 11 MB logistic artifact before the edge wrapper, and regressed on the held-out sets: 97.28% supervised-test accuracy at threshold 0.5, 97.64% at threshold 0.6, 48.27% HC3 wiki accuracy, and 72.28% HC3 QA accuracy. The 30,000-feature cap is therefore not just a size compromise; it is the best tested operating point so far.
 
 ## Why Not Use A Bigger AI Detector?
 
@@ -304,7 +348,7 @@ From a clean checkout, the reproduction flow is:
 ```bash
 python -m venv .venv
 . .venv/bin/activate
-pip install pandas pyarrow nltk
+pip install pandas pyarrow nltk huggingface_hub
 
 # Download source datasets into services/data/hf-corpora.
 # Use the pinned revisions listed below.
@@ -334,14 +378,19 @@ python scripts_build_authorship_corpus_v2.py \
   --output-dir ../evals/corporate_sequence_model/authorship_corpus_v2
 
 python run_authorship_corpus_v2_markov_everything.py \
-  --output ../evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate \
+  --output ../evals/corporate_sequence_model/authorship_corpus_v2_defensive_hc3_candidate \
   --min-frequency 8 \
   --max-features 30000 \
   --epochs 160 \
-  --methods lexical_style,shape_ngrams,shape_ngrams_plus_markov,markov_surface,lexical_shape_plus_markov \
+  --methods lexical_shape_plus_markov \
+  --defensive-calibration-train-ratio 0.25 \
+  --defensive-calibration-wiki-max-per-label 1800 \
+  --defensive-calibration-qa-max-per-label 450 \
   --export-edge-candidate lexical_shape_plus_markov \
   --edge-threshold 0.6
 ```
+
+To reproduce the older ablation table, run the same command without the three `--defensive-calibration-*` flags and with `--methods lexical_style,shape_ngrams,shape_ngrams_plus_markov,markov_surface,lexical_shape_plus_markov`.
 
 The public package should pin these source dataset revisions:
 
@@ -387,17 +436,18 @@ The key generated artifact hashes are:
 
 | Artifact | SHA-256 |
 | --- | --- |
-| `supervised_train_mix.jsonl` | `4548b5922387ca837108095c4d968e0b04d3d985fed75e547cea5030f9e2e843` |
-| `supervised_test_mix.jsonl` | `8a32f654f33bd716c441b6872494b65728187561b3901df12d7ba4fe4cdbaf55` |
-| `calibration_hc3_wiki.jsonl` | `5dec28fd2446ad0d4d5500085e3a294e1ce7d2aaae9b3d71981c7b77ca700de7` |
-| `calibration_hc3_qa.jsonl` | `0d157f533323c751eb29a40c1edcb13ad73a41921dbafbb7b5704ac8fb2de6f4` |
-| `authorship_corpus_v2/report.json` | `af962c191f3f4a4d82155e8436d0beba9a316a1d09e8f49f5c201d0a7450c90c` |
-| `method_comparison.json` | `1a479814bdb1d3f0900addc24a54cacbb3d24dd1aafa4db401d34b916a36ed5f` |
-| `lexical_shape_plus_markov_model.json` | `c8c82dc7f75db94ccd02f76b881a7bd70c2a6261931ac6ca227c132d56a8ac80` |
-| `lexical_shape_plus_markov_edge_candidate.json` | `23cee3fa5d16cc5554c647426601cc95449bdf0dc78e00a9a6fe327d66cbce31` |
-| `lexical_shape_plus_markov_predictions_supervised_test.jsonl` | `beb3ec9c0d6694e83b303e3c2035479160f4970e039f2d817f662a6444789cfe` |
-| `lexical_shape_plus_markov_predictions_calibration_hc3_wiki.jsonl` | `2f86592dff4e1952457685a754b209f8d756eced7cd3c0329fee3fb4c6f532ba` |
-| `lexical_shape_plus_markov_predictions_calibration_hc3_qa.jsonl` | `de580a398bdc6f4b78a13990c60f939f548b5bd02a1fe128077a463b4c279717` |
-| `surface_markov_models.json` | `01e0cedf41b484a36cbe186c50e76b9d75cf996a931466ef9bdcc63777ab2b13` |
+| `supervised_train_mix.jsonl` | `5466cadccf90e02863bb97eeaae4b285893f9a005ff27898bb56fb27da475ddd` |
+| `supervised_test_mix.jsonl` | `6a7605d1c56ad2c4339a727d311196fb8aaf122c8fe8485db18090028a671104` |
+| `calibration_hc3_wiki.jsonl` | `66fee99b5cb366ec8851596af8562bb66b26de41c2a764c49e3c78a6524698cd` |
+| `calibration_hc3_qa.jsonl` | `2246c008aea7ba48823dbef485b8f70606fc49d61c9904a002ccfb742f427966` |
+| `authorship_corpus_v2/report.json` | `22a4164080ef5d9134903792a22132d354829b49ec503a9985868f02e5857a14` |
+| pre-defensive ablation `method_comparison.json` | `1a479814bdb1d3f0900addc24a54cacbb3d24dd1aafa4db401d34b916a36ed5f` |
+| defensive `method_comparison.json` | `81e61bb719a7359e92f315597c3b74d208e6364d9ecfceaca0d747f8f304edf3` |
+| defensive `lexical_shape_plus_markov_model.json` | `658c84765afc68324335fe769e4a5d73a0a991ee338ceaf19fbe067bbba64b11` |
+| defensive `lexical_shape_plus_markov_edge_candidate.json` | `9acfe629f1d305705f9335cc49d11c0ed7b32fb6245bee6e9f560661cace3d69` |
+| defensive `lexical_shape_plus_markov_predictions_supervised_test.jsonl` | `0672185c4cf3d24cc4f935b37a98a662deb13b75ffc04c8cc70858e188c14432` |
+| defensive `lexical_shape_plus_markov_predictions_calibration_hc3_wiki.jsonl` | `cf18032da8d83470cdd50be81344abb1a5f18f1840ac3552f93d9eb3b135efdf` |
+| defensive `lexical_shape_plus_markov_predictions_calibration_hc3_qa.jsonl` | `85c5b71cad26d0ebfe909dd2952a53b68314dd346238eb31d55897bb54621567` |
+| defensive `surface_markov_models.json` | `94260a935110c9667da7a5500922dab788691a714a9322591ebf492ffc296eb2` |
 
 The public repo does not redistribute the frozen generated JSONL splits because those files contain source dataset text. Instead, it publishes the downloader, source revision pins, source-file checksums, and generated split checksums. That makes the method reproducible from public datasets and lets readers verify whether their regenerated files match the original run byte-for-byte.

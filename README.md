@@ -13,7 +13,7 @@ It is intentionally smaller than the private infrastructure monorepo. It include
 - `services/gateway/scripts_build_authorship_corpus_v2.py`: deterministic v2 corpus builder.
 - `services/gateway/run_authorship_corpus_v2_markov_everything.py`: ablation and model-training runner.
 - `services/gateway/model_artifacts/corporate_authorship/`: frozen production candidate artifacts.
-- `services/evals/corporate_sequence_model/**/method_comparison.json`: saved evaluation reports used by the article tables.
+- `services/evals/corporate_sequence_model/**/method_comparison.json`: saved evaluation reports used by the article tables, including the current defensive HC3 candidate.
 - `metadata/source_revisions.json`: pinned source dataset revisions and source-file hashes.
 - `metadata/artifact_checksums.sha256`: checksums for committed replication artifacts and generated split artifacts from the original run.
 
@@ -73,20 +73,23 @@ python scripts_build_authorship_corpus_v2.py \
   --output-dir ../evals/corporate_sequence_model/authorship_corpus_v2
 ```
 
-Train and evaluate the model family:
+Train and evaluate the current defensive HC3 candidate:
 
 ```bash
 python run_authorship_corpus_v2_markov_everything.py \
-  --output ../evals/corporate_sequence_model/authorship_corpus_v2_lexical_shape_markov_candidate \
+  --output ../evals/corporate_sequence_model/authorship_corpus_v2_defensive_hc3_candidate \
   --min-frequency 8 \
   --max-features 30000 \
   --epochs 160 \
-  --methods lexical_style,shape_ngrams,shape_ngrams_plus_markov,markov_surface,lexical_shape_plus_markov \
+  --methods lexical_shape_plus_markov \
+  --defensive-calibration-train-ratio 0.25 \
+  --defensive-calibration-wiki-max-per-label 1800 \
+  --defensive-calibration-qa-max-per-label 450 \
   --export-edge-candidate lexical_shape_plus_markov \
   --edge-threshold 0.6
 ```
 
-Compare generated files with `metadata/artifact_checksums.sha256`.
+This run starts from the same supervised v2 train/test split, deterministically moves a capped 25% per-label slice of HC3 wiki and HC3 QA rows into training, and evaluates on the remaining HC3 holdout rows with a zero-overlap hash audit. The operating target is AI recall greater than 80% and human false-positive rate below 20% on the supervised test, HC3 wiki holdout, and HC3 QA holdout. Compare generated files with `metadata/artifact_checksums.sha256`.
 
 ## Publication Note
 
