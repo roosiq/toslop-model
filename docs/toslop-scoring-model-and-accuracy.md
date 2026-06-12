@@ -349,6 +349,7 @@ From a clean checkout, the reproduction flow is:
 python -m venv .venv
 . .venv/bin/activate
 pip install pandas pyarrow nltk huggingface_hub
+python -m nltk.downloader averaged_perceptron_tagger_eng
 
 # Download source datasets into services/data/hf-corpora.
 # Use the pinned revisions listed below.

@@ -29,6 +29,7 @@ Install dependencies:
 python -m venv .venv
 . .venv/bin/activate
 pip install pandas pyarrow nltk huggingface_hub
+python -m nltk.downloader averaged_perceptron_tagger_eng
 ```
 
 Download pinned source datasets:
