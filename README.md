@@ -18,6 +18,32 @@ It is intentionally smaller than the private infrastructure monorepo. It include
 - `metadata/source_revisions.json`: pinned source dataset revisions and source-file hashes.
 - `metadata/artifact_checksums.sha256`: checksums for committed replication artifacts and generated split artifacts from the original run.
 
+## Current Production Model
+
+As of June 12, 2026, Toslop's live scorer uses the promoted XGBoost core-Markov model:
+
+| Field | Value |
+| --- | --- |
+| Model id | `corporate-lexical-shape-core-markov-xgboost-authorship-v2-defensive-hc3` |
+| Method | `lexical_shape_plus_core_markov_xgboost` |
+| Trainer | `xgboost` |
+| Runtime | Pure Python scorer over committed XGBoost JSON trees |
+| Threshold | `0.6` |
+| Rollback baseline | `corporate-lexical-shape-markov-authorship-v2-defensive-hc3` |
+
+The production artifact is the model JSON, metadata JSON, edge candidate JSON,
+and `surface_markov_models.json` in
+`services/gateway/model_artifacts/corporate_authorship/`. The previous
+defensive linear model remains in that directory as a baseline and rollback
+artifact.
+
+At threshold `0.6`, the promoted model passes the published operating target of
+AI recall above 80% and human false-positive rate below 20% on all audited
+splits: supervised test, HC3 wiki holdout, and HC3 QA holdout. The reason it was
+promoted over the defensive linear model is human accuracy on the HC3 holdouts:
+HC3 wiki human false positives dropped from 10.66% to 3.50%, and HC3 QA human
+false positives dropped from 8.44% to 6.83%.
+
 ## What Is Not Included
 
 The repository does not redistribute the full source corpora or Toslop's generated JSONL train/test/calibration splits. Those files contain source dataset text. Reproduce them by downloading the pinned Hugging Face revisions and running the scripts below.

@@ -70,6 +70,26 @@ The production model is:
 - production threshold: 0.6;
 - operating target: AI recall greater than 80% and human false-positive rate below 20% on the supervised test, HC3 wiki holdout, and HC3 QA holdout.
 
+## Current Production Artifact
+
+As of June 12, 2026, the live Toslop scorer is the promoted XGBoost core-Markov model:
+
+- model id: `corporate-lexical-shape-core-markov-xgboost-authorship-v2-defensive-hc3`;
+- method: `lexical_shape_plus_core_markov_xgboost`;
+- trainer: `xgboost`;
+- runtime scorer: pure Python over the committed XGBoost JSON trees;
+- default threshold: 0.6;
+- rollback baseline: `corporate-lexical-shape-markov-authorship-v2-defensive-hc3`, the previous defensive linear model.
+
+The production artifact is defined by these committed files:
+
+- `services/gateway/model_artifacts/corporate_authorship/lexical_shape_plus_core_markov_xgboost_model.json`;
+- `services/gateway/model_artifacts/corporate_authorship/lexical_shape_plus_core_markov_xgboost_model_metadata.json`;
+- `services/gateway/model_artifacts/corporate_authorship/lexical_shape_plus_core_markov_xgboost_edge_candidate.json`;
+- `services/gateway/model_artifacts/corporate_authorship/surface_markov_models.json`.
+
+The public Toslop Worker does not run the model directly. It serves the report UI, `/summary.json`, and this `/model/` explanation page. Scoring happens in the private Slop Slingers gateway via the Corporate Slop authorship route, and the crawler stores the resulting page-level measurements for the public report.
+
 At Toslop's deployed 0.6 threshold, the promoted XGBoost model reached 97.56% accuracy on the held-out supervised test split, with a 1.50% human false-positive rate and 96.64% AI recall. On the harder defensive holdouts, it reached 90.19% accuracy on HC3 wiki with a 3.50% human false-positive rate and 82.33% AI recall, and 87.58% accuracy on HC3 QA with a 6.83% human false-positive rate and 84.23% AI recall.
 
 This clears the operating target on all three audited splits. Compared with the previous defensive linear model, the biggest improvement is human accuracy on HC3 wiki: human false positives dropped from 10.66% to 3.50%. HC3 QA human false positives dropped from 8.44% to 6.83%. The tradeoff is lower AI recall on HC3 wiki, from 88.24% to 82.33%, but still above the published 80% target.
