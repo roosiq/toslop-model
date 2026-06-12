@@ -111,8 +111,8 @@ and shape n-gram features alone. Adding core Markov improves HC3 wiki accuracy
 and lowers HC3 QA human false positives, while keeping AI recall above 80% on
 all required splits.
 
-The best XGBoost path to investigate next is `lexical_shape_plus_core_markov`.
-It excludes semantic/coarse/motif Markov views, has slightly lower HC3 false
-positive rates than the full-Markov XGBoost candidate, and keeps essentially
-the same HC3 wiki AI recall. It is still not edge-deployable until the gateway
-or Worker has an XGBoost tree runtime.
+The promoted XGBoost path is `lexical_shape_plus_core_markov`. It excludes
+semantic/coarse/motif Markov views, has slightly lower HC3 false-positive rates
+than the full-Markov XGBoost candidate, and keeps essentially the same HC3 wiki
+AI recall. The gateway now scores this model through a pure JSON tree runtime,
+so production does not need the native `xgboost` package.

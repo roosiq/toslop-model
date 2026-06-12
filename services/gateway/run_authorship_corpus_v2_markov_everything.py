@@ -1152,33 +1152,52 @@ def build_edge_candidate_artifact(report: dict[str, Any], method: str, *, thresh
     if method not in methods:
         raise ValueError(f"method {method!r} not found in report results")
     result = methods[method]
-    if str(result.get("trainer", "lr")) != "lr":
-        raise ValueError(
-            f"edge candidate export currently supports only the linear JSON runtime model; "
-            f"{method!r} uses trainer={result.get('trainer')!r}"
-        )
+    trainer = str(result.get("trainer", "lr"))
     model_path = Path(str(result.get("files", {}).get("model") or ""))
     if not model_path.exists():
         raise FileNotFoundError(f"model file for {method!r} not found: {model_path}")
-    model = normalize_model_for_edge(json.loads(model_path.read_text(encoding="utf-8")))
     supervised = result.get("splits", {}).get("supervised_test", {})
     selected_threshold = None
     for item in supervised.get("threshold_sweep", []):
         if abs(float(item.get("threshold", -1.0)) - threshold) < 1e-9:
             selected_threshold = item
             break
-    feature_families = ["lexical_style", "shape_ngrams", "surface_markov"] if method == "lexical_shape_plus_markov" else [method]
+    base_method = str(result.get("base_method") or method.removesuffix("_xgboost"))
+    if base_method == "lexical_shape_plus_core_markov":
+        feature_families = ["lexical_style", "shape_ngrams", "surface_markov_core"]
+    elif base_method == "lexical_shape_plus_markov":
+        feature_families = ["lexical_style", "shape_ngrams", "surface_markov"]
+    else:
+        feature_families = [base_method]
+    if trainer == "xgboost":
+        feature_families.append("xgboost_trees")
     defensive_enabled = bool(report.get("defensive_training", {}).get("enabled"))
-    model_version = (
-        "corporate-lexical-shape-markov-authorship-v2-defensive-hc3"
-        if defensive_enabled
-        else "corporate-lexical-shape-markov-authorship-v2-candidate"
-    )
+    version_suffix = "defensive-hc3" if defensive_enabled else "candidate"
+    if method == "lexical_shape_plus_core_markov_xgboost":
+        model_version = f"corporate-lexical-shape-core-markov-xgboost-authorship-v2-{version_suffix}"
+    elif method == "lexical_shape_plus_markov":
+        model_version = f"corporate-lexical-shape-markov-authorship-v2-{version_suffix}"
+    else:
+        model_version = f"corporate-{method.replace('_', '-')}-authorship-v2-{version_suffix}"
     operating_target = evaluate_operating_target(result, threshold)
-    return {
+    feature_source: dict[str, Any] = {
+        "modelDirectory": str(Path(str(report.get("output_dir", model_path.parent))).resolve()),
+        "modelFile": model_path.name,
+        "markovFile": "surface_markov_models.json",
+        "comparisonFile": "method_comparison.json",
+    }
+    if trainer == "xgboost":
+        metadata_path = Path(str(result.get("files", {}).get("model_metadata") or ""))
+        if not metadata_path.exists():
+            raise FileNotFoundError(f"model metadata file for {method!r} not found: {metadata_path}")
+        feature_source["modelMetadataFile"] = metadata_path.name
+        if "core_markov" in method:
+            feature_source["markovViews"] = ["shape", "posish", "true_pos"]
+    artifact: dict[str, Any] = {
+        "schema": "corporate.edge_candidate_detector.v2" if trainer == "xgboost" else "corporate.edge_candidate_detector.v1",
         "modelVersion": model_version,
+        "trainer": trainer,
         "primaryMethod": method,
-        "primaryModel": model,
         "decisionPolicy": {
             "threshold": threshold,
             "selectedThresholdMetrics": selected_threshold,
@@ -1193,12 +1212,7 @@ def build_edge_candidate_artifact(report: dict[str, Any], method: str, *, thresh
             ),
         },
         "featureFamilies": feature_families,
-        "featureSource": {
-            "modelDirectory": str(Path(str(report.get("output_dir", model_path.parent))).resolve()),
-            "modelFile": model_path.name,
-            "markovFile": "surface_markov_models.json",
-            "comparisonFile": "method_comparison.json",
-        },
+        "featureSource": feature_source,
         "evaluation": {
             "supervisedTest": {
                 "accuracy": supervised.get("accuracy"),
@@ -1221,6 +1235,9 @@ def build_edge_candidate_artifact(report: dict[str, Any], method: str, *, thresh
             "markovModelSummary": report.get("markov_model_summary"),
         },
     }
+    if trainer == "lr":
+        artifact["primaryModel"] = normalize_model_for_edge(json.loads(model_path.read_text(encoding="utf-8")))
+    return artifact
 
 
 def evaluate_method(

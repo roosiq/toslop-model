@@ -4,7 +4,7 @@ Toslop measures how much AI-shaped writing appears in the public web crawl it wa
 
 That distinction matters. LLM-as-judge systems can be useful for qualitative review, but they are expensive, slower to run at crawl scale, and harder to reproduce. Toslop needs something closer to an instrument: the same input should produce the same score, the model should be cheap enough to run repeatedly, and the score should expose enough evidence to audit why it moved.
 
-The current Toslop score uses the Corporate Slop authorship detector, specifically the defensive HC3 version of the `lexical_shape_plus_markov` candidate model. It turns a text sample into deterministic features, runs a logistic regression model, and reports the model's AI-generated probability as a 0-100 score.
+The current Toslop score uses the Corporate Slop authorship detector, specifically the defensive HC3 XGBoost version of the `lexical_shape_plus_core_markov` feature path. It turns a text sample into deterministic features, runs a compact XGBoost tree ensemble stored as JSON, and reports the model's AI-generated probability as a 0-100 score.
 
 ## What The Score Means
 
@@ -54,22 +54,25 @@ The final model then returns one number: how AI-like this text looks compared wi
 
 The production model is:
 
-- model family: standardized logistic regression;
-- primary method: `lexical_shape_plus_markov`;
+- model family: XGBoost binary logistic tree ensemble;
+- primary method: `lexical_shape_plus_core_markov_xgboost`;
+- base feature path: `lexical_shape_plus_core_markov`;
 - training rows: 25,369;
 - supervised test rows: 8,993;
 - defensive HC3 holdout rows: 11,883 HC3 wiki rows and 2,817 HC3 QA rows;
 - feature cap: 30,000;
 - minimum feature frequency: 8;
-- epochs: 160;
-- learning rate: 0.1;
-- L2 penalty: 0.02;
+- boosting rounds: 350;
+- max tree depth: 4;
+- learning rate: 0.06;
+- subsample: 0.9;
+- column sample by tree: 0.85;
 - production threshold: 0.6;
 - operating target: AI recall greater than 80% and human false-positive rate below 20% on the supervised test, HC3 wiki holdout, and HC3 QA holdout.
 
-At the default 0.5 evaluation threshold, the defensive combined model reached 97.97% accuracy on the held-out supervised test split. At Toslop's deployed 0.6 threshold, it reached 97.89% accuracy, with a 1.52% human false-positive rate and 97.30% AI recall. The small recall reduction is intentional: the retrain is designed to reduce false AI accusations on polished human writing.
+At Toslop's deployed 0.6 threshold, the promoted XGBoost model reached 97.56% accuracy on the held-out supervised test split, with a 1.50% human false-positive rate and 96.64% AI recall. On the harder defensive holdouts, it reached 90.19% accuracy on HC3 wiki with a 3.50% human false-positive rate and 82.33% AI recall, and 87.58% accuracy on HC3 QA with a 6.83% human false-positive rate and 84.23% AI recall.
 
-This clears the operating target. At threshold 0.6, AI recall is 97.30% on the supervised test split, 88.24% on HC3 wiki holdout, and 84.97% on HC3 QA holdout. Human false-positive rate is 1.52%, 10.66%, and 8.44% respectively.
+This clears the operating target on all three audited splits. Compared with the previous defensive linear model, the biggest improvement is human accuracy on HC3 wiki: human false positives dropped from 10.66% to 3.50%. HC3 QA human false positives dropped from 8.44% to 6.83%. The tradeoff is lower AI recall on HC3 wiki, from 88.24% to 82.33%, but still above the published 80% target.
 
 ## Training Data
 
@@ -123,23 +126,23 @@ move round(label_count * 0.25) rows into training, capped per label
 evaluate only on the remaining HC3 rows
 ```
 
-That fourth stage is the main model fix. The old model treated polished wiki-style human text as too AI-like. The defensive stage gives the logistic model and Markov matrices a controlled dose of that domain while preserving a large HC3 holdout to measure whether false positives improved.
+That fourth stage is the main model fix. The old model treated polished wiki-style human text as too AI-like. The defensive stage gives the learner and Markov matrices a controlled dose of that domain while preserving a large HC3 holdout to measure whether false positives improved.
 
 ## Features
 
-The final model combines three feature families.
+The final model combines three feature families before passing them to XGBoost.
 
 The first family is lexical/style evidence. This includes word unigrams and bigrams, word count, character count, sentence count, punctuation count, average word length, lexical diversity, uppercase-token ratio, punctuation ratio, alpha ratio, and related surface statistics. This family captures much of the obvious signal: repeated function-word patterns, stock transitions, unusually regular sentence structure, and vocabulary distributions that differ between the AI and human sides of the corpus.
 
 The second family is shape n-grams. Instead of looking only at words, the model maps text into abstract sequences: token types, rough part-of-speech-like buckets, and character shapes. For example, it tracks whether a token looks like lowercase text, title case, punctuation, a determiner, a modal, a preposition, or a noun-like word. It also tracks character-level shapes such as lowercase letters, uppercase letters, digits, spaces, and punctuation. These features help the detector see writing rhythm without memorizing only specific phrases.
 
-The third family is the surface Markov layer. This is a set of Markov transition matrices stored in sparse form. The model maps text into several symbolic views and compares how likely those sequences are under AI-trained and human-trained transition matrices. The deployed logistic model uses matrix-derived features from the shape, coarse, true_pos, and motif views. For each view and order, it derives AI cross-entropy, human cross-entropy, total log-likelihood ratio, per-transition log-likelihood ratio, and transition count.
+The third family is the surface Markov layer. This is a set of Markov transition matrices stored in sparse form. The model maps text into several symbolic views and compares how likely those sequences are under AI-trained and human-trained transition matrices. The promoted XGBoost model uses the core Markov views: `shape`, `posish`, and `true_pos`, each at order 1 and order 2. For each view and order, it derives AI cross-entropy, human cross-entropy, total log-likelihood ratio, per-transition log-likelihood ratio, and transition count.
 
 The Markov layer is intentionally shallow. It does not try to understand the document the way a large language model would. It asks a narrower question: does the sequence of surface states move like the AI examples or like the human examples?
 
 ## What The Markov Matrices Are
 
-Yes: the model does use Markov matrices. They are not the whole detector, but they are a real part of the deployed `lexical_shape_plus_markov` model.
+Yes: the model does use Markov matrices. They are not the whole detector, but they are a real part of the deployed `lexical_shape_plus_core_markov_xgboost` model.
 
 The plain-English "walking pattern" above becomes a matrix here. Each row is the current state, each column is the possible next state, and each cell stores how often that transition happened in the training data. We build one version of the matrix from AI-labeled rows and one version from human-labeled rows. At scoring time, the detector walks through the sample's sequence and asks which matrix assigns that walk a higher probability.
 
@@ -162,7 +165,7 @@ P(next | context, label) =
   / (context_count(label, context) + alpha * vocab_size)
 ```
 
-The artifact contains twelve Markov pairs: `shape`, `coarse`, `posish`, `true_pos`, `motif`, and `semantic`, each at order 1 and order 2. The candidate model trains all twelve, and the final 30,000-feature logistic vocabulary selected all 60 direct Markov summary features: five measurements for each of the six views at both order 1 and order 2.
+The artifact contains twelve Markov pairs: `shape`, `coarse`, `posish`, `true_pos`, `motif`, and `semantic`, each at order 1 and order 2. The promoted runtime intentionally uses the core subset: `shape`, `posish`, and `true_pos`. That means it scores six Markov matrices, not all twelve. This was the best tested XGBoost path because it kept the useful sequence-rhythm signal while avoiding extra semantic/coarse/motif views that did not improve the false-positive tradeoff.
 
 One actual row from the deployed `shape_order1` matrix is the `WORD` context:
 
@@ -177,7 +180,7 @@ One actual row from the deployed `shape_order1` matrix is the `WORD` context:
 | Human | `WORD` | `SHORT` | 154,848 | 0.0772 |
 | Human | `WORD` | `LONG` | 75,004 | 0.0374 |
 
-That row shows the kind of signal the Markov layer contributes. After a `WORD` state, AI examples moved into `LONG` nearly twice as often as human examples in this training corpus, while human examples moved into `SHORT` more often. The detector does not use that row directly as a standalone verdict. It scores the whole observed sequence against the AI and human matrices, then passes the resulting likelihood-ratio and cross-entropy features into the logistic regression.
+That row shows the kind of signal the Markov layer contributes. After a `WORD` state, AI examples moved into `LONG` nearly twice as often as human examples in this training corpus, while human examples moved into `SHORT` more often. The detector does not use that row directly as a standalone verdict. It scores the whole observed sequence against the AI and human matrices, then passes the resulting likelihood-ratio and cross-entropy features into the tree ensemble.
 
 Another row, from `coarse_order1`, shows the abstract rhetorical pattern the model sees:
 
@@ -222,23 +225,22 @@ markov::coarse::order1::ai_cross_entropy
 markov::motif::order2::human_cross_entropy
 ```
 
-The final logistic model selected 60 such Markov features. The largest positive direct Markov weights point toward AI when the sample's sequence has a higher AI-vs-human likelihood ratio, especially in order-2 shape, coarse, and motif views. This is exactly the role we wanted: not a standalone detector, but a sequence-rhythm correction layered on top of lexical evidence.
+The promoted model has 30 direct Markov summary features available from the core views. This is exactly the role we wanted: not a standalone detector, but a sequence-rhythm correction layered on top of lexical and shape evidence.
 
-## The Logistic Model
+## The XGBoost Model
 
-After feature extraction, the detector trains a logistic regression model. The vocabulary is built from feature keys that appear at least eight times in training, sorted by frequency and key name, then capped at 30,000 features.
+After feature extraction, the detector trains an XGBoost binary logistic model. The vocabulary is built from feature keys that appear at least eight times in training, sorted by frequency and key name, then capped at 30,000 features.
 
-For every selected feature, training stores a mean and standard deviation. At runtime, the detector computes:
+At runtime, the detector builds the same sparse feature map and walks the XGBoost trees from the committed JSON model. Missing sparse features follow each tree's learned missing-value branch. The raw tree margin is converted to a probability with the sigmoid function:
 
 ```text
-standardized_value = (raw_value - training_mean) / training_std
-logit = bias + sum(standardized_value * feature_weight)
-probability = sigmoid(logit)
+margin = base_margin + sum(tree_leaf_weight)
+probability = sigmoid(margin)
 ```
 
-The training loop is pure Python sparse logistic regression. It uses 160 epochs, learning rate 0.1, L2 penalty 0.02, and a clipped sigmoid for numerical stability. The model artifact stores `vocab`, `weights`, `bias`, `means`, `stds`, `min_frequency`, `max_features`, `epochs`, `lr`, and `l2`.
+The production artifact stores the XGBoost model JSON plus a metadata JSON file containing `vocab`, `min_frequency`, `max_features`, XGBoost parameters, round count, and feature-importance summaries. The runtime scorer is pure Python over the JSON tree structure, so production scoring does not need the native `xgboost` package.
 
-Because the model is linear, Toslop can show the strongest contributing features. Each active feature has a family, value, weight, contribution, and direction. This makes the detector easier to inspect than a black-box prompt response.
+The previous linear logistic model is still kept as a baseline and rollback artifact. It is easier to explain feature-by-feature because every active feature has a signed coefficient. The XGBoost model is less linear, but Toslop can still expose active high-gain features from the tree model for auditability.
 
 ## Accuracy Against Internal Methods
 
@@ -265,14 +267,18 @@ Those numbers use the standard 0.5 probability cutoff for apples-to-apples compa
 
 That threshold choice is important. For Toslop, a false positive is worse than a false negative. Missing some AI-generated pages makes the aggregate estimate conservative. Accusing human writing of being AI-written damages trust. The 0.6 threshold was selected for that tradeoff.
 
-The current deployed candidate keeps the same feature family and threshold but retrains with the defensive HC3 slice described above. Its supervised-test operating points are:
+The defensive linear model fixed the largest calibration failure, then we tested XGBoost over the same defensive corpus. The promoted model is the `lexical_shape_plus_core_markov_xgboost` path because it further reduced human false positives on the HC3 holdouts while staying above the AI-recall target:
 
-| Model | Threshold | Accuracy | Human false-positive rate | AI recall | Confusion |
-| --- | ---: | ---: | ---: | ---: | --- |
-| defensive `lexical_shape_plus_markov` | 0.5 | 97.97% | 2.22% | 98.14% | 4,442 TP / 4,368 TN / 99 FP / 84 FN |
-| defensive `lexical_shape_plus_markov` | 0.6 | 97.89% | 1.52% | 97.30% | 4,404 TP / 4,399 TN / 68 FP / 122 FN |
+| Model | Evaluation split | Accuracy | Human false-positive rate | AI recall |
+| --- | --- | ---: | ---: | ---: |
+| defensive linear `lexical_shape_plus_markov` | supervised test | 97.89% | 1.52% | 97.30% |
+| defensive linear `lexical_shape_plus_markov` | HC3 wiki holdout | 88.85% | 10.66% | 88.24% |
+| defensive linear `lexical_shape_plus_markov` | HC3 QA holdout | 87.43% | 8.44% | 84.97% |
+| promoted XGB `lexical_shape_plus_core_markov` | supervised test | 97.56% | 1.50% | 96.64% |
+| promoted XGB `lexical_shape_plus_core_markov` | HC3 wiki holdout | 90.19% | 3.50% | 82.33% |
+| promoted XGB `lexical_shape_plus_core_markov` | HC3 QA holdout | 87.58% | 6.83% | 84.23% |
 
-Compared with the previous production candidate at threshold 0.6, supervised-test human false positives dropped from 100 to 68, while AI false negatives rose from 68 to 122. That is the intended tradeoff.
+The difference on normal supervised rows is small. The reason to promote XGBoost is human accuracy on the defensive holdouts: HC3 wiki false positives dropped by roughly two thirds compared with the defensive linear model, and HC3 QA false positives also improved. The model gives up some AI recall on HC3 wiki, but remains above the 80% acceptance threshold.
 
 ## Calibration Results
 
@@ -290,7 +296,7 @@ The combined model did not win every calibration slice. Lexical-style did slight
 
 The fix was not reinforcement learning. There is no interactive environment or reward signal here. The safer correction is supervised hard-negative training: put a small, deterministic, auditable portion of the problematic domain into training and reserve the rest for holdout evaluation.
 
-At the 0.6 production threshold, the before/after looks like this:
+At the 0.6 production threshold, the main sequence of fixes looks like this:
 
 | Model | Evaluation split | Rows | Accuracy | Human false-positive rate | AI recall | Confusion |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
@@ -303,7 +309,15 @@ At the 0.6 production threshold, the before/after looks like this:
 
 The HC3 rows are not directly apples-to-apples because the defensive run consumes 4,364 HC3 rows for training and evaluates on the remaining holdout. That is the correct way to read the result: we gave the model a controlled amount of the domain it was failing, then measured on rows it did not see. The hash audit reports zero overlap between the expanded training set and the supervised test, HC3 wiki holdout, and HC3 QA holdout.
 
-These three audited splits are the acceptance gate for the current model: AI recall must stay greater than 80%, and human false-positive rate must stay below 20%. The defensive HC3 model passes that gate at the deployed 0.6 threshold.
+After that defensive retrain, XGBoost became a practical production option. The promoted core-Markov XGBoost model passes the same acceptance gate at the deployed 0.6 threshold:
+
+| Model | Evaluation split | Rows | Accuracy | Human false-positive rate | AI recall |
+| --- | --- | ---: | ---: | ---: | ---: |
+| promoted XGB core Markov | supervised test | 8,993 | 97.56% | 1.50% | 96.64% |
+| promoted XGB core Markov | HC3 wiki holdout | 11,883 | 90.19% | 3.50% | 82.33% |
+| promoted XGB core Markov | HC3 QA holdout | 2,817 | 87.58% | 6.83% | 84.23% |
+
+These three audited splits are the acceptance gate for the current model: AI recall must stay greater than 80%, and human false-positive rate must stay below 20%. The promoted XGBoost model passes that gate at the deployed 0.6 threshold.
 
 This is still not proof of authorship. It is a better-calibrated measurement instrument. The public site should be read as "this crawl sample contains this much AI-like writing according to this detector," not "these pages were definitely written by AI."
 
@@ -337,6 +351,9 @@ The replication repo includes:
 - `corporate_authorship_detector.py`;
 - `run_authorship_corpus_v2_markov_everything.py`;
 - the frozen `surface_markov_models.json` artifact;
+- the frozen `lexical_shape_plus_core_markov_xgboost_model.json` artifact;
+- the frozen `lexical_shape_plus_core_markov_xgboost_model_metadata.json` artifact;
+- the frozen `lexical_shape_plus_core_markov_xgboost_edge_candidate.json` artifact;
 - the frozen `lexical_shape_plus_markov_model.json` artifact;
 - the frozen `lexical_shape_plus_markov_edge_candidate.json` artifact;
 - `method_comparison.json` files for the ablation tables;
@@ -348,7 +365,7 @@ From a clean checkout, the reproduction flow is:
 ```bash
 python -m venv .venv
 . .venv/bin/activate
-pip install pandas pyarrow nltk huggingface_hub
+pip install pandas pyarrow nltk huggingface_hub scipy xgboost
 python -m nltk.downloader averaged_perceptron_tagger_eng
 
 # Download source datasets into services/data/hf-corpora.
@@ -379,19 +396,27 @@ python scripts_build_authorship_corpus_v2.py \
   --output-dir ../evals/corporate_sequence_model/authorship_corpus_v2
 
 python run_authorship_corpus_v2_markov_everything.py \
-  --output ../evals/corporate_sequence_model/authorship_corpus_v2_defensive_hc3_candidate \
+  --output ../evals/corporate_sequence_model/authorship_corpus_v2_xgboost_core_candidate \
   --min-frequency 8 \
   --max-features 30000 \
-  --epochs 160 \
-  --methods lexical_shape_plus_markov \
+  --methods lexical_shape_plus_core_markov \
+  --trainer xgboost \
+  --xgboost-rounds 350 \
+  --xgboost-max-depth 4 \
+  --xgboost-eta 0.06 \
+  --xgboost-subsample 0.9 \
+  --xgboost-colsample-bytree 0.85 \
+  --xgboost-min-child-weight 2.0 \
+  --xgboost-reg-lambda 1.0 \
+  --xgboost-reg-alpha 0.0 \
   --defensive-calibration-train-ratio 0.25 \
   --defensive-calibration-wiki-max-per-label 1800 \
   --defensive-calibration-qa-max-per-label 450 \
-  --export-edge-candidate lexical_shape_plus_markov \
+  --export-edge-candidate lexical_shape_plus_core_markov_xgboost \
   --edge-threshold 0.6
 ```
 
-To reproduce the older ablation table, run the same command without the three `--defensive-calibration-*` flags and with `--methods lexical_style,shape_ngrams,shape_ngrams_plus_markov,markov_surface,lexical_shape_plus_markov`.
+To reproduce the previous defensive linear baseline, run the same command with `--trainer lr`, `--epochs 160`, `--methods lexical_shape_plus_markov`, and `--export-edge-candidate lexical_shape_plus_markov`. To reproduce the older ablation table, run without the three `--defensive-calibration-*` flags and with `--methods lexical_style,shape_ngrams,shape_ngrams_plus_markov,markov_surface,lexical_shape_plus_markov`.
 
 The public package should pin these source dataset revisions:
 
@@ -449,6 +474,10 @@ The key generated artifact hashes are:
 | defensive `lexical_shape_plus_markov_predictions_supervised_test.jsonl` | `0672185c4cf3d24cc4f935b37a98a662deb13b75ffc04c8cc70858e188c14432` |
 | defensive `lexical_shape_plus_markov_predictions_calibration_hc3_wiki.jsonl` | `cf18032da8d83470cdd50be81344abb1a5f18f1840ac3552f93d9eb3b135efdf` |
 | defensive `lexical_shape_plus_markov_predictions_calibration_hc3_qa.jsonl` | `85c5b71cad26d0ebfe909dd2952a53b68314dd346238eb31d55897bb54621567` |
-| defensive `surface_markov_models.json` | `94260a935110c9667da7a5500922dab788691a714a9322591ebf492ffc296eb2` |
+| promoted XGB `lexical_shape_plus_core_markov_xgboost_model.json` | `8dbb1764a1112ac5192d25a4f15fae2609692abdbc3bd515129fda76be5262fd` |
+| promoted XGB `lexical_shape_plus_core_markov_xgboost_model_metadata.json` | `0d5b8b3f702331b86bb505546a23799be17fec0ed154a1de4adb17ff1a2a29dd` |
+| promoted XGB `lexical_shape_plus_core_markov_xgboost_edge_candidate.json` | `076efbe28be56cf1c61458b523b5f7030c9af5856a7ac9f06cfb1b3b578993f0` |
+| promoted XGB `xgboost_core_markov_method_comparison.json` | `04480a3bb8469057c028a7c860127ec52458c8c05846fa3ae670b8565a0e6753` |
+| promoted XGB `surface_markov_models.json` | `009e869897f30256135cfd0ea8459839e65dffcf9431fd18135a26a4a22decc7` |
 
 The public repo does not redistribute the frozen generated JSONL splits because those files contain source dataset text. Instead, it publishes the downloader, source revision pins, source-file checksums, and generated split checksums. That makes the method reproducible from public datasets and lets readers verify whether their regenerated files match the original run byte-for-byte.

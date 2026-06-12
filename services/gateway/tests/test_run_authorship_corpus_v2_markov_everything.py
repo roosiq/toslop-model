@@ -1,4 +1,9 @@
-from run_authorship_corpus_v2_markov_everything import defensive_calibration_split, evaluate_operating_target, threshold_metrics
+from run_authorship_corpus_v2_markov_everything import (
+    build_edge_candidate_artifact,
+    defensive_calibration_split,
+    evaluate_operating_target,
+    threshold_metrics,
+)
 
 
 def test_defensive_calibration_split_is_label_balanced_and_deterministic():
@@ -128,3 +133,44 @@ def test_operating_target_requires_ai_recall_above_80_and_human_fpr_below_20():
     passed = evaluate_operating_target(result, 0.6)
     assert passed["splits"]["calibration_hc3_qa"]["passed"] is True
     assert passed["passed"] is True
+
+
+def test_edge_candidate_export_supports_xgboost_descriptor(tmp_path):
+    model_path = tmp_path / "lexical_shape_plus_core_markov_xgboost_model.json"
+    metadata_path = tmp_path / "lexical_shape_plus_core_markov_xgboost_model_metadata.json"
+    model_path.write_text("{}", encoding="utf-8")
+    metadata_path.write_text("{}", encoding="utf-8")
+    threshold_row = {"threshold": 0.6, "accuracy": 0.9, "ai_recall": 0.85, "human_false_positive_rate": 0.1}
+    report = {
+        "schema": "corporate.authorship_corpus_v2_markov_everything.v1",
+        "output_dir": str(tmp_path),
+        "settings": {},
+        "rows": {},
+        "leakage_audit": {},
+        "defensive_training": {"enabled": True},
+        "markov_model_summary": {},
+        "results": [
+            {
+                "method": "lexical_shape_plus_core_markov_xgboost",
+                "base_method": "lexical_shape_plus_core_markov",
+                "trainer": "xgboost",
+                "files": {"model": str(model_path), "model_metadata": str(metadata_path)},
+                "splits": {
+                    "supervised_test": {"threshold_sweep": [threshold_row]},
+                    "calibration_hc3_wiki": {"threshold_sweep": [threshold_row]},
+                    "calibration_hc3_qa": {"threshold_sweep": [threshold_row]},
+                },
+            }
+        ],
+    }
+
+    artifact = build_edge_candidate_artifact(report, "lexical_shape_plus_core_markov_xgboost", threshold=0.6)
+
+    assert artifact["schema"] == "corporate.edge_candidate_detector.v2"
+    assert artifact["trainer"] == "xgboost"
+    assert artifact["modelVersion"] == "corporate-lexical-shape-core-markov-xgboost-authorship-v2-defensive-hc3"
+    assert artifact["featureFamilies"] == ["lexical_style", "shape_ngrams", "surface_markov_core", "xgboost_trees"]
+    assert artifact["featureSource"]["modelFile"] == model_path.name
+    assert artifact["featureSource"]["modelMetadataFile"] == metadata_path.name
+    assert artifact["featureSource"]["markovViews"] == ["shape", "posish", "true_pos"]
+    assert artifact["decisionPolicy"]["passesOperatingTarget"] is True
