@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import math
 import os
+import re
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -29,6 +30,28 @@ DEFAULT_MODEL_PATH = DEFAULT_MODEL_DIR / "lexical_shape_plus_core_markov_xgboost
 DEFAULT_EDGE_ARTIFACT_PATH = DEFAULT_MODEL_DIR / "lexical_shape_plus_core_markov_xgboost_edge_candidate.json"
 DEFAULT_MARKOV_PATH = DEFAULT_MODEL_DIR / "surface_markov_models.json"
 DEFAULT_TRAIN_PATH = EVAL_DIR / "authorship_corpus_v2" / "supervised_train_mix.jsonl"
+DEFAULT_MIXED_MIN_WORDS = 80
+DEFAULT_MIXED_TARGET_WORDS = 180
+DEFAULT_MIXED_MAX_WORDS = 320
+DEFAULT_MIXED_MAX_CHUNKS = 48
+MIN_MIXED_TEXT_WORDS = 40
+
+ARTICLE_SECTION_HEADINGS = {
+    "abstract",
+    "introduction",
+    "background",
+    "related work",
+    "methods",
+    "method",
+    "methodology",
+    "approach",
+    "results",
+    "discussion",
+    "conclusion",
+    "conclusions",
+    "references",
+    "appendix",
+}
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -86,6 +109,237 @@ def _confidence(probability: float, threshold: float) -> str:
 
 def _label(probability: float, threshold: float) -> str:
     return "ai_generated" if probability >= threshold else "human_written"
+
+
+def _word_count(text: str) -> int:
+    return len(re.findall(r"\S+", text or ""))
+
+
+def _normalize_heading(text: str) -> str:
+    return re.sub(r"\s+", " ", str(text or "").strip())
+
+
+def _heading_body(line: str) -> str | None:
+    stripped = _normalize_heading(line)
+    if not stripped or len(stripped) > 120:
+        return None
+
+    numbered = re.match(r"^(?:[0-9]+(?:\.[0-9]+)*|[A-Z])\.?\s+(.+)$", stripped)
+    body = numbered.group(1).strip() if numbered else stripped
+    lower_body = body.lower()
+    if lower_body in ARTICLE_SECTION_HEADINGS:
+        return body
+    if not numbered:
+        return None
+    return body
+
+
+def _is_probable_heading(line: str) -> bool:
+    body = _heading_body(line)
+    if not body:
+        return False
+
+    words = body.split()
+    if len(words) > 14 or body[-1:] in ".!?;:":
+        return False
+
+    letters = sum(character.isalpha() for character in body)
+    digits = sum(character.isdigit() for character in body)
+    if letters < 3:
+        return False
+    if digits and letters / max(1, letters + digits) < 0.65:
+        return False
+
+    alpha_words = [re.sub(r"[^A-Za-z]", "", word) for word in words]
+    alpha_words = [word for word in alpha_words if word]
+    if not alpha_words:
+        return False
+    lowercase_starters = sum(word[0].islower() for word in alpha_words)
+    return lowercase_starters <= max(1, len(alpha_words) // 2)
+
+
+def _trimmed_span(text: str, start: int, end: int) -> tuple[int, int]:
+    while start < end and text[start].isspace():
+        start += 1
+    while end > start and text[end - 1].isspace():
+        end -= 1
+    return start, end
+
+
+def _split_sections_with_offsets(text: str) -> list[dict[str, Any]]:
+    normalized = re.sub(r"\r\n?", "\n", str(text or "")).strip()
+    if not normalized:
+        return []
+
+    lines = list(re.finditer(r".*(?:\n|$)", normalized))
+    sections: list[dict[str, Any]] = []
+    current_heading = "front matter"
+    current_start: int | None = None
+    current_end: int | None = None
+
+    def flush() -> None:
+        nonlocal current_start, current_end
+        if current_start is None or current_end is None:
+            current_start = None
+            current_end = None
+            return
+        start, end = _trimmed_span(normalized, current_start, current_end)
+        if start < end:
+            sections.append(
+                {
+                    "heading": current_heading,
+                    "text": normalized[start:end],
+                    "char_start": start,
+                    "char_end": end,
+                }
+            )
+        current_start = None
+        current_end = None
+
+    for match in lines:
+        line = match.group(0)
+        if not line:
+            continue
+        line_body = line.rstrip("\n")
+        if _is_probable_heading(line_body):
+            flush()
+            current_heading = _normalize_heading(line_body)
+            continue
+        if line_body.strip():
+            current_start = match.start() if current_start is None else current_start
+            current_end = match.end()
+
+    flush()
+    return sections or [{"heading": "document", "text": normalized, "char_start": 0, "char_end": len(normalized)}]
+
+
+def _paragraphs_with_offsets(section: dict[str, Any], *, first_paragraph_index: int) -> list[dict[str, Any]]:
+    section_text = str(section.get("text") or "")
+    section_start = int(section.get("char_start") or 0)
+    paragraphs: list[dict[str, Any]] = []
+    paragraph_index = first_paragraph_index
+    for match in re.finditer(r"\S[\s\S]*?(?=\n\s*\n+|\Z)", section_text):
+        local_start, local_end = _trimmed_span(section_text, match.start(), match.end())
+        paragraph_text = section_text[local_start:local_end]
+        if not paragraph_text:
+            continue
+        paragraphs.append(
+            {
+                "text": paragraph_text,
+                "word_count": _word_count(paragraph_text),
+                "char_start": section_start + local_start,
+                "char_end": section_start + local_end,
+                "paragraph_index": paragraph_index,
+            }
+        )
+        paragraph_index += 1
+    return paragraphs
+
+
+def _chunk_long_paragraph(paragraph: dict[str, Any], *, max_words: int) -> list[dict[str, Any]]:
+    words = list(re.finditer(r"\S+", str(paragraph.get("text") or "")))
+    if not words:
+        return []
+    paragraph_text = str(paragraph["text"])
+    paragraph_start = int(paragraph["char_start"])
+    chunks: list[dict[str, Any]] = []
+    for start_index in range(0, len(words), max_words):
+        end_index = min(start_index + max_words, len(words))
+        local_start = words[start_index].start()
+        local_end = words[end_index - 1].end()
+        text = paragraph_text[local_start:local_end].strip()
+        chunks.append(
+            {
+                "text": text,
+                "word_count": _word_count(text),
+                "char_start": paragraph_start + local_start,
+                "char_end": paragraph_start + local_end,
+                "paragraph_start": int(paragraph["paragraph_index"]),
+                "paragraph_end": int(paragraph["paragraph_index"]),
+                "chunk_type": "long_paragraph_split",
+            }
+        )
+    return chunks
+
+
+def chunk_text_for_mixed_authorship(
+    text: str,
+    *,
+    min_words: int = DEFAULT_MIXED_MIN_WORDS,
+    target_words: int = DEFAULT_MIXED_TARGET_WORDS,
+    max_words: int = DEFAULT_MIXED_MAX_WORDS,
+    max_chunks: int = DEFAULT_MIXED_MAX_CHUNKS,
+) -> list[dict[str, Any]]:
+    total_words = _word_count(text)
+    if total_words < MIN_MIXED_TEXT_WORDS:
+        return []
+    if total_words and max_chunks:
+        max_words = min(900, max(max_words, math.ceil(total_words / max_chunks)))
+        target_words = min(max_words, max(target_words, math.ceil(max_words * 0.58)))
+
+    chunks: list[dict[str, Any]] = []
+    paragraph_counter = 1
+    for section in _split_sections_with_offsets(text):
+        heading = str(section.get("heading") or "document")
+        paragraphs = _paragraphs_with_offsets(section, first_paragraph_index=paragraph_counter)
+        paragraph_counter += len(paragraphs)
+        if not paragraphs:
+            continue
+
+        buffered: list[dict[str, Any]] = []
+        buffered_words = 0
+
+        def emit_buffered() -> None:
+            nonlocal buffered, buffered_words
+            if not buffered:
+                return
+            body = "\n\n".join(str(item["text"]) for item in buffered).strip()
+            chunks.append(
+                {
+                    "text": body,
+                    "word_count": _word_count(body),
+                    "char_start": int(buffered[0]["char_start"]),
+                    "char_end": int(buffered[-1]["char_end"]),
+                    "section_heading": heading,
+                    "paragraph_start": int(buffered[0]["paragraph_index"]),
+                    "paragraph_end": int(buffered[-1]["paragraph_index"]),
+                    "chunk_type": "paragraph_merge" if len(buffered) > 1 else "paragraph",
+                }
+            )
+            buffered = []
+            buffered_words = 0
+
+        for paragraph in paragraphs:
+            paragraph_words = int(paragraph["word_count"])
+            if paragraph_words >= max_words:
+                emit_buffered()
+                for chunk in _chunk_long_paragraph(paragraph, max_words=max_words):
+                    chunks.append({**chunk, "section_heading": heading})
+                continue
+
+            if buffered and buffered_words + paragraph_words > max_words:
+                emit_buffered()
+            buffered.append(paragraph)
+            buffered_words += paragraph_words
+            if buffered_words >= target_words:
+                emit_buffered()
+
+        emit_buffered()
+
+    if not chunks:
+        return []
+
+    return [
+        {
+            **chunk,
+            "index": index + 1,
+            "chunk_total": len(chunks),
+            "chunk_word_count": int(chunk["word_count"]),
+            "score_reliability": "high" if int(chunk["word_count"]) >= min_words else "medium" if int(chunk["word_count"]) >= 45 else "low",
+            "offset_basis": "normalized_text",
+        }
+        for index, chunk in enumerate(chunks[:max_chunks])
+    ]
 
 
 def _metadata_path_for(model_path: Path) -> Path:
@@ -250,14 +504,14 @@ class CorporateAuthorshipDetector:
                 warnings.append("surface_markov_features_unavailable")
         return features, warnings
 
-    def score(self, text: str) -> dict[str, Any]:
+    def _score_text(self, text: str, *, top_feature_limit: int = 12) -> dict[str, Any]:
         features, warnings = self.features_for_text(text)
         if self.trainer == "xgboost":
             if self._xgboost_scorer is None:
                 raise RuntimeError("xgboost_json_scorer_unavailable")
             probability = self._xgboost_scorer.predict(features)
             active_count = self._xgboost_scorer.active_feature_count(features)
-            contributions = self._xgboost_scorer.top_features(features)
+            contributions = self._xgboost_scorer.top_features(features, limit=top_feature_limit)
         else:
             vocab = [str(item) for item in self.model["vocab"]]
             weights = [float(item) for item in self.model["weights"]]
@@ -299,10 +553,119 @@ class CorporateAuthorshipDetector:
             "label": label,
             "threshold": self.threshold,
             "confidence": _confidence(probability, self.threshold),
-            "top_features": contributions[:12],
+            "top_features": contributions[:top_feature_limit],
             "feature_count": active_count,
             "warnings": warnings,
         }
+
+    def _score_chunks(self, text: str) -> tuple[list[dict[str, Any]], list[str]]:
+        chunks = chunk_text_for_mixed_authorship(text)
+        warnings: list[str] = []
+        scored_chunks: list[dict[str, Any]] = []
+        for chunk in chunks:
+            score = self._score_text(str(chunk["text"]), top_feature_limit=4)
+            warnings.extend(str(item) for item in score.get("warnings", []))
+            scored_chunks.append(
+                {
+                    "index": chunk["index"],
+                    "chunkTotal": chunk["chunk_total"],
+                    "chunkType": chunk["chunk_type"],
+                    "sectionHeading": chunk.get("section_heading"),
+                    "paragraphStart": chunk["paragraph_start"],
+                    "paragraphEnd": chunk["paragraph_end"],
+                    "charStart": chunk["char_start"],
+                    "charEnd": chunk["char_end"],
+                    "offsetBasis": chunk["offset_basis"],
+                    "wordCount": chunk["chunk_word_count"],
+                    "scoreReliability": chunk["score_reliability"],
+                    "probability": score["probability"],
+                    "likelihood": score["likelihood"],
+                    "label": score["label"],
+                    "confidence": score["confidence"],
+                    "topFeatures": score.get("top_features", []),
+                    "textPreview": re.sub(r"\s+", " ", str(chunk["text"])).strip()[:220],
+                }
+            )
+        return scored_chunks, sorted(set(warnings))
+
+    def _mixed_authorship_summary(self, chunks: list[dict[str, Any]]) -> dict[str, Any]:
+        if not chunks:
+            return {
+                "available": False,
+                "classification": "not_enough_text",
+                "summary": "Text was too short for reliable mixed-authorship chunking.",
+                "chunkCount": 0,
+            }
+
+        total_words = sum(int(chunk.get("wordCount") or 0) for chunk in chunks)
+        ai_words = sum(int(chunk.get("wordCount") or 0) for chunk in chunks if chunk.get("label") == "ai_generated")
+        human_words = max(0, total_words - ai_words)
+        ai_chunk_count = sum(1 for chunk in chunks if chunk.get("label") == "ai_generated")
+        human_chunk_count = len(chunks) - ai_chunk_count
+        likelihoods = [int(chunk.get("likelihood") or 0) for chunk in chunks]
+        likelihood_min = min(likelihoods)
+        likelihood_max = max(likelihoods)
+        contrast = likelihood_max - likelihood_min
+        transition_count = sum(
+            1
+            for previous, current in zip(chunks, chunks[1:], strict=False)
+            if previous.get("label") != current.get("label")
+        )
+        ai_word_share = ai_words / max(1, total_words)
+        has_both = ai_chunk_count > 0 and human_chunk_count > 0
+        if has_both and contrast >= 25 and 0.15 <= ai_word_share <= 0.85:
+            classification = "mixed_ai_and_human"
+            summary = "Chunk scores show both AI-like and human-like sections."
+        elif ai_word_share >= 0.75:
+            classification = "mostly_ai_like"
+            summary = "Most scored words fall in AI-like chunks."
+        elif ai_word_share <= 0.25:
+            classification = "mostly_human_like"
+            summary = "Most scored words fall in human-like chunks."
+        else:
+            classification = "mixed_or_uncertain"
+            summary = "Chunk scores vary, but the contrast is not strong enough for a firm mixed label."
+
+        ai_chunks = sorted(
+            [chunk for chunk in chunks if chunk.get("label") == "ai_generated"],
+            key=lambda chunk: int(chunk.get("likelihood") or 0),
+            reverse=True,
+        )
+        human_chunks = sorted(
+            [chunk for chunk in chunks if chunk.get("label") == "human_written"],
+            key=lambda chunk: int(chunk.get("likelihood") or 0),
+        )
+        return {
+            "available": True,
+            "classification": classification,
+            "summary": summary,
+            "chunkCount": len(chunks),
+            "aiChunkCount": ai_chunk_count,
+            "humanChunkCount": human_chunk_count,
+            "aiWordShare": round(ai_word_share, 4),
+            "aiWordCount": ai_words,
+            "humanWordCount": human_words,
+            "likelihoodRange": {"min": likelihood_min, "max": likelihood_max, "contrast": contrast},
+            "labelTransitionCount": transition_count,
+            "strongAiChunks": ai_chunks[:3],
+            "strongHumanChunks": human_chunks[:3],
+            "chunking": {
+                "strategy": "section_paragraph_window",
+                "minWords": DEFAULT_MIXED_MIN_WORDS,
+                "targetWords": DEFAULT_MIXED_TARGET_WORDS,
+                "maxWords": DEFAULT_MIXED_MAX_WORDS,
+                "maxChunks": DEFAULT_MIXED_MAX_CHUNKS,
+                "offsetBasis": "normalized_text",
+            },
+        }
+
+    def score(self, text: str) -> dict[str, Any]:
+        result = self._score_text(text)
+        chunks, chunk_warnings = self._score_chunks(text)
+        result["authorship_chunks"] = chunks
+        result["mixed_authorship"] = self._mixed_authorship_summary(chunks)
+        result["warnings"] = sorted(set([*result.get("warnings", []), *chunk_warnings]))
+        return result
 
 
 @lru_cache(maxsize=1)

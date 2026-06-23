@@ -14,6 +14,8 @@ For binary labels, the deployed detector uses a conservative threshold of `0.6`:
 
 Long pages are handled by chunking. The detector was trained mostly on examples between 80 and 900 words, so Toslop splits extracted article text into roughly article-section chunks, uses normal chunks around 100-320 words for real-world calibration, and hard-caps normal production chunks around 600 model words. Each chunk is scored independently, then Toslop stores a word-weighted page score. That keeps a long article from being treated as one giant out-of-distribution sample.
 
+The runtime scorer can also return a mixed-authorship breakdown. It splits normalized article text by likely section headings and paragraph boundaries, then scores paragraph windows with the same authorship model used for the page-level score. The response includes each chunk's section heading, paragraph range, normalized character offsets, word count, likelihood, label, confidence, and a short preview. A `mixed_authorship` summary reports whether the page looks mostly AI-like, mostly human-like, or mixed, using the contrast between chunk scores and the word-weighted share of AI-labeled chunks. This is meant to show where a document changes authorship style; it is not a stronger claim than the underlying model score.
+
 ## Plain English Version
 
 The simplest way to think about the model is that it is a spelling-and-rhythm detector for writing.
