@@ -17,6 +17,7 @@ import os
 import random
 import re
 import stat
+import sqlite3
 import tempfile
 import time
 import urllib.parse
@@ -474,6 +475,173 @@ def dedupe_records(records: list[dict[str, Any]]) -> tuple[list[dict[str, Any]],
     return kept, dict(sorted(counts.items()))
 
 
+def connect_private_candidate_db(path: Path) -> sqlite3.Connection:
+    ensure_private_path(path)
+    conn = sqlite3.connect(path)
+    conn.execute("PRAGMA journal_mode=DELETE")
+    conn.execute("PRAGMA synchronous=NORMAL")
+    conn.executescript(
+        """
+        CREATE TABLE IF NOT EXISTS candidates (
+            document_id TEXT PRIMARY KEY,
+            publication_year_month TEXT NOT NULL,
+            publication_date TEXT NOT NULL,
+            sitename TEXT NOT NULL,
+            warc_identity TEXT NOT NULL UNIQUE,
+            payload_digest TEXT,
+            normalized_url_hash TEXT NOT NULL UNIQUE,
+            normalized_text_sha256 TEXT NOT NULL UNIQUE,
+            near_duplicate_cluster_id TEXT NOT NULL UNIQUE,
+            record_json TEXT NOT NULL
+        );
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_candidates_payload
+            ON candidates(payload_digest) WHERE payload_digest IS NOT NULL AND payload_digest != '';
+        CREATE INDEX IF NOT EXISTS idx_candidates_month ON candidates(publication_year_month);
+        CREATE TABLE IF NOT EXISTS duplicate_counts (key TEXT PRIMARY KEY, value INTEGER NOT NULL);
+        """
+    )
+    os.chmod(path, 0o600)
+    return conn
+
+
+def increment_db_count(conn: sqlite3.Connection, key: str, amount: int = 1) -> None:
+    conn.execute(
+        """
+        INSERT INTO duplicate_counts(key, value) VALUES (?, ?)
+        ON CONFLICT(key) DO UPDATE SET value = value + excluded.value
+        """,
+        (key, amount),
+    )
+
+
+def duplicate_counts_from_db(conn: sqlite3.Connection) -> dict[str, int]:
+    counts = {key: int(value) for key, value in conn.execute("SELECT key, value FROM duplicate_counts")}
+    counts["input_count"] = counts.get("input_count", 0)
+    counts["kept_count"] = int(conn.execute("SELECT COUNT(*) FROM candidates").fetchone()[0])
+    counts.setdefault("duplicate_count", counts["input_count"] - counts["kept_count"])
+    return dict(sorted(counts.items()))
+
+
+def add_candidate_record(conn: sqlite3.Connection, record: dict[str, Any]) -> bool:
+    increment_db_count(conn, "input_count")
+    warc_identity = "|".join([record.get("warc_filename", ""), record.get("warc_record_id", ""), record.get("warc_target_uri", "")])
+    duplicate_reasons: list[str] = []
+    checks = [
+        ("warc_identity_duplicates", "warc_identity", warc_identity),
+        ("url_duplicates", "normalized_url_hash", record["normalized_url_hash"]),
+        ("text_hash_duplicates", "normalized_text_sha256", record["normalized_text_sha256"]),
+        ("near_duplicate_duplicates", "near_duplicate_cluster_id", record["near_duplicate_cluster_id"]),
+    ]
+    payload = record.get("warc_payload_digest")
+    if payload:
+        checks.append(("payload_digest_duplicates", "payload_digest", payload))
+    for reason, column, value in checks:
+        if conn.execute(f"SELECT 1 FROM candidates WHERE {column} = ? LIMIT 1", (value,)).fetchone():
+            duplicate_reasons.append(reason)
+    if duplicate_reasons:
+        increment_db_count(conn, "duplicate_count")
+        for reason in duplicate_reasons:
+            increment_db_count(conn, reason)
+        return False
+    conn.execute(
+        """
+        INSERT INTO candidates(
+            document_id, publication_year_month, publication_date, sitename,
+            warc_identity, payload_digest, normalized_url_hash,
+            normalized_text_sha256, near_duplicate_cluster_id, record_json
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            record["document_id"],
+            record["publication_year_month"],
+            record["publication_date"],
+            str(record.get("sitename") or ""),
+            warc_identity,
+            payload or None,
+            record["normalized_url_hash"],
+            record["normalized_text_sha256"],
+            record["near_duplicate_cluster_id"],
+            json.dumps(record, sort_keys=True, ensure_ascii=False),
+        ),
+    )
+    return True
+
+
+def seed_candidate_db_from_jsonl(conn: sqlite3.Connection, path: Path) -> None:
+    if not path.exists() or conn.execute("SELECT COUNT(*) FROM candidates").fetchone()[0]:
+        return
+    for record in read_jsonl(path):
+        add_candidate_record(conn, record)
+    conn.commit()
+
+
+def select_month_rows_from_db(
+    conn: sqlite3.Connection,
+    *,
+    month: str,
+    target: int,
+    seed: int,
+    per_sitename_cap: int,
+) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    rows = conn.execute(
+        """
+        SELECT document_id, sitename
+        FROM candidates
+        WHERE publication_year_month = ?
+        ORDER BY document_id
+        """,
+        (month,),
+    )
+    selected_ids: list[str] = []
+    site_counts = Counter()
+    rejected = Counter()
+    for document_id, sitename in sorted(
+        rows,
+        key=lambda item: (stable_hash(f"{seed}|{month}|{item[0]}", 32), item[0]),
+    ):
+        if site_counts[str(sitename or "")] >= per_sitename_cap:
+            rejected["per_sitename_cap"] += 1
+            continue
+        selected_ids.append(str(document_id))
+        site_counts[str(sitename or "")] += 1
+        if len(selected_ids) >= target:
+            break
+    if len(selected_ids) < target:
+        rejected["month_quota_shortfall"] = target - len(selected_ids)
+    selected = []
+    for document_id in selected_ids:
+        row = conn.execute("SELECT record_json FROM candidates WHERE document_id = ?", (document_id,)).fetchone()
+        if row:
+            selected.append(json.loads(row[0]))
+    return sorted(selected, key=lambda row: (row["publication_date"], row["document_id"])), dict(sorted(rejected.items()))
+
+
+def month_quota_satisfied_in_db(
+    conn: sqlite3.Connection,
+    *,
+    month: str,
+    target: int,
+    seed: int,
+    per_sitename_cap: int,
+) -> bool:
+    """Return whether stored candidates can already fill a month quota."""
+    del seed  # Quota sufficiency does not depend on deterministic row ordering.
+    capped_total = 0
+    for (site_count,) in conn.execute(
+        """
+        SELECT COUNT(*)
+        FROM candidates
+        WHERE publication_year_month = ?
+        GROUP BY sitename
+        """,
+        (month,),
+    ):
+        capped_total += min(int(site_count), per_sitename_cap)
+        if capped_total >= target:
+            return True
+    return False
+
+
 def select_month_rows(
     rows: list[dict[str, Any]],
     *,
@@ -597,9 +765,10 @@ def build_public_safe_manifest(
     rejected_counts: dict[str, int],
     duplicate_counts: dict[str, int],
     shard_identities: list[dict[str, Any]],
+    include_records: bool = True,
 ) -> dict[str, Any]:
     records = sorted(records, key=lambda row: (row["publication_date"], row["document_id"]))
-    return {
+    manifest = {
         "schema": PUBLIC_SCHEMA,
         "created_at": utc_now(),
         "caveat": CAVEAT,
@@ -624,8 +793,10 @@ def build_public_safe_manifest(
             "mean": round(sum(row["word_count"] for row in records) / len(records), 2) if records else 0,
         },
         "shard_identities": sorted(shard_identities, key=lambda item: item["path"]),
-        "records": [public_record(row) for row in records],
     }
+    if include_records:
+        manifest["records"] = [public_record(row) for row in records]
+    return manifest
 
 
 def reject_public_text(payload: Any, path: str = "") -> None:
@@ -648,6 +819,55 @@ def write_public_json(path: Path, payload: dict[str, Any]) -> None:
         raise InfiniNewsSchemaError("public artifact would contain raw text")
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text + "\n", encoding="utf-8")
+
+
+def iter_json_public_records(records: Iterable[dict[str, Any]]) -> Iterable[str]:
+    first = True
+    for row in records:
+        safe = public_record(row)
+        reject_public_text(safe)
+        encoded = json.dumps(safe, sort_keys=True)
+        if first:
+            yield encoded
+            first = False
+        else:
+            yield ",\n" + encoded
+
+
+def stream_selected_rows_from_db(
+    conn: sqlite3.Connection,
+    *,
+    manifest: dict[str, Any],
+    seed: int,
+    per_sitename_cap: int,
+) -> Iterable[dict[str, Any]]:
+    try:
+        for month, target in sorted(manifest["targets_by_month"].items()):
+            month_rows, _month_rejections = select_month_rows_from_db(
+                conn,
+                month=month,
+                target=int(target),
+                seed=seed,
+                per_sitename_cap=per_sitename_cap,
+            )
+            yield from month_rows
+    finally:
+        conn.close()
+
+
+def write_public_manifest_streamed(path: Path, payload: dict[str, Any], records: Iterable[dict[str, Any]]) -> None:
+    """Write a public manifest without holding all public records in memory."""
+    reject_public_text(payload)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as handle:
+        handle.write("{\n")
+        items = sorted(payload.items())
+        for key, value in items:
+            handle.write(f"  {json.dumps(key)}: {json.dumps(value, indent=2, sort_keys=True).replace(chr(10), chr(10) + '  ')},\n")
+        handle.write("  \"records\": [\n")
+        for encoded in iter_json_public_records(records):
+            handle.write("    " + encoded)
+        handle.write("\n  ]\n}\n")
 
 
 def hub_file_manifest(
@@ -720,9 +940,11 @@ def collect(
     output_root = Path(output_root)
     ensure_private_path(output_root / "normalized_rows.jsonl")
     accepted_path = output_root / "normalized_rows.jsonl"
+    candidate_db_path = output_root / "candidate_records.sqlite3"
     progress_path = output_root / "progress.json"
     progress = load_progress(progress_path)
-    records = read_jsonl(accepted_path)
+    conn = connect_private_candidate_db(candidate_db_path)
+    seed_candidate_db_from_jsonl(conn, accepted_path)
     rejected = Counter(progress.get("stats", {}).get("rejected_counts", {}))
     shard_identities = hub_file_manifest(
         targets_by_month=manifest["targets_by_month"],
@@ -731,14 +953,28 @@ def collect(
     )
     retrieved_at = utc_now()
     scanned_shards = []
+    sample_seed = int(manifest.get("sample_seed", DEFAULT_SEED))
+    per_sitename_cap = int(manifest.get("per_sitename_month_cap", DEFAULT_PER_SITENAME_MONTH_CAP))
+    satisfied_months: set[str] = set()
     for shard in shard_identities:
         shard_path = shard["path"]
+        shard_month = str(shard["year_month"])
         shard_progress = progress["shards"].setdefault(shard_path, {"rows_seen": 0, "complete": False})
         if shard_progress.get("complete"):
             scanned_shards.append(shard)
             continue
+        if shard_month in satisfied_months or month_quota_satisfied_in_db(
+            conn,
+            month=shard_month,
+            target=int(manifest["targets_by_month"][shard_month]),
+            seed=sample_seed,
+            per_sitename_cap=per_sitename_cap,
+        ):
+            satisfied_months.add(shard_month)
+            shard_progress["skipped"] = "month_quota_satisfied"
+            continue
         rows_seen = 0
-        page_records = []
+        accepted_in_shard = 0
         for row_index, raw_row in read_shard_rows(shard_path):
             if row_index < int(shard_progress.get("rows_seen", 0)):
                 continue
@@ -753,27 +989,29 @@ def collect(
             except InfiniNewsSchemaError as exc:
                 rejected[rejection_code(str(exc))] += 1
             else:
-                page_records.append(normalized)
+                if add_candidate_record(conn, normalized):
+                    accepted_in_shard += 1
             rows_seen = row_index + 1
             shard_progress["rows_seen"] = rows_seen
             if max_rows_per_shard is not None and rows_seen >= max_rows_per_shard:
                 break
         shard_progress["complete"] = max_rows_per_shard is None
-        records.extend(page_records)
-        append_private_jsonl(accepted_path, page_records)
+        shard_progress["accepted_candidates"] = int(shard_progress.get("accepted_candidates", 0)) + accepted_in_shard
+        conn.commit()
         progress["stats"]["rejected_counts"] = dict(sorted(rejected.items()))
+        progress["stats"]["duplicate_counts"] = duplicate_counts_from_db(conn)
         write_private_json(progress_path, progress)
         scanned_shards.append(shard)
-    deduped, duplicate_counts = dedupe_records(records)
+    duplicate_counts = duplicate_counts_from_db(conn)
     selected = []
     selection_rejections = Counter(rejected)
     for month, target in sorted(manifest["targets_by_month"].items()):
-        month_rows, month_rejections = select_month_rows(
-            deduped,
+        month_rows, month_rejections = select_month_rows_from_db(
+            conn,
             month=month,
             target=int(target),
-            seed=int(manifest.get("sample_seed", DEFAULT_SEED)),
-            per_sitename_cap=int(manifest.get("per_sitename_month_cap", DEFAULT_PER_SITENAME_MONTH_CAP)),
+            seed=sample_seed,
+            per_sitename_cap=per_sitename_cap,
         )
         selected.extend(month_rows)
         selection_rejections.update(month_rejections)
@@ -781,6 +1019,7 @@ def collect(
     progress["stats"]["rejected_counts"] = dict(sorted(selection_rejections.items()))
     progress["stats"]["duplicate_counts"] = duplicate_counts
     write_private_json(progress_path, progress)
+    conn.close()
     return {
         "records": selected,
         "rejected_counts": dict(sorted(selection_rejections.items())),
@@ -825,10 +1064,20 @@ def main(argv: list[str] | None = None) -> int:
         rejected_counts=result["rejected_counts"],
         duplicate_counts=result["duplicate_counts"],
         shard_identities=result["shard_identities"],
+        include_records=False,
     )
     public["private_output_root"] = str(args.output_root)
-    write_public_json(args.report, public)
-    printable = {key: value for key, value in public.items() if key != "records"}
+    write_public_manifest_streamed(
+        args.report,
+        public,
+        stream_selected_rows_from_db(
+            connect_private_candidate_db(Path(result["output_root"]) / "candidate_records.sqlite3"),
+            manifest=manifest,
+            seed=int(manifest.get("sample_seed", DEFAULT_SEED)),
+            per_sitename_cap=int(manifest.get("per_sitename_month_cap", DEFAULT_PER_SITENAME_MONTH_CAP)),
+        ),
+    )
+    printable = public
     print(json.dumps(printable, indent=2, sort_keys=True))
     return 0
 

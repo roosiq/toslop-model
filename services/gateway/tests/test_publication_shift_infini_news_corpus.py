@@ -8,17 +8,22 @@ import pytest
 from build_publication_shift_infini_news_corpus import (
     FROZEN_REVISION,
     InfiniNewsSchemaError,
+    add_candidate_record,
     assign_corpus_role,
     build_public_safe_manifest,
+    connect_private_candidate_db,
     default_manifest,
     dedupe_records,
+    duplicate_counts_from_db,
+    month_quota_satisfied_in_db,
     deterministic_near_duplicate_cluster,
     normalize_row,
+    select_month_rows_from_db,
     select_month_rows,
     write_private_jsonl,
     write_public_json,
+    write_public_manifest_streamed,
 )
-
 
 def _text(prefix="word", words=170):
     return " ".join(f"{prefix}{idx}" for idx in range(words))
@@ -115,6 +120,37 @@ def test_dedupe_uses_warc_payload_url_text_hash_and_near_duplicate_cluster():
     assert deterministic_near_duplicate_cluster(first["normalized_text"]) == first["near_duplicate_cluster_id"]
 
 
+def test_private_candidate_db_streams_global_dedupe_and_month_selection(tmp_path):
+    db_path = tmp_path / "services" / "data" / "publication_shift" / "infini_news_v1" / "candidate_records.sqlite3"
+    conn = connect_private_candidate_db(db_path)
+    kwargs = {"shard_path": "data/year=2025/month=01/part.parquet", "shard_sha256": "sha", "retrieved_at": "now"}
+    first = normalize_row(_row(text=_text("alpha")), row_index=1, **kwargs)
+    duplicate_url = normalize_row(_row(text=_text("beta")), row_index=2, **kwargs)
+    unique = normalize_row(
+        _row(url="https://other.example/a", warc_record_id="<urn:uuid:333>", warc_payload_digest="sha1:OTHER", text=_text("gamma")),
+        row_index=3,
+        **kwargs,
+    )
+
+    assert add_candidate_record(conn, first) is True
+    assert add_candidate_record(conn, duplicate_url) is False
+    assert add_candidate_record(conn, unique) is True
+    conn.commit()
+
+    counts = duplicate_counts_from_db(conn)
+    assert counts["input_count"] == 3
+    assert counts["kept_count"] == 2
+    assert counts["duplicate_count"] == 1
+    assert counts["url_duplicates"] == 1
+    selected, rejected = select_month_rows_from_db(conn, month="2024-12", target=2, seed=123, per_sitename_cap=2)
+    assert [row["document_id"] for row in selected] == sorted(row["document_id"] for row in [first, unique])
+    assert rejected == {}
+    assert month_quota_satisfied_in_db(conn, month="2024-12", target=2, seed=123, per_sitename_cap=2) is True
+    assert month_quota_satisfied_in_db(conn, month="2024-12", target=3, seed=123, per_sitename_cap=2) is False
+    conn.close()
+    assert stat.S_IMODE(os.stat(db_path).st_mode) == 0o600
+
+
 def test_seeded_month_selection_is_deterministic_and_enforces_sitename_cap():
     rows = []
     for idx in range(6):
@@ -149,6 +185,12 @@ def test_private_and_public_outputs_are_restrictive_and_no_text(tmp_path):
     public = tmp_path / "report.json"
     write_public_json(public, manifest)
     assert public.exists()
+
+    streamed = tmp_path / "streamed_report.json"
+    no_records = {key: value for key, value in manifest.items() if key != "records"}
+    write_public_manifest_streamed(streamed, no_records, [row])
+    streamed_payload = json.loads(streamed.read_text(encoding="utf-8"))
+    assert streamed_payload["records"] == manifest["records"]
 
 
 def test_public_writer_rejects_text_like_public_artifacts(tmp_path):
