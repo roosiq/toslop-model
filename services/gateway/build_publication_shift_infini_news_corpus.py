@@ -39,6 +39,7 @@ CAVEAT = "This score does not establish AI authorship."
 SOURCE_RIGHTS_STATUS = "research_only_no_public_text_no_production_use"
 DEFAULT_SEED = 20260712
 DEFAULT_PER_SITENAME_MONTH_CAP = 250
+IN_SHARD_QUOTA_CHECK_EVERY_ACCEPTED = 128
 PILOT_TARGET_MONTHS = ["2016-08", "2018-01", "2022-01", "2025-01", "2026-01", "2026-02", "2026-03", "2026-04"]
 PARQUET_COLUMNS = [
     "url",
@@ -522,22 +523,42 @@ def duplicate_counts_from_db(conn: sqlite3.Connection) -> dict[str, int]:
     return dict(sorted(counts.items()))
 
 
+CANDIDATE_COLLISION_QUERY = """
+SELECT
+    EXISTS(SELECT 1 FROM candidates WHERE warc_identity = ?),
+    CASE WHEN ? = '' THEN 0 ELSE EXISTS(
+        SELECT 1 FROM candidates
+        WHERE payload_digest = ? AND payload_digest != ''
+    ) END,
+    EXISTS(SELECT 1 FROM candidates WHERE normalized_url_hash = ?),
+    EXISTS(SELECT 1 FROM candidates WHERE normalized_text_sha256 = ?),
+    EXISTS(SELECT 1 FROM candidates WHERE near_duplicate_cluster_id = ?)
+"""
+
+
 def add_candidate_record(conn: sqlite3.Connection, record: dict[str, Any]) -> bool:
     increment_db_count(conn, "input_count")
     warc_identity = "|".join([record.get("warc_filename", ""), record.get("warc_record_id", ""), record.get("warc_target_uri", "")])
-    duplicate_reasons: list[str] = []
-    checks = [
-        ("warc_identity_duplicates", "warc_identity", warc_identity),
-        ("url_duplicates", "normalized_url_hash", record["normalized_url_hash"]),
-        ("text_hash_duplicates", "normalized_text_sha256", record["normalized_text_sha256"]),
-        ("near_duplicate_duplicates", "near_duplicate_cluster_id", record["near_duplicate_cluster_id"]),
-    ]
-    payload = record.get("warc_payload_digest")
-    if payload:
-        checks.append(("payload_digest_duplicates", "payload_digest", payload))
-    for reason, column, value in checks:
-        if conn.execute(f"SELECT 1 FROM candidates WHERE {column} = ? LIMIT 1", (value,)).fetchone():
-            duplicate_reasons.append(reason)
+    payload = str(record.get("warc_payload_digest") or "")
+    collisions = conn.execute(
+        CANDIDATE_COLLISION_QUERY,
+        (
+            warc_identity,
+            payload,
+            payload,
+            record["normalized_url_hash"],
+            record["normalized_text_sha256"],
+            record["near_duplicate_cluster_id"],
+        ),
+    ).fetchone()
+    reasons = (
+        "warc_identity_duplicates",
+        "payload_digest_duplicates",
+        "url_duplicates",
+        "text_hash_duplicates",
+        "near_duplicate_duplicates",
+    )
+    duplicate_reasons = [reason for reason, collided in zip(reasons, collisions or ()) if collided]
     if duplicate_reasons:
         increment_db_count(conn, "duplicate_count")
         for reason in duplicate_reasons:
@@ -585,34 +606,29 @@ def select_month_rows_from_db(
 ) -> tuple[list[dict[str, Any]], dict[str, int]]:
     rows = conn.execute(
         """
-        SELECT document_id, sitename
+        SELECT document_id, sitename, record_json
         FROM candidates
         WHERE publication_year_month = ?
-        ORDER BY document_id
         """,
         (month,),
     )
-    selected_ids: list[str] = []
+    selected_json: list[str] = []
     site_counts = Counter()
     rejected = Counter()
-    for document_id, sitename in sorted(
+    for document_id, sitename, record_json in sorted(
         rows,
         key=lambda item: (stable_hash(f"{seed}|{month}|{item[0]}", 32), item[0]),
     ):
         if site_counts[str(sitename or "")] >= per_sitename_cap:
             rejected["per_sitename_cap"] += 1
             continue
-        selected_ids.append(str(document_id))
+        selected_json.append(record_json)
         site_counts[str(sitename or "")] += 1
-        if len(selected_ids) >= target:
+        if len(selected_json) >= target:
             break
-    if len(selected_ids) < target:
-        rejected["month_quota_shortfall"] = target - len(selected_ids)
-    selected = []
-    for document_id in selected_ids:
-        row = conn.execute("SELECT record_json FROM candidates WHERE document_id = ?", (document_id,)).fetchone()
-        if row:
-            selected.append(json.loads(row[0]))
+    if len(selected_json) < target:
+        rejected["month_quota_shortfall"] = target - len(selected_json)
+    selected = [json.loads(value) for value in selected_json]
     return sorted(selected, key=lambda row: (row["publication_date"], row["document_id"])), dict(sorted(rejected.items()))
 
 
@@ -975,6 +991,7 @@ def collect(
             continue
         rows_seen = 0
         accepted_in_shard = 0
+        stopped_for_quota = False
         for row_index, raw_row in read_shard_rows(shard_path):
             if row_index < int(shard_progress.get("rows_seen", 0)):
                 continue
@@ -991,11 +1008,28 @@ def collect(
             else:
                 if add_candidate_record(conn, normalized):
                     accepted_in_shard += 1
+                    if (
+                        normalized["publication_year_month"] == shard_month
+                        and accepted_in_shard % IN_SHARD_QUOTA_CHECK_EVERY_ACCEPTED == 0
+                        and month_quota_satisfied_in_db(
+                            conn,
+                            month=shard_month,
+                            target=int(manifest["targets_by_month"][shard_month]),
+                            seed=sample_seed,
+                            per_sitename_cap=per_sitename_cap,
+                        )
+                    ):
+                        stopped_for_quota = True
+                        satisfied_months.add(shard_month)
             rows_seen = row_index + 1
             shard_progress["rows_seen"] = rows_seen
+            if stopped_for_quota:
+                break
             if max_rows_per_shard is not None and rows_seen >= max_rows_per_shard:
                 break
-        shard_progress["complete"] = max_rows_per_shard is None
+        shard_progress["complete"] = max_rows_per_shard is None and not stopped_for_quota
+        if stopped_for_quota:
+            shard_progress["skipped"] = "month_quota_satisfied_mid_shard"
         shard_progress["accepted_candidates"] = int(shard_progress.get("accepted_candidates", 0)) + accepted_in_shard
         conn.commit()
         progress["stats"]["rejected_counts"] = dict(sorted(rejected.items()))

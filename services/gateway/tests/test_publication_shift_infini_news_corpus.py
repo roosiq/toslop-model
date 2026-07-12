@@ -5,7 +5,9 @@ import stat
 
 import pytest
 
+import build_publication_shift_infini_news_corpus as collector
 from build_publication_shift_infini_news_corpus import (
+    CANDIDATE_COLLISION_QUERY,
     FROZEN_REVISION,
     InfiniNewsSchemaError,
     add_candidate_record,
@@ -149,6 +151,149 @@ def test_private_candidate_db_streams_global_dedupe_and_month_selection(tmp_path
     assert month_quota_satisfied_in_db(conn, month="2024-12", target=3, seed=123, per_sitename_cap=2) is False
     conn.close()
     assert stat.S_IMODE(os.stat(db_path).st_mode) == 0o600
+
+
+def test_collision_query_uses_payload_partial_index_without_candidate_scan(tmp_path):
+    db_path = tmp_path / "services" / "data" / "publication_shift" / "infini_news_v1" / "candidate_records.sqlite3"
+    conn = connect_private_candidate_db(db_path)
+    params = ("warc", "sha1:payload", "sha1:payload", "url", "text", "near")
+    plan = conn.execute("EXPLAIN QUERY PLAN " + CANDIDATE_COLLISION_QUERY, params).fetchall()
+    details = "\n".join(str(row[-1]) for row in plan)
+    conn.close()
+
+    assert "idx_candidates_payload" in details
+    assert "SCAN candidates" not in details
+
+
+def test_db_selection_matches_list_selection_without_per_document_queries(tmp_path):
+    db_path = tmp_path / "services" / "data" / "publication_shift" / "infini_news_v1" / "candidate_records.sqlite3"
+    conn = connect_private_candidate_db(db_path)
+    kwargs = {"shard_path": "data/year=2025/month=01/part.parquet", "shard_sha256": "sha", "retrieved_at": "now"}
+    records = []
+    for idx in range(6):
+        records.append(
+            normalize_row(
+                _row(
+                    url=f"https://site{idx % 2}.example/story-{idx}",
+                    url_hostname=f"site{idx % 2}.example",
+                    sitename=f"site-{idx % 2}",
+                    warc_record_id=f"<urn:uuid:{idx:032d}>",
+                    warc_target_uri=f"https://site{idx % 2}.example/story-{idx}",
+                    warc_payload_digest=f"sha1:{idx}",
+                    text=_text(f"unique{idx}"),
+                ),
+                row_index=idx,
+                **kwargs,
+            )
+        )
+    for record in records:
+        assert add_candidate_record(conn, record) is True
+    conn.commit()
+
+    expected, _ = select_month_rows(records, month="2024-12", target=4, seed=123, per_sitename_cap=2)
+    statements = []
+    conn.set_trace_callback(statements.append)
+    actual, _ = select_month_rows_from_db(conn, month="2024-12", target=4, seed=123, per_sitename_cap=2)
+    conn.set_trace_callback(None)
+    conn.close()
+
+    assert [row["document_id"] for row in actual] == [row["document_id"] for row in expected]
+    assert not any("WHERE document_id =" in statement for statement in statements)
+
+
+def test_collect_stops_inside_shard_when_publish_month_quota_is_satisfied(tmp_path, monkeypatch):
+    shard_path = "data/year=2025/month=01/part-test.parquet"
+    consumed = []
+    rows = []
+    for idx in range(5):
+        rows.append(
+            _row(
+                publish_date="2025-01-01",
+                warc_date=dt.datetime(2025, 1, 2, tzinfo=dt.timezone.utc),
+                url=f"https://site{idx}.example/story-{idx}",
+                url_hostname=f"site{idx}.example",
+                sitename=f"site-{idx}",
+                warc_record_id=f"<urn:uuid:{idx:032d}>",
+                warc_target_uri=f"https://site{idx}.example/story-{idx}",
+                warc_payload_digest=f"sha1:{idx}",
+                text=_text(f"row{idx}"),
+            )
+        )
+
+    def fake_read_shard_rows(_path):
+        for idx, row in enumerate(rows):
+            consumed.append(idx)
+            yield idx, row
+
+    monkeypatch.setattr(
+        collector,
+        "hub_file_manifest",
+        lambda **_kwargs: [{"path": shard_path, "year_month": "2025-01", "lfs_sha256": "sha"}],
+    )
+    monkeypatch.setattr(collector, "read_shard_rows", fake_read_shard_rows)
+    monkeypatch.setattr(collector, "IN_SHARD_QUOTA_CHECK_EVERY_ACCEPTED", 1)
+    manifest = {
+        "source_revision": FROZEN_REVISION,
+        "targets_by_month": {"2025-01": 2},
+        "sample_seed": 123,
+        "per_sitename_month_cap": 1,
+    }
+    output_root = tmp_path / "services" / "data" / "publication_shift" / "infini_news_v1"
+
+    result = collector.collect(manifest, output_root)
+    progress = json.loads((output_root / "progress.json").read_text())
+
+    assert consumed == [0, 1]
+    assert len(result["records"]) == 2
+    assert progress["shards"][shard_path]["rows_seen"] == 2
+    assert progress["shards"][shard_path]["complete"] is False
+    assert progress["shards"][shard_path]["skipped"] == "month_quota_satisfied_mid_shard"
+
+
+def test_in_shard_quota_stop_uses_publish_date_not_partition_month(tmp_path, monkeypatch):
+    shard_path = "data/year=2025/month=01/part-date-lag.parquet"
+    consumed = []
+    rows = []
+    for idx, publish_date in enumerate(["2024-12-31", "2024-12-31", "2025-01-01", "2025-01-01", "2025-01-01"]):
+        rows.append(
+            _row(
+                publish_date=publish_date,
+                warc_date=dt.datetime(2025, 1, 2, tzinfo=dt.timezone.utc),
+                url=f"https://date{idx}.example/story-{idx}",
+                url_hostname=f"date{idx}.example",
+                sitename=f"site-{idx}",
+                warc_record_id=f"<urn:uuid:{idx + 100:032d}>",
+                warc_target_uri=f"https://date{idx}.example/story-{idx}",
+                warc_payload_digest=f"sha1:date-{idx}",
+                text=_text(f"date{idx}"),
+            )
+        )
+
+    def fake_read_shard_rows(_path):
+        for idx, row in enumerate(rows):
+            consumed.append(idx)
+            yield idx, row
+
+    monkeypatch.setattr(
+        collector,
+        "hub_file_manifest",
+        lambda **_kwargs: [{"path": shard_path, "year_month": "2025-01", "lfs_sha256": "sha"}],
+    )
+    monkeypatch.setattr(collector, "read_shard_rows", fake_read_shard_rows)
+    monkeypatch.setattr(collector, "IN_SHARD_QUOTA_CHECK_EVERY_ACCEPTED", 1)
+    manifest = {
+        "source_revision": FROZEN_REVISION,
+        "targets_by_month": {"2025-01": 2},
+        "sample_seed": 123,
+        "per_sitename_month_cap": 1,
+    }
+    output_root = tmp_path / "services" / "data" / "publication_shift" / "infini_news_v1"
+
+    result = collector.collect(manifest, output_root)
+
+    assert consumed == [0, 1, 2, 3]
+    assert len(result["records"]) == 2
+    assert {row["publication_year_month"] for row in result["records"]} == {"2025-01"}
 
 
 def test_seeded_month_selection_is_deterministic_and_enforces_sitename_cap():
