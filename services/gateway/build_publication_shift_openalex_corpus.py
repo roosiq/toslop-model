@@ -9,6 +9,7 @@ under services/evals are intentionally public-safe and contain no text previews.
 from __future__ import annotations
 
 import argparse
+import calendar
 import datetime as dt
 import hashlib
 import json
@@ -412,6 +413,7 @@ def default_manifest(pilot: bool = False) -> dict[str, Any]:
         "retry_backoff_seconds": 2.0,
         "sample_seed": 20260712,
         "max_forward_month": 7,
+        "forward_targets_by_month": {"1": 286, "2": 286, "3": 286, "4": 286, "5": 286, "6": 286, "7": 284},
         "targets_by_year": targets,
         "filters": {
             "language": "en",
@@ -435,10 +437,17 @@ def openalex_headers() -> dict[str, str]:
     }
 
 
-def build_openalex_url(year: int, cursor: str, per_page: int, mailto: str) -> str:
+def build_openalex_url(year: int, cursor: str, per_page: int, mailto: str, month: int | None = None) -> str:
+    if month is None:
+        from_date = f"{year}-01-01"
+        to_date = f"{year}-12-31"
+    else:
+        last_day = calendar.monthrange(year, month)[1]
+        from_date = f"{year}-{month:02d}-01"
+        to_date = f"{year}-{month:02d}-{last_day:02d}"
     filters = [
-        f"from_publication_date:{year}-01-01",
-        f"to_publication_date:{year}-12-31",
+        f"from_publication_date:{from_date}",
+        f"to_publication_date:{to_date}",
         "language:en",
         "has_abstract:true",
         "type:article|review|preprint|letter",
@@ -504,6 +513,24 @@ def fetch_json(url: str, max_retries: int, backoff: float) -> dict[str, Any]:
     raise OpenAlexHTTPError("OpenAlex request failed")
 
 
+def cap_forward_rows(records: list[dict[str, Any]], targets_by_month: dict[str, int]) -> tuple[list[dict[str, Any]], int]:
+    """Keep a deterministic month-balanced 2026 lane and return rows removed."""
+    if not targets_by_month:
+        return records, 0
+    forward: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    retained = []
+    for row in records:
+        if row["publication_year"] == 2026:
+            forward[str(row["publication_month"])].append(row)
+        else:
+            retained.append(row)
+    for month, target in sorted(targets_by_month.items(), key=lambda item: int(item[0])):
+        candidates = sorted(forward.get(str(month), []), key=lambda row: (row["publication_date"], row["document_id"]))
+        retained.extend(candidates[: int(target)])
+    retained.sort(key=lambda row: (row["publication_date"], row["work_id"]))
+    return retained, len(records) - len(retained)
+
+
 def collect(manifest: dict[str, Any], output_root: Path, *, max_requests: int | None = None) -> dict[str, Any]:
     ensure_private_path(output_root / "normalized_rows.jsonl")
     accepted_path = output_root / "normalized_rows.jsonl"
@@ -511,9 +538,15 @@ def collect(manifest: dict[str, Any], output_root: Path, *, max_requests: int | 
     progress_path = output_root / "progress.json"
 
     existing, startup_dedup = dedupe_records(read_jsonl(accepted_path))
-    if startup_dedup.get("duplicate_count", 0):
+    forward_targets = {str(k): int(v) for k, v in manifest.get("forward_targets_by_month", {}).items()}
+    existing, forward_rows_removed = cap_forward_rows(existing, forward_targets)
+    if startup_dedup.get("duplicate_count", 0) or forward_rows_removed:
         write_private_jsonl(accepted_path, existing)
     accepted_by_year = Counter(str(row["publication_year"]) for row in existing)
+    accepted_by_bucket = Counter(
+        f"2026-{row['publication_month']:02d}" if row["publication_year"] == 2026 and forward_targets else str(row["publication_year"])
+        for row in existing
+    )
     accepted = list(existing)
 
     progress = load_progress(progress_path)
@@ -531,20 +564,34 @@ def collect(manifest: dict[str, Any], output_root: Path, *, max_requests: int | 
     request_count = 0
     total_request_count = int(stats.get("request_count", 0))
     targets = {str(k): int(v) for k, v in manifest["targets_by_year"].items()}
+    buckets: list[tuple[str, int, int | None, int]] = []
+    for year_s in sorted(targets):
+        year = int(year_s)
+        if year == 2026 and forward_targets:
+            for month_s, target in sorted(forward_targets.items(), key=lambda item: int(item[0])):
+                month = int(month_s)
+                buckets.append((f"2026-{month:02d}", year, month, target))
+        else:
+            buckets.append((year_s, year, None, targets[year_s]))
 
     seen_work = {row["work_id"] for row in accepted}
     seen_doi = {row["doi"] for row in accepted if row.get("doi")}
     seen_hash = {row["normalized_text_sha256"] for row in accepted}
     seen_cluster = {row["near_duplicate_cluster_id"] for row in accepted}
 
-    for year_s in sorted(targets):
-        target = targets[year_s]
-        year = int(year_s)
-        cursor = cursors.get(year_s, "*")
-        while accepted_by_year[year_s] < target:
+    for bucket_key, year, month, target in buckets:
+        year_s = str(year)
+        cursor = cursors.get(bucket_key, "*")
+        while accepted_by_bucket[bucket_key] < target:
             if max_requests is not None and request_count >= max_requests:
                 break
-            url = build_openalex_url(year, cursor, int(manifest.get("per_page", 200)), manifest.get("mailto", DEFAULT_CONTACT))
+            url = build_openalex_url(
+                year,
+                cursor,
+                int(manifest.get("per_page", 200)),
+                manifest.get("mailto", DEFAULT_CONTACT),
+                month=month,
+            )
             requested_at = utc_now()
             payload = fetch_json(url, int(manifest.get("max_retries", 4)), float(manifest.get("retry_backoff_seconds", 2.0)))
             request_count += 1
@@ -572,6 +619,9 @@ def collect(manifest: dict[str, Any], output_root: Path, *, max_requests: int | 
                 if row["publication_year"] != year:
                     rejected["publication_year_filter_mismatch"] += 1
                     continue
+                if month is not None and row["publication_month"] != month:
+                    rejected["publication_month_filter_mismatch"] += 1
+                    continue
 
                 duplicate_reasons = []
                 if row["work_id"] in seen_work:
@@ -590,16 +640,17 @@ def collect(manifest: dict[str, Any], output_root: Path, *, max_requests: int | 
                 accepted.append(row)
                 page_accepted.append(row)
                 accepted_by_year[year_s] += 1
+                accepted_by_bucket[bucket_key] += 1
                 seen_work.add(row["work_id"])
                 if row.get("doi"):
                     seen_doi.add(row["doi"])
                 seen_hash.add(row["normalized_text_sha256"])
                 seen_cluster.add(row["near_duplicate_cluster_id"])
-                if accepted_by_year[year_s] >= target:
+                if accepted_by_bucket[bucket_key] >= target:
                     break
 
             cursor = next_cursor
-            cursors[year_s] = cursor
+            cursors[bucket_key] = cursor
             stats["request_count"] = total_request_count
             stats["rejected_counts"] = dict(sorted(rejected.items()))
             stats["duplicate_counts"] = dict(sorted(duplicate_counts.items()))

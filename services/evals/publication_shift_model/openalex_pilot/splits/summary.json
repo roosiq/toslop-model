@@ -1,11 +1,11 @@
 {
   "author_heldout": {
     "counts": {
-      "test": 822,
-      "train": 10912,
-      "validation": 335
+      "test": 830,
+      "train": 10907,
+      "validation": 330
     },
-    "dropped_bridge_work_count": 34931,
+    "dropped_bridge_work_count": 34933,
     "overlap_audit": {
       "author_ids": 0,
       "doi": 0,
@@ -17,9 +17,9 @@
   "schema": "publication_shift.split_summary.v1",
   "source_publisher_heldout": {
     "counts": {
-      "test": 15142,
-      "train": 25545,
-      "validation": 6313
+      "test": 15079,
+      "train": 25627,
+      "validation": 6294
     },
     "overlap_audit": {
       "doi": 0,

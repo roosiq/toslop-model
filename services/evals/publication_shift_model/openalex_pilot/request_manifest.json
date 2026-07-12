@@ -6,6 +6,15 @@
     "language": "en",
     "type": "article|review|preprint|letter"
   },
+  "forward_targets_by_month": {
+    "1": 286,
+    "2": 286,
+    "3": 286,
+    "4": 286,
+    "5": 286,
+    "6": 286,
+    "7": 284
+  },
   "manifest_id": "openalex_pilot_v1",
   "max_forward_month": 7,
   "max_retries": 4,

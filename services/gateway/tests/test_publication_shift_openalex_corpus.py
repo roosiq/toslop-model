@@ -9,7 +9,9 @@ from build_publication_shift_openalex_corpus import (
     OpenAlexSchemaError,
     append_private_jsonl,
     assign_corpus_role,
+    build_openalex_url,
     build_public_safe_manifest,
+    cap_forward_rows,
     dedupe_records,
     deterministic_near_duplicate_cluster,
     load_progress,
@@ -91,6 +93,23 @@ def test_partial_2026_role_assignment_is_forward_only_and_month_limited():
     assert assign_corpus_role(2022, 3) == "transition_2022"
     assert assign_corpus_role(2016, 3) == "historical_placebo"
     assert assign_corpus_role(2024, 3) == "current_core"
+
+
+def test_forward_collection_uses_calendar_month_filters_and_deterministic_caps():
+    url = build_openalex_url(2026, "*", 200, "test@example.com", month=2)
+    assert "from_publication_date:2026-02-01" in url
+    assert "to_publication_date:2026-02-28" in url
+
+    rows = [
+        {"publication_year": 2025, "publication_month": 1, "publication_date": "2025-01-01", "document_id": "old", "work_id": "W0"},
+        {"publication_year": 2026, "publication_month": 1, "publication_date": "2026-01-02", "document_id": "jan2", "work_id": "W2"},
+        {"publication_year": 2026, "publication_month": 1, "publication_date": "2026-01-01", "document_id": "jan1", "work_id": "W1"},
+        {"publication_year": 2026, "publication_month": 2, "publication_date": "2026-02-01", "document_id": "feb1", "work_id": "W3"},
+    ]
+    retained, removed = cap_forward_rows(rows, {"1": 1, "2": 1})
+
+    assert removed == 1
+    assert {row["document_id"] for row in retained} == {"old", "jan1", "feb1"}
 
 
 def test_schema_and_quota_errors_are_explicit():
