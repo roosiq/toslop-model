@@ -1,0 +1,1087 @@
+{
+  "corpus": {
+    "accepted_count": 950,
+    "counts_by_month": {
+      "2021-08": 475,
+      "2023-07": 265,
+      "2023-08": 210
+    },
+    "counts_by_role": {
+      "current_core": 475,
+      "pre_llm_core": 475
+    },
+    "source_domain_hash_count": 125
+  },
+  "created_at": "2026-07-13T03:46:33Z",
+  "decision": "HOLD",
+  "decision_reason": "Report held because one or more frozen external gates failed; do not call PASS below balanced accuracy 0.80 or failed date/source/privacy gates.",
+  "disclaimer": "This score does not establish AI authorship.",
+  "domain_matched_balance_proof": {
+    "exact_per_domain_era_balance": true,
+    "overlapping_domain_count": 125,
+    "per_domain": {
+      "024f32065c2a8240054d829482f3775335241239146010562b3977a2805b95d9": {
+        "available_current_core": 32,
+        "available_pre_llm_core": 21,
+        "selected_current_core": 21,
+        "selected_pre_llm_core": 21
+      },
+      "033956a5479277f00fb402042704381e8bcb858a732de8f5fc94e1fdcf32ee4f": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 11,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "033d0598cc60e73cfed22ad2dbeeda44733ec40ed5549c349082fa32493c182b": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "038efb649ce1c0d48a2103fb74bdf3487f782b01b231f00106e55019dadde5fe": {
+        "available_current_core": 6,
+        "available_pre_llm_core": 26,
+        "selected_current_core": 6,
+        "selected_pre_llm_core": 6
+      },
+      "04c318665e5d0bf482d8240e6d25972d49a9fb4b8162a0b82177c97c17ce2259": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "076e30044624674a1800fdeee4d0a53ffd1c8e9c77e557e5070009612028edf5": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 5,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "0be79be35f8792cb560aebe8c48eb143b5b0984c28e6f31e5924cfcbb770a720": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "0dca018ca21d6fa316e6573b38aca3e5de2466e8b3b0bc9af708d89c2b3ca9d5": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "0e629004ba715ae77745d1dcb0997786a261fd7ed73f87f2aed05accb06faa2b": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 7,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "0eee147bd9d44d73beea4a70edc63b23c548010212c14a5233cbd62747af1708": {
+        "available_current_core": 5,
+        "available_pre_llm_core": 7,
+        "selected_current_core": 5,
+        "selected_pre_llm_core": 5
+      },
+      "1361a6b3be6d0917a5c43c80b89edf38096fc8cddcf3e6500ba5e0e50d0f292c": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "1cc71e47d97cec4efafc0ea29597e9dfeed678ec6ba420df4ce714e3c26eb70c": {
+        "available_current_core": 18,
+        "available_pre_llm_core": 14,
+        "selected_current_core": 14,
+        "selected_pre_llm_core": 14
+      },
+      "20e1fe52efbe0aaaf92d1ce536f4e8d300737f45e6d49e43d5414cd2ccfbb38f": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "2133f00fa7fbbf4fd15d1495435bc3091e3279300d8593c4a9816c2c75f0128f": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 11,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "2380158eb098a628fdda343d21d7c9707a83d777659efc9742ee7666a82a3d25": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "26bcfec290e2fe394e7cb5200a12ebad238e18de51c6ae808311a76084983f9f": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "26d89c9152b77386dfd2cda81431414d52827661c5f8b7d8dd1ebb5f81376047": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "33d419d2b24171b9495f5d2c4b6c0811a2d03e07b00eac82e789d03e3c6815e0": {
+        "available_current_core": 8,
+        "available_pre_llm_core": 11,
+        "selected_current_core": 8,
+        "selected_pre_llm_core": 8
+      },
+      "355b4cb171ba421e2d5700ccdece088b7d167689674159d7b8607dc601b40a30": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "38790aa0915e1190bae33a9620d1486cfdd2e1a629b3de3c86e45c1ee2fa3d2f": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "3e6a2584117307c320abfeb4eef4066e26ef363c23f4cf8f35e4865e40fbc206": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "412a87fb19b7ed13e231ab72681039d700c7c05a1236500451dc5e49c896ad0d": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "419036ee2f80bd99ceb4e8cf7370a69d1220cc87a6a2fbb254ad994d9f00b98f": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "4199a29bd5fa1564ad20c8e70a5ad17690a780ed8613ecc403e74d801267e2d8": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 14,
+        "selected_current_core": 4,
+        "selected_pre_llm_core": 4
+      },
+      "443af8bde12fec9dcba5571d9f9b50c968ce586b66a9c9d49078bf132a851cfc": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "45167720607878b726ad302e1e8fc5e5624f9b7d128ed2d9e7c72985d284bd3a": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "47f2f1c1f8c403ed4badbf0251ef0ccfaa3756919bbc9e945d0e2bde7512f8eb": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "483288825514176bd13f7903f7b2f06279e70f99812515b61366a7c3707b6b5f": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "48a4d693cbb0eb7c5db09681ee8c7a920bcf3c368df26117aff1e7b73725c972": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "498513348e040fed2a2a8627226eeb696ca1cb7b8a322405897732aa1d510d2f": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 7,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "4990f67b1b14d146465ea80e8c5caedabfd711c7a3fb718fd60e40f8350e116e": {
+        "available_current_core": 5,
+        "available_pre_llm_core": 5,
+        "selected_current_core": 5,
+        "selected_pre_llm_core": 5
+      },
+      "4b4601201b28bd59e10c8479d72dc810e091048cc7d929a008007bfeb231c53f": {
+        "available_current_core": 8,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "4d44a9644fdbd9cb73a85f45f61c87f5edad04d4ffb0cde33a77a49372dbf394": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 4,
+        "selected_current_core": 4,
+        "selected_pre_llm_core": 4
+      },
+      "529b75e0d5ddff70f6a5cec41c26c0fe4b6885acb9b25c64762584b1c148fe0f": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "593e960e3afa02e500304f549c397943d7b6f592bd78853db8ea4e48d29b0793": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "5a208d91f3af340158f8f51663a336b96c197a5100af887bed2ac5675e6355fa": {
+        "available_current_core": 8,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "5aadbe0583794b663eeec67f1f1c564c62b53de9e5b6359d46c9788dd5d2f13f": {
+        "available_current_core": 9,
+        "available_pre_llm_core": 11,
+        "selected_current_core": 9,
+        "selected_pre_llm_core": 9
+      },
+      "60ef1fcf2ea00b3ee3445af18106e0ca8c2cef8b602f2e6cb91d45db7d7d98db": {
+        "available_current_core": 11,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "617328303dd9b9b61946b7627f934aacb768525d4cedf8df7c14b193f58b2e23": {
+        "available_current_core": 5,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "617fbc5b7d7e3edb3cca7133bbd05cb6abe4b5ba6c7a303ec7c22944be066bbc": {
+        "available_current_core": 78,
+        "available_pre_llm_core": 16,
+        "selected_current_core": 16,
+        "selected_pre_llm_core": 16
+      },
+      "64cb4ca051929c0deed37bdd108d37d194cc93b25f322f576eb052d2101b3926": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "655b263004df89e6daee5b5a5cee60d59c856f10b7c9c13141bebb274fbf7896": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "6655d1d7fd96c3293c4f941b0b81ef014b5b83150972d9ff87d85aa602c6f454": {
+        "available_current_core": 7,
+        "available_pre_llm_core": 13,
+        "selected_current_core": 7,
+        "selected_pre_llm_core": 7
+      },
+      "683e68088f16ffc0fb7082b16c359a37afb7163eba7ea700ea8f7a397fbe8496": {
+        "available_current_core": 6,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "6853f23b10c693ea153ea9f2d54ad0b321ce2c054f17c3cddcf508b2e34d6f40": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 45,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "69448bb2f13ea6a266c60308030ebd8e49584ee1423e3ad402a4653328c6517b": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "6995b06eaaacb6610a4bab5072902194f7354bf6c4ed23a05a60f5128f617536": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "6a58715764d2bd0858bb9c18560c15535fe1e77d665a7938134808c97ee17b47": {
+        "available_current_core": 6,
+        "available_pre_llm_core": 6,
+        "selected_current_core": 6,
+        "selected_pre_llm_core": 6
+      },
+      "6aa58b1691217dd8e08635a3f4458316ffef2bda96b77ad60b5e77059f853ecf": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "6be59e4dfa0e9870bcf23befefefdc30424bd4055901f69a630eed92ee0e2a2e": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "6c3c13925b3e6fe93da6547e2caabe70d59813ee9a81a95418e60f6f80ab7eb3": {
+        "available_current_core": 8,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "6f22cb9d48d84eced3e0a9dccb6094d737e0bbb8c93c2c7b57b13ef82acd5319": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "71b7b7481d076464fcf6effb9b5597d3802730905a6b33b4cb1accba9d15548d": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "769075bbdb1c201ad8383f367a817612b3cef23bb1c1903a44036247e207db43": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "77661de9d24817182a412f4432d099e929668cc8818f65d7263d5a4c4e85c107": {
+        "available_current_core": 62,
+        "available_pre_llm_core": 79,
+        "selected_current_core": 62,
+        "selected_pre_llm_core": 62
+      },
+      "79665f446b3431925dcdd7fe777eee44ebbaa0304fdfcae23538cccadebe1f13": {
+        "available_current_core": 6,
+        "available_pre_llm_core": 24,
+        "selected_current_core": 6,
+        "selected_pre_llm_core": 6
+      },
+      "7bf266199a88ffe0f176f01419c33827744ed42431981a7ab8d4f463d4070eb4": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "7bfc5a0b28c6c8fa91f7de2c5af0f3d3b42ac734d8ae5c573d63856a004531bc": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 8,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "7d8b4127f5a95dde63ecf547ddcd14bc8d0f02edf4c31ad6ae1fe4db2fc00377": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "7f2699a56b4b3b4d041a39f48bc38c60faf44da4416d868e49b2e6eafbb464e7": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "7febe4e9434fb95b33d824e0040e59641b661354f09540991dcc9e1881632501": {
+        "available_current_core": 6,
+        "available_pre_llm_core": 4,
+        "selected_current_core": 4,
+        "selected_pre_llm_core": 4
+      },
+      "80e673d4d9d72d88dacf1086c46ebb20bf31499f2c750dbefc241d9f11069235": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "8153a4cd8b71eaeba3a98906c9af47ba304a8f9e8323a0f394feacc6a6063d3b": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 72,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "82fd8c99bb8cc024b7341a9a9acdb37504648ed50be25db7e1506319f5ccca05": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "84411df0a0ecc99be48fe7813721007778afede7d5a88ffb348ca8a823f2cae1": {
+        "available_current_core": 6,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "867e762e12fe2ad5c2ceb717e6c36e70d7f0486b0b82430ffb0ede7224ab9671": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 5,
+        "selected_current_core": 4,
+        "selected_pre_llm_core": 4
+      },
+      "88ef41b4f522d492ff87a81e9c4578b9eabbf84765a9ca1438d1e3c039f1623b": {
+        "available_current_core": 10,
+        "available_pre_llm_core": 5,
+        "selected_current_core": 5,
+        "selected_pre_llm_core": 5
+      },
+      "8a2ae0365e417d7d9da391b817a1197c3a6d0d5f17c088a7d9b213e0e379854b": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "8cc12ac50cf1666ff511230ffbb98a48c185b3e79bcf0946bdca3c8fa2dbfdc2": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "8f2a9b746bfccb2de722d8bd968e3dcd7e1ce30d06a877caca471c545da2bc36": {
+        "available_current_core": 35,
+        "available_pre_llm_core": 22,
+        "selected_current_core": 22,
+        "selected_pre_llm_core": 22
+      },
+      "9279c54bcb5ed3efb922f7de92836f4d0b3b79abfc9bd13ef15fd6065df6dbc2": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "9d0c39ad56fdcde7a9b94696c492fad939ac254a8dd80cd5eed7023530729187": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "a0b6436ff68775ee52cf7dc82d7b8bce5db2e28250eac5d8296a3f33fbc91e02": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "a1764d49d011e084221a74bc462887c4042a39a1d024a865a46121a6a664cf11": {
+        "available_current_core": 8,
+        "available_pre_llm_core": 9,
+        "selected_current_core": 8,
+        "selected_pre_llm_core": 8
+      },
+      "a3c218166a4389ba75e81358dcc5afa3a6b6a7e0f731e75837eee0f4e055af34": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "a4d4f20bede3413928373a6f3fe5d3f0b6d91069bcd021e1c69c09bd2028523f": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "a70b2501c8d00bd79c3a5ef951fea1e467e127d3c3b55f77589d6f0d277546b3": {
+        "available_current_core": 7,
+        "available_pre_llm_core": 4,
+        "selected_current_core": 4,
+        "selected_pre_llm_core": 4
+      },
+      "a9a115bb026dc2e0d54f3ec95d703ed2ecd9578303336737f24250c9abbfd3f1": {
+        "available_current_core": 7,
+        "available_pre_llm_core": 7,
+        "selected_current_core": 7,
+        "selected_pre_llm_core": 7
+      },
+      "aa2ba6efe01174829ad8709bc3a8cce8589f82d22efb0442553935aedf30fe15": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "aaadf5bcc06ff77fda66ec0ebb3f844c3cbb56d9165ed87fe0ecd23235e00415": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "ab84da97c6c4f6cf6011660be4041f43ae9df90265e16536bffe6dcaf0f8fe29": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 6,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "abbd71b0737205ccefa6f2300a7b953844858c25a4cbf5793ff28ec66f8befd0": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 4,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "afddda4f6553fbe6609766bd0c5ce96f37b523e85e4b1bd15e040a49986fd136": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 4,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "b016a3b4a2a5497485812b9ea8be071c08662afd9b20bc87f293bc0fb347b358": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 4,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "b172fb0b52822461d2bfa7b4b90ed3e960c736155ff487827b9d47dd5b1b467d": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 4,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "b1c148be13842f301793c1c20a10bd8be3851bc893ae562214f3226ffb83aacd": {
+        "available_current_core": 12,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "b7783cae412af4174ece2c49182a750fa4ebb388fc381cac7f6baf5c58818c12": {
+        "available_current_core": 88,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "b9aa67dd0fd7d889fa6422b7207d014dc0e5db6f49cb56bd457caebafa734e51": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "bb764e7f6f81b3869402b0cca75b60ee2f3c1c13942c24542a2b1e242732df22": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "bbd146aeeceac63c4c7dfad6029b1ac004ed5df5b8415abc61f2dca1751b278b": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "bd2d148a4cc098dfdf16095524c958f2fbbe7f2fa40014ad52d57e13a51401a6": {
+        "available_current_core": 11,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "bd45b479be9ca51a1213cda9e31773522230d8cb7652472b0ea46e9483823eec": {
+        "available_current_core": 5,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "bf70a74124aa52244a8e1ee8c11ca68b4e9557933daf747a74fbbfbe9965f9e3": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 46,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "bfefc18475487b7bb4e0c3fa35d638211fb6192d351564f2ca7b75e81f1abedd": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "c0dbbc01ae95255b9118447c686ea8d420f8b440800be5d707b5b2dba5aa93d7": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "c33fb200796c9eca72447f7398a17f10a1bfe07309f570a3bc4c2e76d7226fe0": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "c3cebfa05f5476e9865f5fdeea0b766f96efa4fce4d89e09e222ea7bd04e8e89": {
+        "available_current_core": 8,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "c4d862ed4d58d32e20ef694efa85dfd19e5f617aaeddb73507e4a052306150c1": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "c51925b8102ad07e41c0c7e9b644cab78768036313ba5f5975b2a4db7c751d89": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "c815ba4fb1bc6e11dde7f051ba334244b560f533f2fa7519526cdcae65ba4925": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "ca46574338228a370a22d4ac6fa83203e58e053328a4ea729d23ed5a202241f7": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 2,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "cabd17ea38ee9e93ee4929a14afc388bb452421f926032387b5d049ae6b3c122": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "cb1047792f8d7aa1ead94a19681f5bf917a8c06e3fe3f4996117fe177bab4860": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 18,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "d521837c621f0bc7fa5ff15a9bcda28e7825b7201bf7da86817bb62b56a3d1b3": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "d690a52a79aa69599d7a83c3426e32255168945eb5ce9860f5ff48bea84e2346": {
+        "available_current_core": 6,
+        "available_pre_llm_core": 5,
+        "selected_current_core": 5,
+        "selected_pre_llm_core": 5
+      },
+      "d6ead13d6b72e4adf63647d536c0bad5ac1f7fae83f89788b00ae999d79db23d": {
+        "available_current_core": 54,
+        "available_pre_llm_core": 90,
+        "selected_current_core": 54,
+        "selected_pre_llm_core": 54
+      },
+      "d7027e65145b20cba9ebc1cca0046ed7ac7aec5965bb379ef23f6ebf7f43109c": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 6,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "dd36d66c46db4bc4689985fd4816c580b422918c0c4f31ee1a22d86d02bfea5d": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "e1371dfb481a5ade39751f214df4677c10a3f02cfbba19055808d75e3abbb855": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 5,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "e1af0e0076f5fbb7728d5acf7453b1302c902c454a2d2b16d6928f966c51eb29": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "e3a259420d5870e89da7e381aa7a358ec66106730cee758e1b079175c49bd286": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "ee577e9b3221a0c3e84ba208604b5eeef4e36985541ed8946ddccf86b89cfd00": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 4,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "f0e503079caed0ef5fee9f0daefd8694bf0d29ef65ea02217203c5847a10f287": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "f15ecf4a079e5e49f031000c7c82dd47f3d4abbb133ed30f2a8af6d491183726": {
+        "available_current_core": 5,
+        "available_pre_llm_core": 4,
+        "selected_current_core": 4,
+        "selected_pre_llm_core": 4
+      },
+      "f238501964a5675a9bd82356b5aa86f5c128e85f5771fb10915be8249919b71d": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "f2f452a655ec9c4eb0fe36460542e115ff4baf01b06e0bc7e9c6b5ef916ea3cb": {
+        "available_current_core": 6,
+        "available_pre_llm_core": 7,
+        "selected_current_core": 6,
+        "selected_pre_llm_core": 6
+      },
+      "f347c3f0298f1a0e3b0f3911cf23d085df2e63eeac4cf055f6f1c055585568af": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 7,
+        "selected_current_core": 3,
+        "selected_pre_llm_core": 3
+      },
+      "f4e60bbe313491494f2a26323e6287e4a1d93c54c5f866db901f792e8f50f71a": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 3,
+        "selected_current_core": 2,
+        "selected_pre_llm_core": 2
+      },
+      "f7449ff230566ab9e2479dd007f1d831f687d9933a2d12058f7f3520d8cdfa15": {
+        "available_current_core": 4,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "f7bb39682818dc5bb1c5ee71e5957df938fe873a58e2d682b41b0a1ce960222c": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "f874673b7cac235388ee55cad8adc21fad617d166600e16168ea22cffda9542a": {
+        "available_current_core": 29,
+        "available_pre_llm_core": 20,
+        "selected_current_core": 20,
+        "selected_pre_llm_core": 20
+      },
+      "fa529c1c360dce16952311a929ed6917bd8a20f0f43e0d8ed0b5b5c0e8d69806": {
+        "available_current_core": 2,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "fcc17a9967358058ed726a3509e6c68c50117443c7ea1fb6c4a0c1f516d0f1a6": {
+        "available_current_core": 1,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      },
+      "fdfff3e5b49d55954ccc32c263a625eef443be4819a4c6e1c52570b241e2a9da": {
+        "available_current_core": 6,
+        "available_pre_llm_core": 14,
+        "selected_current_core": 6,
+        "selected_pre_llm_core": 6
+      },
+      "fe1fc8f05a91f2f1cc3ddebd04ea9105f800b47b587b8f919b291f0418258af0": {
+        "available_current_core": 3,
+        "available_pre_llm_core": 1,
+        "selected_current_core": 1,
+        "selected_pre_llm_core": 1
+      }
+    },
+    "total_per_era": {
+      "current_core": 475,
+      "pre_llm_core": 475
+    }
+  },
+  "gates": {
+    "balanced_accuracy_minimum": {
+      "status": "FAIL",
+      "threshold": 0.8,
+      "value": 0.76
+    },
+    "date_axis": {
+      "policy": "reject_missing_or_out_of_window_date_publish_do_not_substitute_dataset_names_download_or_modify_dates",
+      "status": "PASS",
+      "value": "date_publish_only"
+    },
+    "domain_only_shortcut": {
+      "reason": "Exact per-domain era balance means a domain-only lookup has chance ranking by construction; learned shortcut diagnostic is unnecessary.",
+      "roc_auc": 0.5,
+      "status": "STRUCTURAL_CHANCE"
+    },
+    "masked_roc_auc_minimum": {
+      "status": "FAIL",
+      "threshold": 0.75,
+      "value": 0.7185595567867036
+    },
+    "rights_privacy_public_safe": {
+      "public_text_policy": "no raw article text, titles, descriptions, URLs, or previews",
+      "source_rights_status": "HOLD_combined_cc_and_unspecified_public_no_text_only",
+      "status": "PASS"
+    },
+    "source_diversity": {
+      "source_count": 2,
+      "status": "PASS"
+    },
+    "source_only_shortcut": {
+      "reason": "Source snapshot identity is era-linked in this external challenge; this diagnostic is reported as confound risk, not used as a runtime input.",
+      "roc_auc": 1.0,
+      "status": "reported"
+    }
+  },
+  "lane_name": "domain_matched_balanced",
+  "metrics": {
+    "by_month": {
+      "2021-08": {
+        "accuracy": 0.8231578947368421,
+        "balanced_accuracy": null,
+        "brier": null,
+        "count": 475,
+        "ece": null,
+        "f1": null,
+        "false_positive_rate": 0.17684210526315788,
+        "negative_count": 475,
+        "positive_count": 0,
+        "pr_auc": null,
+        "roc_auc": null,
+        "specificity": 0.8231578947368421,
+        "threshold": 0.49690983649044096
+      },
+      "2023-07": {
+        "accuracy": 0.7245283018867924,
+        "balanced_accuracy": null,
+        "brier": null,
+        "count": 265,
+        "ece": null,
+        "f1": null,
+        "false_negative_rate": 0.27547169811320754,
+        "negative_count": 0,
+        "positive_count": 265,
+        "pr_auc": null,
+        "roc_auc": null,
+        "sensitivity": 0.7245283018867924,
+        "threshold": 0.49690983649044096
+      },
+      "2023-08": {
+        "accuracy": 0.6619047619047619,
+        "balanced_accuracy": null,
+        "brier": null,
+        "count": 210,
+        "ece": null,
+        "f1": null,
+        "false_negative_rate": 0.3380952380952381,
+        "negative_count": 0,
+        "positive_count": 210,
+        "pr_auc": null,
+        "roc_auc": null,
+        "sensitivity": 0.6619047619047619,
+        "threshold": 0.49690983649044096
+      }
+    },
+    "by_role": {
+      "current_core": {
+        "accuracy": 0.6968421052631579,
+        "balanced_accuracy": null,
+        "brier": null,
+        "count": 475,
+        "ece": null,
+        "f1": null,
+        "false_negative_rate": 0.3031578947368421,
+        "negative_count": 0,
+        "positive_count": 475,
+        "pr_auc": null,
+        "roc_auc": null,
+        "sensitivity": 0.6968421052631579,
+        "threshold": 0.49690983649044096
+      },
+      "pre_llm_core": {
+        "accuracy": 0.8231578947368421,
+        "balanced_accuracy": null,
+        "brier": null,
+        "count": 475,
+        "ece": null,
+        "f1": null,
+        "false_positive_rate": 0.17684210526315788,
+        "negative_count": 475,
+        "positive_count": 0,
+        "pr_auc": null,
+        "roc_auc": null,
+        "specificity": 0.8231578947368421,
+        "threshold": 0.49690983649044096
+      }
+    },
+    "grouped_bootstrap_source_domain_roc_auc_95ci": {
+      "lower": 0.817387887243731,
+      "median": 0.8542354297527083,
+      "samples_requested": 300,
+      "samples_valid": 300,
+      "upper": 0.8904139182649631
+    },
+    "length_quartiles": {
+      "q1_shortest": {
+        "accuracy": 0.7563025210084033,
+        "balanced_accuracy": 0.7540473665606222,
+        "brier": 0.16309845022768138,
+        "count": 238,
+        "ece": 0.060640316259923374,
+        "f1": 0.7314814814814815,
+        "false_negative_rate": 0.3130434782608696,
+        "false_positive_rate": 0.17886178861788618,
+        "negative_count": 123,
+        "positive_count": 115,
+        "pr_auc": 0.8542870764934652,
+        "roc_auc": 0.8446800989749028,
+        "sensitivity": 0.6869565217391305,
+        "specificity": 0.8211382113821138,
+        "threshold": 0.49690983649044096,
+        "word_count_range": [
+          151.0,
+          332.25
+        ]
+      },
+      "q2": {
+        "accuracy": 0.7383966244725738,
+        "balanced_accuracy": 0.7381783221763281,
+        "brier": 0.17305714829273675,
+        "count": 237,
+        "ece": 0.08052976322210899,
+        "f1": 0.7232142857142857,
+        "false_negative_rate": 0.3135593220338983,
+        "false_positive_rate": 0.21008403361344538,
+        "negative_count": 119,
+        "positive_count": 118,
+        "pr_auc": 0.8240362139508444,
+        "roc_auc": 0.8241703461045435,
+        "sensitivity": 0.6864406779661016,
+        "specificity": 0.7899159663865546,
+        "threshold": 0.49690983649044096,
+        "word_count_range": [
+          332.25,
+          477.5
+        ]
+      },
+      "q3": {
+        "accuracy": 0.7341772151898734,
+        "balanced_accuracy": 0.7325448845825021,
+        "brier": 0.17692263804431116,
+        "count": 237,
+        "ece": 0.07193438615853191,
+        "f1": 0.7069767441860465,
+        "false_negative_rate": 0.3448275862068966,
+        "false_positive_rate": 0.19008264462809918,
+        "negative_count": 121,
+        "positive_count": 116,
+        "pr_auc": 0.8246927897162539,
+        "roc_auc": 0.8178968367056141,
+        "sensitivity": 0.6551724137931034,
+        "specificity": 0.8099173553719008,
+        "threshold": 0.49690983649044096,
+        "word_count_range": [
+          477.5,
+          725.0
+        ]
+      },
+      "q4_longest": {
+        "accuracy": 0.8109243697478992,
+        "balanced_accuracy": 0.814484126984127,
+        "brier": 0.12411394763386492,
+        "count": 238,
+        "ece": 0.07310750387028739,
+        "f1": 0.8085106382978723,
+        "false_negative_rate": 0.24603174603174602,
+        "false_positive_rate": 0.125,
+        "negative_count": 112,
+        "positive_count": 126,
+        "pr_auc": 0.9306519662775102,
+        "roc_auc": 0.9167375283446711,
+        "sensitivity": 0.753968253968254,
+        "specificity": 0.875,
+        "threshold": 0.49690983649044096,
+        "word_count_range": [
+          725.0,
+          5453.0
+        ]
+      }
+    },
+    "masked": {
+      "accuracy": 0.6463157894736842,
+      "balanced_accuracy": 0.6463157894736842,
+      "brier": 0.21584891822529748,
+      "count": 950,
+      "ece": 0.06809455840386015,
+      "f1": 0.625,
+      "false_negative_rate": 0.4105263157894737,
+      "false_positive_rate": 0.2968421052631579,
+      "negative_count": 475,
+      "positive_count": 475,
+      "pr_auc": 0.7033297009908872,
+      "roc_auc": 0.7185595567867036,
+      "sensitivity": 0.5894736842105263,
+      "specificity": 0.7031578947368421,
+      "threshold": 0.49690983649044096
+    },
+    "missing_author": {
+      "True": {
+        "accuracy": 0.76,
+        "balanced_accuracy": 0.76,
+        "brier": 0.15926501058202988,
+        "count": 950,
+        "ece": 0.053210299681994866,
+        "f1": 0.7438202247191011,
+        "false_negative_rate": 0.3031578947368421,
+        "false_positive_rate": 0.17684210526315788,
+        "negative_count": 475,
+        "positive_count": 475,
+        "pr_auc": 0.8618403949683434,
+        "roc_auc": 0.852839889196676,
+        "sensitivity": 0.6968421052631579,
+        "specificity": 0.8231578947368421,
+        "threshold": 0.49690983649044096
+      }
+    },
+    "overall": {
+      "accuracy": 0.76,
+      "balanced_accuracy": 0.76,
+      "brier": 0.15926501058202988,
+      "count": 950,
+      "ece": 0.053210299681994866,
+      "f1": 0.7438202247191011,
+      "false_negative_rate": 0.3031578947368421,
+      "false_positive_rate": 0.17684210526315788,
+      "negative_count": 475,
+      "positive_count": 475,
+      "pr_auc": 0.8618403949683434,
+      "roc_auc": 0.852839889196676,
+      "sensitivity": 0.6968421052631579,
+      "specificity": 0.8231578947368421,
+      "threshold": 0.49690983649044096
+    }
+  },
+  "model": {
+    "artifact_sha256": "0ca8956726b101fd585ff663caf4119e4911d3ec2789cf25fab415669691d403",
+    "metadata_model_id": "infini-news-lexical_tfidf_logistic-v1-cca5838ac34f",
+    "model_id": "infini-news-lexical_tfidf_logistic-v1-cca5838ac34f",
+    "threshold": 0.49690983649044096
+  },
+  "request_manifest_id": "multisource_external_v1_all_and_domain_matched",
+  "schema": "publication_shift.multisource_external_report.v1",
+  "score_distribution": {
+    "count": 950,
+    "mean": 0.44974363882109536,
+    "median": 0.4198952512336379,
+    "p05": 0.02343095883691966,
+    "p25": 0.15390061699872146,
+    "p75": 0.7364427482818022,
+    "p95": 0.9633705174919711,
+    "std": 0.31276069043036214
+  },
+  "source": {
+    "rights_status": "HOLD_combined_cc_and_unspecified_public_no_text_only",
+    "schema_fields": [
+      "date_publish",
+      "date_download",
+      "date_modify",
+      "maintext",
+      "source_domain",
+      "url",
+      "authors"
+    ],
+    "sources": {
+      "current_2023": {
+        "filename": "data/train-00000-of-00001-4ad0fe9bc38de63f.parquet",
+        "license": "cc",
+        "repo_id": "RealTimeData/News_August_2023",
+        "revision": "eedb055bf0b5583f22854c347e51a0b5a5d76f49"
+      },
+      "pre_llm_2021": {
+        "filename": "data/train-00000-of-00001-347d4b994ed4dc71.parquet",
+        "license": null,
+        "repo_id": "RealTimeData/News_Seq_2021",
+        "revision": "b703213f35f4b604a15ffa92d3bb4090dba25ad5"
+      }
+    }
+  }
+}
