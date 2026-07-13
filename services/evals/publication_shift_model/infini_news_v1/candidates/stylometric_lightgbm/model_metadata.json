@@ -1,0 +1,54 @@
+{
+  "artifact_path": "services/gateway/model_artifacts/publication_shift/infini_news_v1/infini_news_stylometric_lightgbm.joblib",
+  "artifact_sha256": "b735233e719bab6949a2773ba9e3768de3c496510cc7da4d342307c43d0ac6fe",
+  "artifact_size_bytes": 730728,
+  "candidate_name": "stylometric_lightgbm",
+  "config": {
+    "boosting_type": "gbdt",
+    "class_weight": "balanced",
+    "colsample_bytree": 0.9,
+    "deterministic": true,
+    "force_col_wise": true,
+    "learning_rate": 0.035,
+    "max_depth": -1,
+    "min_child_samples": 80,
+    "n_estimators": 450,
+    "n_jobs": 8,
+    "num_leaves": 31,
+    "objective": "binary",
+    "random_state": 20260712,
+    "reg_alpha": 0.05,
+    "reg_lambda": 0.1,
+    "subsample": 0.85,
+    "subsample_freq": 1,
+    "verbosity": -1
+  },
+  "corpus_rows": 264000,
+  "created_at": "2026-07-13T01:41:50Z",
+  "disclaimer": "This score does not establish AI authorship.",
+  "environment": {
+    "joblib": "1.5.3",
+    "lightgbm": "4.6.0",
+    "numpy": "2.4.3",
+    "platform": "Linux-7.0.12-201.fc44.x86_64-x86_64-with-glibc2.43",
+    "python": "3.11.15",
+    "scikit_learn": "1.9.0",
+    "scipy": "1.17.1"
+  },
+  "excluded_from_training": [
+    "historical_placebo",
+    "transition_2022",
+    "forward_2026"
+  ],
+  "model_family": "infini_news_stylometric_lightgbm",
+  "model_id": "infini-news-stylometric_lightgbm-v1-c7d371ffb96e",
+  "schema": "publication_shift.infini_news_candidate_metadata.v1",
+  "score_name": "current_era_similarity",
+  "split_summary_sha256": "a2ab127c5421c7c14444d7053e08125205e03118067e8194d1fe75618ccbaa1d",
+  "threshold": 0.5264848260412621,
+  "training_identity_sha256": "c7d371ffb96e34fa596042a9048ba36dd72b9a3355b1b13dff3bf984bae66a11",
+  "training_roles": {
+    "current_core": 1,
+    "pre_llm_core": 0
+  }
+}
