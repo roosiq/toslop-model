@@ -4,8 +4,10 @@ from pathlib import Path
 import pytest
 
 from diagnose_infini_news_january_2024 import (
-    ARTIFACT_SHA256,
-    DEFAULT_ARTIFACT,
+    CANDIDATE_ARTIFACT_SHA256,
+    DEFAULT_CANDIDATE_ARTIFACT,
+    DEFAULT_DECISION_PACKET,
+    DEFAULT_FINAL_ARTIFACT,
     DEFAULT_METADATA,
     DEFAULT_PREDICTIONS,
     DISCLAIMER,
@@ -16,7 +18,8 @@ from diagnose_infini_news_january_2024 import (
     assert_public_safe,
     run,
     sha256_file,
-    validate_frozen_model,
+    validate_hold_release,
+    validate_reviewed_candidate,
 )
 
 
@@ -30,18 +33,24 @@ def generated(tmp_path_factory):
     before = {
         "predictions": sha256_file(DEFAULT_PREDICTIONS),
         "metadata": sha256_file(DEFAULT_METADATA),
-        "artifact": sha256_file(DEFAULT_ARTIFACT),
+        "candidate_artifact": sha256_file(DEFAULT_CANDIDATE_ARTIFACT),
+        "decision_packet": sha256_file(DEFAULT_DECISION_PACKET),
+        "final_artifact_present": DEFAULT_FINAL_ARTIFACT.exists(),
     }
     result = run(
         predictions_path=DEFAULT_PREDICTIONS,
         metadata_path=DEFAULT_METADATA,
-        artifact_path=DEFAULT_ARTIFACT,
+        candidate_artifact_path=DEFAULT_CANDIDATE_ARTIFACT,
+        decision_packet_path=DEFAULT_DECISION_PACKET,
+        final_artifact_path=DEFAULT_FINAL_ARTIFACT,
         output_dir=output_dir,
     )
     after = {
         "predictions": sha256_file(DEFAULT_PREDICTIONS),
         "metadata": sha256_file(DEFAULT_METADATA),
-        "artifact": sha256_file(DEFAULT_ARTIFACT),
+        "candidate_artifact": sha256_file(DEFAULT_CANDIDATE_ARTIFACT),
+        "decision_packet": sha256_file(DEFAULT_DECISION_PACKET),
+        "final_artifact_present": DEFAULT_FINAL_ARTIFACT.exists(),
     }
     return result, output_dir, before, after
 
@@ -104,19 +113,31 @@ def test_reports_required_no_text_slices_and_dominant_error_contributors(generat
     assert source_time["windows"]["remainder_of_2024"]["count"] == 0
 
 
-def test_frozen_inputs_and_model_identity_are_immutable(generated):
+def test_frozen_inputs_candidate_identity_and_hold_status_are_immutable(generated):
     result, _, before, after = generated
 
     assert before == after == {
         "predictions": PREDICTIONS_SHA256,
         "metadata": METADATA_SHA256,
-        "artifact": ARTIFACT_SHA256,
+        "candidate_artifact": CANDIDATE_ARTIFACT_SHA256,
+        "decision_packet": sha256_file(DEFAULT_DECISION_PACKET),
+        "final_artifact_present": False,
     }
-    frozen = result["frozen_model"]
-    assert frozen["model_id"] == MODEL_ID
-    assert frozen["threshold"] == THRESHOLD
-    assert frozen["artifact_sha256"] == ARTIFACT_SHA256
-    assert frozen["changed_or_tuned"] is False
+    reviewed = result["reviewed_candidate"]
+    assert reviewed["model_id"] == MODEL_ID
+    assert reviewed["threshold"] == THRESHOLD
+    assert reviewed["source_artifact_sha256"] == CANDIDATE_ARTIFACT_SHA256
+    assert reviewed["selection_status"] == "reviewed_not_selected"
+    assert reviewed["artifact_used_for_scoring"] is False
+    assert reviewed["changed_or_tuned"] is False
+    assert result["release_status"] == {
+        "decision": "HOLD",
+        "selected_candidate": None,
+        "selected_model": None,
+        "artifact_freeze": "not_performed",
+        "reviewed_candidate_selection_status": "reviewed_not_selected",
+        "final_artifact_present": False,
+    }
     assert result["interpretation"]["model_selection_or_tuning_performed"] is False
     assert result["disclaimer"] == DISCLAIMER
 
@@ -128,7 +149,9 @@ def test_public_outputs_are_deterministic_text_free_and_checksummed(generated):
     run(
         predictions_path=DEFAULT_PREDICTIONS,
         metadata_path=DEFAULT_METADATA,
-        artifact_path=DEFAULT_ARTIFACT,
+        candidate_artifact_path=DEFAULT_CANDIDATE_ARTIFACT,
+        decision_packet_path=DEFAULT_DECISION_PACKET,
+        final_artifact_path=DEFAULT_FINAL_ARTIFACT,
         output_dir=output_dir,
     )
     second = _output_bytes(output_dir)
@@ -156,7 +179,21 @@ def test_model_metadata_drift_fails_closed(tmp_path):
     changed.write_text(json.dumps(metadata, sort_keys=True), encoding="utf-8")
 
     with pytest.raises(ValueError, match="metadata checksum changed"):
-        validate_frozen_model(changed, DEFAULT_ARTIFACT)
+        validate_reviewed_candidate(changed, DEFAULT_CANDIDATE_ARTIFACT)
+
+
+def test_hold_release_semantic_drift_or_final_artifact_fails_closed(tmp_path):
+    changed_packet = json.loads(DEFAULT_DECISION_PACKET.read_text(encoding="utf-8"))
+    changed_packet["selected_model"] = {"model_id": MODEL_ID}
+    changed = tmp_path / "decision_packet.json"
+    changed.write_text(json.dumps(changed_packet), encoding="utf-8")
+    with pytest.raises(ValueError, match="selected_candidate and selected_model"):
+        validate_hold_release(changed, DEFAULT_FINAL_ARTIFACT)
+
+    unexpected_final_artifact = tmp_path / "unexpected-final.joblib"
+    unexpected_final_artifact.write_bytes(b"must not exist")
+    with pytest.raises(ValueError, match="must remain absent"):
+        validate_hold_release(DEFAULT_DECISION_PACKET, unexpected_final_artifact)
 
 
 def test_public_safety_rejects_raw_or_row_level_fields():

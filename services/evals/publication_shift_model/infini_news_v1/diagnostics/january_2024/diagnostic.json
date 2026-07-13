@@ -135,17 +135,6 @@
     "defect_detected": false
   },
   "disclaimer": "This score does not establish AI authorship.",
-  "frozen_model": {
-    "artifact_sha256": "0ca8956726b101fd585ff663caf4119e4911d3ec2789cf25fab415669691d403",
-    "candidate_name": "lexical_tfidf_logistic",
-    "changed_or_tuned": false,
-    "model_family": "infini_news_word_char_tfidf_logistic",
-    "model_id": "infini-news-lexical_tfidf_logistic-v1-cca5838ac34f",
-    "score_name": "current_era_similarity",
-    "split_summary_sha256": "a2ab127c5421c7c14444d7053e08125205e03118067e8194d1fe75618ccbaa1d",
-    "threshold": 0.49690983649044096,
-    "training_identity_sha256": "cca5838ac34f170c53d1552ed8e8ca09fed187f9111b37c20f5e87cf9456e7b5"
-  },
   "interpretation": {
     "model_selection_or_tuning_performed": false,
     "production_integration": "none",
@@ -1694,18 +1683,44 @@
     }
   },
   "purpose": "Post-hoc diagnosis of existing frozen predictions only; not model selection, calibration, threshold tuning, or production scoring.",
-  "schema": "publication_shift.infini_news_january_2024_diagnostic.v1",
+  "release_status": {
+    "artifact_freeze": "not_performed",
+    "decision": "HOLD",
+    "final_artifact_present": false,
+    "reviewed_candidate_selection_status": "reviewed_not_selected",
+    "selected_candidate": null,
+    "selected_model": null
+  },
+  "reviewed_candidate": {
+    "artifact_used_for_scoring": false,
+    "candidate_name": "lexical_tfidf_logistic",
+    "changed_or_tuned": false,
+    "model_family": "infini_news_word_char_tfidf_logistic",
+    "model_id": "infini-news-lexical_tfidf_logistic-v1-cca5838ac34f",
+    "score_name": "current_era_similarity",
+    "selection_status": "reviewed_not_selected",
+    "source_artifact_sha256": "0ca8956726b101fd585ff663caf4119e4911d3ec2789cf25fab415669691d403",
+    "split_summary_sha256": "a2ab127c5421c7c14444d7053e08125205e03118067e8194d1fe75618ccbaa1d",
+    "threshold": 0.49690983649044096,
+    "training_identity_sha256": "cca5838ac34f170c53d1552ed8e8ca09fed187f9111b37c20f5e87cf9456e7b5"
+  },
+  "schema": "publication_shift.infini_news_january_2024_diagnostic.v2",
   "source_inputs": {
-    "model_artifact": {
-      "path": "services/evals/publication_shift_model/infini_news_final_v1/infini_news_word_char_tfidf_logistic.joblib",
-      "sha256": "0ca8956726b101fd585ff663caf4119e4911d3ec2789cf25fab415669691d403"
-    },
     "predictions": {
       "path": "services/evals/publication_shift_model/infini_news_final_v1/publisher_domain_heldout_primary_predictions.jsonl",
       "row_count": 55383,
       "sha256": "ea95783593fcbdd75dfe07c9156000dbc9f03de88360be0965bb8253b5b95c33"
     },
-    "selected_candidate_metadata": {
+    "release_decision_packet": {
+      "path": "services/evals/publication_shift_model/infini_news_final_v1/decision_packet.json",
+      "sha256": "c64a776ed7215ca015a776cf9a450786b3e0546ea2b9cf82ea32fd506c22b52f"
+    },
+    "reviewed_candidate_artifact": {
+      "path": "services/gateway/model_artifacts/publication_shift/infini_news_v1/infini_news_word_char_tfidf_logistic.joblib",
+      "purpose": "provenance_checksum_only_not_release_freeze_or_rescoring",
+      "sha256": "0ca8956726b101fd585ff663caf4119e4911d3ec2789cf25fab415669691d403"
+    },
+    "reviewed_candidate_metadata": {
       "path": "services/evals/publication_shift_model/infini_news_v1/candidates/lexical_tfidf_logistic/model_metadata.json",
       "sha256": "1917395aa1d71201d8680822658b8a74156ecc9b4e88a38d8ea936d95e234089"
     }

@@ -1,7 +1,7 @@
 {
   "files": {
-    "REPORT.md": "031af02823790d43da68340b87bd0eee4640e4b24e553f6c62df440869e8bce0",
-    "diagnostic.json": "5562eb008bb81858c0574f0c73c551993891979bd864605b6a62e100a63888d7"
+    "REPORT.md": "2af155a7f48a55433748796accd58bc55145530a7d50888b211bb9d9f8c9ec08",
+    "diagnostic.json": "a17cf34c0275f661bf627e325af2b0dfd593526185f2c59290e938b0e80f3a08"
   },
-  "schema": "publication_shift.infini_news_january_2024_checksums.v1"
+  "schema": "publication_shift.infini_news_january_2024_checksums.v2"
 }

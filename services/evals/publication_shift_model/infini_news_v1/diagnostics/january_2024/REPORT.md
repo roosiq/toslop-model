@@ -4,12 +4,14 @@ This score does not establish AI authorship.
 
 This is a post-hoc diagnostic of frozen predictions. It is not model selection, calibration, threshold tuning, retraining, or production scoring.
 
-## Frozen subject and data boundary
+## Reviewed candidate and HOLD boundary
 
 - Model ID: `infini-news-lexical_tfidf_logistic-v1-cca5838ac34f`
-- Artifact SHA-256: `0ca8956726b101fd585ff663caf4119e4911d3ec2789cf25fab415669691d403`
+- Reviewed candidate artifact SHA-256: `0ca8956726b101fd585ff663caf4119e4911d3ec2789cf25fab415669691d403`
 - Threshold: `0.49690983649044096` (unchanged)
-- Inputs: frozen publisher/domain-held-out primary predictions plus frozen selected-candidate metadata.
+- Release decision: `HOLD`; selected candidate/model: `null`; artifact freeze: `not_performed`.
+- The candidate is reviewed-not-selected. Its candidate artifact is checksum-verified for provenance only and is not copied into the final package or used to rescore rows.
+- Inputs: frozen publisher/domain-held-out primary predictions, reviewed-candidate metadata/artifact, and the HOLD decision packet.
 - Public output: aggregates and already-hashed source/domain identifiers; no article body, title, URL, or raw/normalized article content.
 
 ## Time comparison

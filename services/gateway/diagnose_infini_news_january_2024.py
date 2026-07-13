@@ -17,14 +17,14 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Sequence
 
 DISCLAIMER = "This score does not establish AI authorship."
-SCHEMA = "publication_shift.infini_news_january_2024_diagnostic.v1"
-CHECKSUM_SCHEMA = "publication_shift.infini_news_january_2024_checksums.v1"
+SCHEMA = "publication_shift.infini_news_january_2024_diagnostic.v2"
+CHECKSUM_SCHEMA = "publication_shift.infini_news_january_2024_checksums.v2"
 MODEL_ID = "infini-news-lexical_tfidf_logistic-v1-cca5838ac34f"
 MODEL_FAMILY = "infini_news_word_char_tfidf_logistic"
 CANDIDATE_NAME = "lexical_tfidf_logistic"
 SCORE_NAME = "current_era_similarity"
 THRESHOLD = 0.49690983649044096
-ARTIFACT_SHA256 = "0ca8956726b101fd585ff663caf4119e4911d3ec2789cf25fab415669691d403"
+CANDIDATE_ARTIFACT_SHA256 = "0ca8956726b101fd585ff663caf4119e4911d3ec2789cf25fab415669691d403"
 PREDICTIONS_SHA256 = "ea95783593fcbdd75dfe07c9156000dbc9f03de88360be0965bb8253b5b95c33"
 METADATA_SHA256 = "1917395aa1d71201d8680822658b8a74156ecc9b4e88a38d8ea936d95e234089"
 TRAINING_IDENTITY_SHA256 = "cca5838ac34f170c53d1552ed8e8ca09fed187f9111b37c20f5e87cf9456e7b5"
@@ -80,7 +80,9 @@ FORBIDDEN_PUBLIC_KEYS = RAW_INPUT_FIELDS | {"document_id", "identity_hash", "nor
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PREDICTIONS = REPO_ROOT / "services/evals/publication_shift_model/infini_news_final_v1/publisher_domain_heldout_primary_predictions.jsonl"
 DEFAULT_METADATA = REPO_ROOT / "services/evals/publication_shift_model/infini_news_v1/candidates/lexical_tfidf_logistic/model_metadata.json"
-DEFAULT_ARTIFACT = REPO_ROOT / "services/evals/publication_shift_model/infini_news_final_v1/infini_news_word_char_tfidf_logistic.joblib"
+DEFAULT_CANDIDATE_ARTIFACT = REPO_ROOT / "services/gateway/model_artifacts/publication_shift/infini_news_v1/infini_news_word_char_tfidf_logistic.joblib"
+DEFAULT_DECISION_PACKET = REPO_ROOT / "services/evals/publication_shift_model/infini_news_final_v1/decision_packet.json"
+DEFAULT_FINAL_ARTIFACT = REPO_ROOT / "services/evals/publication_shift_model/infini_news_final_v1/infini_news_word_char_tfidf_logistic.joblib"
 DEFAULT_OUTPUT = REPO_ROOT / "services/evals/publication_shift_model/infini_news_v1/diagnostics/january_2024"
 
 
@@ -121,10 +123,10 @@ def assert_public_safe(payload: Any) -> None:
     visit(payload)
 
 
-def validate_frozen_model(metadata_path: Path, artifact_path: Path) -> dict[str, Any]:
+def validate_reviewed_candidate(metadata_path: Path, artifact_path: Path) -> dict[str, Any]:
     metadata_digest = sha256_file(metadata_path)
     if metadata_digest != METADATA_SHA256:
-        raise ValueError(f"selected-candidate metadata checksum changed: {metadata_digest}")
+        raise ValueError(f"reviewed-candidate metadata checksum changed: {metadata_digest}")
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
     expected = {
         "model_id": MODEL_ID,
@@ -132,18 +134,45 @@ def validate_frozen_model(metadata_path: Path, artifact_path: Path) -> dict[str,
         "candidate_name": CANDIDATE_NAME,
         "score_name": SCORE_NAME,
         "threshold": THRESHOLD,
-        "artifact_sha256": ARTIFACT_SHA256,
+        "artifact_sha256": CANDIDATE_ARTIFACT_SHA256,
         "training_identity_sha256": TRAINING_IDENTITY_SHA256,
         "split_summary_sha256": SPLIT_SUMMARY_SHA256,
         "config": EXPECTED_CONFIG,
     }
     for key, expected_value in expected.items():
         if metadata.get(key) != expected_value:
-            raise ValueError(f"frozen model metadata differs for {key}")
+            raise ValueError(f"reviewed candidate metadata differs for {key}")
     artifact_digest = sha256_file(artifact_path)
-    if artifact_digest != ARTIFACT_SHA256:
-        raise ValueError(f"frozen model artifact checksum changed: {artifact_digest}")
+    if artifact_digest != CANDIDATE_ARTIFACT_SHA256:
+        raise ValueError(f"reviewed candidate artifact checksum changed: {artifact_digest}")
     return metadata
+
+
+def validate_hold_release(decision_packet_path: Path, final_artifact_path: Path) -> dict[str, Any]:
+    packet = json.loads(decision_packet_path.read_text(encoding="utf-8"))
+    decision = packet.get("decision") or {}
+    artifact_freeze = packet.get("artifact_freeze") or {}
+    reviewed_model = packet.get("reviewed_model") or {}
+    if decision.get("decision") != "HOLD":
+        raise ValueError("January diagnostic requires release decision HOLD")
+    if decision.get("selected_candidate") is not None or packet.get("selected_model") is not None:
+        raise ValueError("January diagnostic requires selected_candidate and selected_model to remain null")
+    if artifact_freeze.get("status") != "not_performed":
+        raise ValueError("January diagnostic requires artifact_freeze status not_performed")
+    if reviewed_model.get("selection_status") != "reviewed_not_selected":
+        raise ValueError("January diagnostic subject must remain reviewed_not_selected")
+    if reviewed_model.get("model_id") != MODEL_ID or reviewed_model.get("source_artifact_sha256") != CANDIDATE_ARTIFACT_SHA256:
+        raise ValueError("release packet reviewed-model identity changed")
+    if final_artifact_path.exists():
+        raise ValueError(f"HOLD final artifact must remain absent: {_repo_path(final_artifact_path)}")
+    return {
+        "decision": "HOLD",
+        "selected_candidate": None,
+        "selected_model": None,
+        "artifact_freeze": "not_performed",
+        "reviewed_candidate_selection_status": "reviewed_not_selected",
+        "final_artifact_present": False,
+    }
 
 
 def load_frozen_predictions(path: Path) -> list[dict[str, Any]]:
@@ -344,7 +373,12 @@ def data_quality(rows: Sequence[dict[str, Any]], january_rows: Sequence[dict[str
     }
 
 
-def build_diagnostic(rows: Sequence[dict[str, Any]], *, source_inputs: dict[str, Any]) -> dict[str, Any]:
+def build_diagnostic(
+    rows: Sequence[dict[str, Any]],
+    *,
+    source_inputs: dict[str, Any],
+    release_status: dict[str, Any],
+) -> dict[str, Any]:
     windows = {
         "december_2023": [row for row in rows if row["publication_year_month"] == "2023-12"],
         "january_2024": [row for row in rows if row["publication_year_month"] == "2024-01"],
@@ -381,17 +415,20 @@ def build_diagnostic(rows: Sequence[dict[str, Any]], *, source_inputs: dict[str,
         "schema": SCHEMA,
         "disclaimer": DISCLAIMER,
         "purpose": "Post-hoc diagnosis of existing frozen predictions only; not model selection, calibration, threshold tuning, or production scoring.",
-        "frozen_model": {
+        "reviewed_candidate": {
             "model_id": MODEL_ID,
             "model_family": MODEL_FAMILY,
             "candidate_name": CANDIDATE_NAME,
             "score_name": SCORE_NAME,
             "threshold": THRESHOLD,
-            "artifact_sha256": ARTIFACT_SHA256,
+            "source_artifact_sha256": CANDIDATE_ARTIFACT_SHA256,
             "training_identity_sha256": TRAINING_IDENTITY_SHA256,
             "split_summary_sha256": SPLIT_SUMMARY_SHA256,
+            "selection_status": "reviewed_not_selected",
+            "artifact_used_for_scoring": False,
             "changed_or_tuned": False,
         },
+        "release_status": release_status,
         "source_inputs": source_inputs,
         "content_boundary": {
             "article_body_loaded": False,
@@ -452,12 +489,14 @@ def render_report(diagnostic: dict[str, Any]) -> str:
         "",
         "This is a post-hoc diagnostic of frozen predictions. It is not model selection, calibration, threshold tuning, retraining, or production scoring.",
         "",
-        "## Frozen subject and data boundary",
+        "## Reviewed candidate and HOLD boundary",
         "",
         f"- Model ID: `{MODEL_ID}`",
-        f"- Artifact SHA-256: `{ARTIFACT_SHA256}`",
+        f"- Reviewed candidate artifact SHA-256: `{CANDIDATE_ARTIFACT_SHA256}`",
         f"- Threshold: `{THRESHOLD}` (unchanged)",
-        "- Inputs: frozen publisher/domain-held-out primary predictions plus frozen selected-candidate metadata.",
+        "- Release decision: `HOLD`; selected candidate/model: `null`; artifact freeze: `not_performed`.",
+        "- The candidate is reviewed-not-selected. Its candidate artifact is checksum-verified for provenance only and is not copied into the final package or used to rescore rows.",
+        "- Inputs: frozen publisher/domain-held-out primary predictions, reviewed-candidate metadata/artifact, and the HOLD decision packet.",
         "- Public output: aggregates and already-hashed source/domain identifiers; no article body, title, URL, or raw/normalized article content.",
         "",
         "## Time comparison",
@@ -547,15 +586,29 @@ def write_outputs(output_dir: Path, diagnostic: dict[str, Any]) -> dict[str, str
     return output_checksums
 
 
-def run(*, predictions_path: Path, metadata_path: Path, artifact_path: Path, output_dir: Path) -> dict[str, Any]:
-    validate_frozen_model(metadata_path, artifact_path)
+def run(
+    *,
+    predictions_path: Path,
+    metadata_path: Path,
+    candidate_artifact_path: Path,
+    decision_packet_path: Path,
+    final_artifact_path: Path,
+    output_dir: Path,
+) -> dict[str, Any]:
+    validate_reviewed_candidate(metadata_path, candidate_artifact_path)
+    release_status = validate_hold_release(decision_packet_path, final_artifact_path)
     rows = load_frozen_predictions(predictions_path)
     source_inputs = {
         "predictions": {"path": _repo_path(predictions_path), "sha256": PREDICTIONS_SHA256, "row_count": len(rows)},
-        "selected_candidate_metadata": {"path": _repo_path(metadata_path), "sha256": METADATA_SHA256},
-        "model_artifact": {"path": _repo_path(artifact_path), "sha256": ARTIFACT_SHA256},
+        "reviewed_candidate_metadata": {"path": _repo_path(metadata_path), "sha256": METADATA_SHA256},
+        "reviewed_candidate_artifact": {
+            "path": _repo_path(candidate_artifact_path),
+            "sha256": CANDIDATE_ARTIFACT_SHA256,
+            "purpose": "provenance_checksum_only_not_release_freeze_or_rescoring",
+        },
+        "release_decision_packet": {"path": _repo_path(decision_packet_path), "sha256": sha256_file(decision_packet_path)},
     }
-    diagnostic = build_diagnostic(rows, source_inputs=source_inputs)
+    diagnostic = build_diagnostic(rows, source_inputs=source_inputs, release_status=release_status)
     write_outputs(output_dir, diagnostic)
     return diagnostic
 
@@ -564,13 +617,17 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--predictions", type=Path, default=DEFAULT_PREDICTIONS)
     parser.add_argument("--metadata", type=Path, default=DEFAULT_METADATA)
-    parser.add_argument("--artifact", type=Path, default=DEFAULT_ARTIFACT)
+    parser.add_argument("--candidate-artifact", type=Path, default=DEFAULT_CANDIDATE_ARTIFACT)
+    parser.add_argument("--decision-packet", type=Path, default=DEFAULT_DECISION_PACKET)
+    parser.add_argument("--final-artifact", type=Path, default=DEFAULT_FINAL_ARTIFACT, help="Final artifact path that must remain absent under HOLD.")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args(argv)
     result = run(
         predictions_path=args.predictions,
         metadata_path=args.metadata,
-        artifact_path=args.artifact,
+        candidate_artifact_path=args.candidate_artifact,
+        decision_packet_path=args.decision_packet,
+        final_artifact_path=args.final_artifact,
         output_dir=args.output,
     )
     january = result["comparisons"]["january_2024"]
