@@ -817,9 +817,10 @@ def build_public_safe_manifest(
 
 def reject_public_text(payload: Any, path: str = "") -> None:
     if isinstance(payload, dict):
+        keys_are_data_values = path in {"/counts_by_month", "/counts_by_role", "/counts_by_sitename"}
         for key, value in payload.items():
             lowered_key = str(key).lower()
-            if lowered_key in PUBLIC_BANNED_KEYS or "preview" in lowered_key:
+            if not keys_are_data_values and (lowered_key in PUBLIC_BANNED_KEYS or "preview" in lowered_key):
                 raise InfiniNewsSchemaError(f"public artifact would contain text-like field {path}/{key}")
             reject_public_text(value, f"{path}/{key}")
     elif isinstance(payload, list):

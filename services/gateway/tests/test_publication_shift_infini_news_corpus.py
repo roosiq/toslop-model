@@ -343,6 +343,15 @@ def test_public_writer_rejects_text_like_public_artifacts(tmp_path):
         write_public_json(tmp_path / "bad.json", {"records": [{"title": "do not publish"}]})
 
 
+def test_public_writer_allows_text_like_sitename_as_a_count_key(tmp_path):
+    path = tmp_path / "safe-counts.json"
+    payload = {"counts_by_sitename": {"Aston Villa v Juventus Odds & Match Preview": 3}}
+
+    write_public_json(path, payload)
+
+    assert json.loads(path.read_text()) == payload
+
+
 def test_role_assignment_matches_design_windows():
     assert assign_corpus_role(2016, 8) == "historical_placebo"
     assert assign_corpus_role(2016, 7) is None
