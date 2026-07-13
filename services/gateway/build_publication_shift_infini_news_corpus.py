@@ -882,8 +882,12 @@ def write_public_manifest_streamed(path: Path, payload: dict[str, Any], records:
         for key, value in items:
             handle.write(f"  {json.dumps(key)}: {json.dumps(value, indent=2, sort_keys=True).replace(chr(10), chr(10) + '  ')},\n")
         handle.write("  \"records\": [\n")
+        first_record = True
         for encoded in iter_json_public_records(records):
-            handle.write("    " + encoded)
+            if not first_record:
+                handle.write(",\n")
+            handle.write("    " + encoded.lstrip(",\n"))
+            first_record = False
         handle.write("\n  ]\n}\n")
 
 

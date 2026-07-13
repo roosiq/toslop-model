@@ -338,6 +338,42 @@ def test_private_and_public_outputs_are_restrictive_and_no_text(tmp_path):
     assert streamed_payload["records"] == manifest["records"]
 
 
+def test_streamed_public_manifest_many_records_is_valid_json(tmp_path):
+    rows = []
+    for idx in range(3):
+        rows.append(
+            normalize_row(
+                _row(
+                    url=f"https://stream{idx}.example/story",
+                    url_hostname=f"stream{idx}.example",
+                    sitename=f"stream-{idx}",
+                    warc_record_id=f"<urn:uuid:{idx:032d}>",
+                    warc_target_uri=f"https://stream{idx}.example/story",
+                    warc_payload_digest=f"sha1:stream-{idx}",
+                    text=_text(f"stream{idx}"),
+                ),
+                shard_path="data/year=2025/month=01/part.parquet",
+                shard_sha256="sha",
+                row_index=idx,
+                retrieved_at="now",
+            )
+        )
+    manifest = build_public_safe_manifest(
+        rows,
+        request_manifest=default_manifest(pilot=True),
+        rejected_counts={},
+        duplicate_counts={},
+        shard_identities=[],
+        include_records=False,
+    )
+
+    streamed = tmp_path / "streamed_many_records.json"
+    write_public_manifest_streamed(streamed, manifest, rows)
+
+    parsed = json.loads(streamed.read_text(encoding="utf-8"))
+    assert [record["document_id"] for record in parsed["records"]] == [record["document_id"] for record in rows]
+
+
 def test_public_writer_rejects_text_like_public_artifacts(tmp_path):
     with pytest.raises(InfiniNewsSchemaError):
         write_public_json(tmp_path / "bad.json", {"records": [{"title": "do not publish"}]})
