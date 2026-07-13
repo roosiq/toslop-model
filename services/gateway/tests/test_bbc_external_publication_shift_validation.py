@@ -29,6 +29,17 @@ def test_bbc_default_manifest_freezes_revision_and_24k_core_targets():
 
     assert manifest["source_repo_id"] == "RealTimeData/bbc_news_alltime"
     assert manifest["source_revision"] == "8dd1ecdc92ac43f9c04a3da3e945537dbb08179b"
+    assert manifest["source_schema_fields"] == [
+        "title",
+        "published_date",
+        "authors",
+        "item",
+        "description",
+        "section",
+        "content",
+        "link",
+        "top_image",
+    ]
     assert manifest["source_rights_status"] == "HOLD_no_explicit_license_public_no_text_only"
     assert manifest["targets_by_month"]["2018-01"] == 250
     assert manifest["targets_by_month"]["2021-12"] == 250

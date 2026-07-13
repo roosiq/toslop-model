@@ -35,7 +35,7 @@ from train_infini_news_publication_shift_candidates import assert_public_safe, m
 SOURCE_REPO_ID = "RealTimeData/bbc_news_alltime"
 SOURCE_REVISION = "8dd1ecdc92ac43f9c04a3da3e945537dbb08179b"
 SOURCE_REVISION_URL = f"https://huggingface.co/datasets/{SOURCE_REPO_ID}/tree/{SOURCE_REVISION}"
-SOURCE_SCHEMA_FIELDS = ["content", "published_date", "link", "section", "authors"]
+SOURCE_SCHEMA_FIELDS = ["title", "published_date", "authors", "item", "description", "section", "content", "link", "top_image"]
 SOURCE_RIGHTS_STATUS = "HOLD_no_explicit_license_public_no_text_only"
 REQUEST_SCHEMA = "publication_shift.bbc_external_request_manifest.v1"
 CORPUS_SCHEMA = "publication_shift.bbc_external_corpus.v1"

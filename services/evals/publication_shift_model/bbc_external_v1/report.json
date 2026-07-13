@@ -99,7 +99,7 @@
       "transition_2022": 2826
     }
   },
-  "created_at": "2026-07-13T03:18:50Z",
+  "created_at": "2026-07-13T03:30:51Z",
   "decision": "HOLD",
   "decision_reason": "Single-publisher BBC external validation cannot satisfy source-diversity/source-only PASS gates; report as HOLD even if metric thresholds pass.",
   "disclaimer": "This score does not establish AI authorship.",
@@ -5083,11 +5083,15 @@
     "revision": "8dd1ecdc92ac43f9c04a3da3e945537dbb08179b",
     "rights_status": "HOLD_no_explicit_license_public_no_text_only",
     "schema_fields": [
-      "content",
+      "title",
       "published_date",
-      "link",
+      "authors",
+      "item",
+      "description",
       "section",
-      "authors"
+      "content",
+      "link",
+      "top_image"
     ]
   }
 }

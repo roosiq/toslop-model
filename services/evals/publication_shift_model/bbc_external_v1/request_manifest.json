@@ -30,11 +30,15 @@
   "source_revision_url": "https://huggingface.co/datasets/RealTimeData/bbc_news_alltime/tree/8dd1ecdc92ac43f9c04a3da3e945537dbb08179b",
   "source_rights_status": "HOLD_no_explicit_license_public_no_text_only",
   "source_schema_fields": [
-    "content",
+    "title",
     "published_date",
-    "link",
+    "authors",
+    "item",
+    "description",
     "section",
-    "authors"
+    "content",
+    "link",
+    "top_image"
   ],
   "target_core_rows": 24000,
   "targets_by_month": {
