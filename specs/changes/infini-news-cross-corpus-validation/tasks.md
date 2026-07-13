@@ -1,8 +1,8 @@
 # Tasks
 
 - [ ] Freeze v1 identity and baseline checksums in the external-validation manifest.
-- [ ] Implement January 2024 no-text diagnostic.
-- [ ] Add deterministic tests for diagnostic counts and test-set immutability.
+- [x] Implement January 2024 no-text diagnostic.
+- [x] Add deterministic tests for diagnostic counts and test-set immutability.
 - [ ] Research and pin an independent dated-news source and revision.
 - [ ] Verify actual article publication-date semantics on a pilot.
 - [ ] Implement resumable local/private external collector with global dedupe.
