@@ -4,7 +4,7 @@
     "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/author_heldout_predictions.jsonl": "55ac2c7ef7f946f809bdc5137de672aa622761e866ac78afa78e4f8225a031e6",
     "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/failed_candidates.json": "669dca0e993bfc0ba735bd4baecf393d070eb6b2cd2639cdb3cbf79d97d84e1a",
     "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/forward_2026_jan_apr_predictions.jsonl": "ac1a5c5a08aeddff90c2bd9e4a57d066fa4b3117cd5a7d53034f6f8373ab7f8f",
-    "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/metrics.json": "fcc3fab9290914d9c2c8257c9dda213d92d3dd74bc2c3de3eb68e4c639dcf236",
+    "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/metrics.json": "6dbf47bc57068850020d2c6d7c96748349d867d345bbe47588eca765189cf768",
     "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/model_metadata.json": "9ed257bf853f6671c0bff5d44e7a455c0cc339a022d9b195492dde04572ace29",
     "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/placebo_2016_2017_vs_2020_2021_predictions.jsonl": "09d18eabadb3e29c58d5faf231849b30b08694ddc0d4b1e274adda754155ee9c",
     "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/placebo_2016_2018_vs_2019_2021_predictions.jsonl": "d86579af3cfecba22e2e29fb01aca9fafafcb3400a937afc4f75ede1bf5451f2",

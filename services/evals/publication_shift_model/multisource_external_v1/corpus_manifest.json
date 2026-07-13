@@ -1,6 +1,6 @@
 {
   "created_at": "2026-07-13T00:00:00Z",
-  "cross_dedupe_private_path": "/home/ryan/toslop-model/.worktrees/temporal-publication-shift/services/data/publication_shift/infini_news_v1/normalized_rows.jsonl",
+  "cross_dedupe_reference": "infini_news_v1_normalized_rows",
   "date_axis": "date_publish_only",
   "disclaimer": "This score does not establish AI authorship.",
   "domain_matched_balance_proof": {

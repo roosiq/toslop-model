@@ -77,8 +77,8 @@ PUBLIC_SAFE_KEYS = {
     "row_index",
     "url_hash",
     "normalized_url_hash",
-    "sitename",
-    "url_hostname",
+    "sitename_hash",
+    "url_hostname_hash",
     "publication_date",
     "publication_year",
     "publication_month",
@@ -109,7 +109,29 @@ PUBLIC_SAFE_KEYS = {
     "rights_status",
     "retrieved_at",
 }
-PUBLIC_BANNED_KEYS = {"text", "normalized_text", "title", "description", "preview", "body", "content"}
+PUBLIC_BANNED_KEYS = {
+    "text",
+    "original_text",
+    "normalized_text",
+    "maintext",
+    "title",
+    "description",
+    "preview",
+    "body",
+    "content",
+    "url",
+    "normalized_url",
+    "link",
+    "sitename",
+    "url_hostname",
+    "source_domain",
+}
+PUBLIC_COUNT_MAP_KEY_PATTERNS = {
+    "/counts_by_month": re.compile(r"\d{4}-(?:0[1-9]|1[0-2])"),
+    "/counts_by_role": re.compile(r"(?:historical_placebo|pre_llm_core|transition_2022|current_core|forward_2026)"),
+    "/counts_by_sitename_hash": re.compile(r"[0-9a-f]{64}"),
+}
+ABSOLUTE_LOCAL_PATH = re.compile(r"(?:^|\s)(?:/home/|/Users/|[A-Za-z]:[\\/]+Users[\\/]+)")
 PILOT_MONTH_SHARD_OVERRIDES = {
     # Small pinned shards keep the real pilot bounded while still touching all
     # requested eras. Other runs discover shards from the Hub manifest.
@@ -142,6 +164,11 @@ def stable_hash(value: str, length: int = 16) -> str:
 
 def sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def public_identifier_hash(value: Any) -> str:
+    """Hash a publisher/domain identifier after stable case/space normalization."""
+    return sha256_text(str(value).strip().casefold())
 
 
 def parse_year_month(value: str) -> tuple[int, int]:
@@ -756,21 +783,39 @@ def load_progress(path: Path) -> dict[str, Any]:
 
 
 def public_record(record: dict[str, Any]) -> dict[str, Any]:
-    return {key: record.get(key) for key in sorted(PUBLIC_SAFE_KEYS) if key in record}
+    public = {key: record.get(key) for key in sorted(PUBLIC_SAFE_KEYS) if key in record}
+    if record.get("sitename"):
+        public["sitename_hash"] = public_identifier_hash(record["sitename"])
+    if record.get("url_hostname"):
+        public["url_hostname_hash"] = public_identifier_hash(record["url_hostname"])
+    return dict(sorted(public.items()))
 
 
 def count_by(rows: list[dict[str, Any]], key: str) -> dict[str, int]:
     return dict(sorted(Counter(str(row.get(key)) for row in rows).items()))
 
 
+def count_by_identifier_hash(rows: list[dict[str, Any]], key: str) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    hash_key = f"{key}_hash"
+    for row in rows:
+        identifier_hash = row.get(hash_key)
+        if not identifier_hash and row.get(key):
+            identifier_hash = public_identifier_hash(row[key])
+        if identifier_hash:
+            counts[str(identifier_hash)] += 1
+    return dict(sorted(counts.items()))
+
+
 def date_lag_summary(records: list[dict[str, Any]]) -> dict[str, Any]:
     lags = sorted(int(row["date_lag_days"]) for row in records)
     divergences = [row for row in records if int(row["date_lag_days"]) != 0]
+    example = public_record(divergences[0]) if divergences else None
     return {
         "min_days": lags[0] if lags else None,
         "max_days": lags[-1] if lags else None,
         "divergent_count": len(divergences),
-        "example_divergence": public_record(divergences[0]) if divergences else None,
+        "example_divergence": example,
     }
 
 
@@ -801,7 +846,7 @@ def build_public_safe_manifest(
         "duplicate_counts": dict(sorted(duplicate_counts.items())),
         "counts_by_month": count_by(records, "publication_year_month"),
         "counts_by_role": count_by(records, "corpus_role"),
-        "counts_by_sitename": count_by(records, "sitename"),
+        "counts_by_sitename_hash": count_by_identifier_hash(records, "sitename"),
         "date_lag_summary": date_lag_summary(records),
         "word_count": {
             "min": min((row["word_count"] for row in records), default=0),
@@ -817,15 +862,28 @@ def build_public_safe_manifest(
 
 def reject_public_text(payload: Any, path: str = "") -> None:
     if isinstance(payload, dict):
-        keys_are_data_values = path in {"/counts_by_month", "/counts_by_role", "/counts_by_sitename"}
+        count_map_pattern = PUBLIC_COUNT_MAP_KEY_PATTERNS.get(path)
         for key, value in payload.items():
             lowered_key = str(key).lower()
-            if not keys_are_data_values and (lowered_key in PUBLIC_BANNED_KEYS or "preview" in lowered_key):
-                raise InfiniNewsSchemaError(f"public artifact would contain text-like field {path}/{key}")
-            reject_public_text(value, f"{path}/{key}")
+            child_path = f"{path}/{key}"
+            if count_map_pattern is not None:
+                if (
+                    count_map_pattern.fullmatch(str(key)) is None
+                    or isinstance(value, bool)
+                    or not isinstance(value, int)
+                    or value < 0
+                ):
+                    raise InfiniNewsSchemaError(f"public count map contains unsafe key/value {child_path}")
+            elif lowered_key.startswith("counts_by_") and child_path not in PUBLIC_COUNT_MAP_KEY_PATTERNS:
+                raise InfiniNewsSchemaError(f"public artifact contains unregistered count map {child_path}")
+            if count_map_pattern is None and (lowered_key in PUBLIC_BANNED_KEYS or "preview" in lowered_key):
+                raise InfiniNewsSchemaError(f"public artifact would contain text-like field {child_path}")
+            reject_public_text(value, child_path)
     elif isinstance(payload, list):
         for idx, item in enumerate(payload):
             reject_public_text(item, f"{path}[{idx}]")
+    elif isinstance(payload, str) and ABSOLUTE_LOCAL_PATH.search(payload):
+        raise InfiniNewsSchemaError(f"public artifact would contain an absolute local path at {path}")
 
 
 def write_public_json(path: Path, payload: dict[str, Any]) -> None:
@@ -1105,7 +1163,9 @@ def main(argv: list[str] | None = None) -> int:
         shard_identities=result["shard_identities"],
         include_records=False,
     )
-    public["private_output_root"] = str(args.output_root)
+    # Publish a logical repository location, never the caller's possibly
+    # absolute local output path.
+    public["private_output_root"] = PRIVATE_ROOT_MARKER.as_posix()
     write_public_manifest_streamed(
         args.report,
         public,

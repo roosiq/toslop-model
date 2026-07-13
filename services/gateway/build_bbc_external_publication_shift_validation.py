@@ -46,6 +46,9 @@ CHECKSUM_SCHEMA = "publication_shift.bbc_external_checksums.v1"
 DISCLAIMER = "This score does not establish AI authorship."
 PRIVATE_ROOT = Path("services/data/publication_shift/bbc_external_v1")
 PUBLIC_ROOT = Path("services/evals/publication_shift_model/bbc_external_v1")
+CROSS_DEDUPE_ENV_VAR = "PUBLICATION_SHIFT_CROSS_DEDUPE_PATH"
+CROSS_DEDUPE_RELATIVE_PATH = Path("services/data/publication_shift/infini_news_v1/normalized_rows.jsonl")
+CROSS_DEDUPE_LOGICAL_REFERENCE = "infini_news_v1_normalized_rows"
 FROZEN_ARTIFACT_PATH = Path("services/gateway/model_artifacts/publication_shift/infini_news_v1/infini_news_word_char_tfidf_logistic.joblib")
 FROZEN_METADATA_PATH = Path("services/evals/publication_shift_model/infini_news_v1/candidates/lexical_tfidf_logistic/model_metadata.json")
 FROZEN_PREDICTIONS_PATH = Path("services/evals/publication_shift_model/infini_news_v1/candidates/lexical_tfidf_logistic/publisher_domain_heldout_primary_predictions.jsonl")
@@ -92,6 +95,11 @@ def sha256_file(path: Path) -> str:
 
 def stable_hash(value: str, length: int = 24) -> str:
     return sha256_text(value)[:length]
+
+
+def default_cross_dedupe_path() -> Path:
+    """Resolve a private input from an environment override or repository-relative default."""
+    return Path(os.environ.get(CROSS_DEDUPE_ENV_VAR, CROSS_DEDUPE_RELATIVE_PATH.as_posix()))
 
 
 def year_months(start: str, end: str) -> list[str]:
@@ -292,6 +300,8 @@ def reject_public_text(payload: Any, path: str = "") -> None:
     elif isinstance(payload, list):
         for index, item in enumerate(payload):
             reject_public_text(item, f"{path}[{index}]")
+    elif isinstance(payload, str) and re.search(r"(?:^|\s)(?:/home/|/Users/|[A-Za-z]:[\\/]+Users[\\/]+)", payload):
+        raise BbcExternalValidationError(f"public artifact contains an absolute local path at {path}")
 
 
 def write_public_json(path: Path, payload: Any) -> None:
@@ -470,7 +480,7 @@ def count_by(rows: Sequence[dict[str, Any]], key: str) -> dict[str, int]:
     return dict(sorted(Counter(str(row.get(key)) for row in rows).items()))
 
 
-def build_public_corpus_manifest(records: Sequence[dict[str, Any]], *, request_manifest: dict[str, Any], rejected_counts: dict[str, int], duplicate_counts: dict[str, int], source_files: Sequence[dict[str, Any]], cross_dedupe_path: str | None) -> dict[str, Any]:
+def build_public_corpus_manifest(records: Sequence[dict[str, Any]], *, request_manifest: dict[str, Any], rejected_counts: dict[str, int], duplicate_counts: dict[str, int], source_files: Sequence[dict[str, Any]], cross_dedupe_reference: str | None) -> dict[str, Any]:
     public = {
         "schema": PUBLIC_CORPUS_SCHEMA,
         "created_at": utc_now(),
@@ -491,7 +501,7 @@ def build_public_corpus_manifest(records: Sequence[dict[str, Any]], *, request_m
         "counts_by_section": count_by(records, "section"),
         "rejected_counts": dict(sorted(rejected_counts.items())),
         "duplicate_counts": dict(sorted(duplicate_counts.items())),
-        "cross_dedupe_private_path": cross_dedupe_path,
+        "cross_dedupe_reference": cross_dedupe_reference,
         "source_files": sorted(source_files, key=lambda item: item["path"]),
         "records": [public_record(row) for row in sorted(records, key=lambda item: (item["publication_date"], item["document_id"]))],
     }
@@ -740,8 +750,14 @@ def top_length_counts(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def checksum_manifest(paths: Sequence[Path], output_root: Path) -> dict[str, str]:
     files = {}
+    resolved_root = output_root.resolve()
     for path in sorted({p for p in paths if p.exists() and p.is_file()}, key=str):
-        files[str(path)] = sha256_file(path)
+        try:
+            relative = path.resolve().relative_to(resolved_root)
+        except ValueError as exc:
+            raise BbcExternalValidationError(f"checksum artifact is outside public root: {path}") from exc
+        logical_path = (PUBLIC_ROOT / relative).as_posix()
+        files[logical_path] = sha256_file(path)
     payload = {"schema": CHECKSUM_SCHEMA, "created_at": utc_now(), "files": files}
     write_public_json(output_root / "checksums.json", payload)
     (output_root / "checksums.sha256").write_text("".join(f"{digest}  {path}\n" for path, digest in sorted(files.items())), encoding="utf-8")
@@ -753,7 +769,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     if args.write_default_manifest:
         write_public_json(args.write_default_manifest, manifest)
     result = collect_bbc_corpus(manifest, args.output_root, cross_dedupe_path=args.cross_dedupe, max_rows_per_month=args.max_rows_per_month)
-    corpus_manifest = build_public_corpus_manifest(result["records"], request_manifest=manifest, rejected_counts=result["rejected_counts"], duplicate_counts=result["duplicate_counts"], source_files=result["source_files"], cross_dedupe_path=str(args.cross_dedupe) if args.cross_dedupe else None)
+    corpus_manifest = build_public_corpus_manifest(result["records"], request_manifest=manifest, rejected_counts=result["rejected_counts"], duplicate_counts=result["duplicate_counts"], source_files=result["source_files"], cross_dedupe_reference=CROSS_DEDUPE_LOGICAL_REFERENCE if args.cross_dedupe else None)
     write_public_json(args.request_manifest_output, manifest)
     write_public_json(args.corpus_manifest_output, corpus_manifest)
     artifact_sha = sha256_file(args.model_artifact)
@@ -795,7 +811,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--masked-predictions-output", type=Path, default=PUBLIC_ROOT / "masked_predictions.jsonl")
     parser.add_argument("--report-output", type=Path, default=PUBLIC_ROOT / "report.json")
     parser.add_argument("--january-diagnostic-output", type=Path, default=PUBLIC_ROOT / "january_2024_diagnostic.json")
-    parser.add_argument("--cross-dedupe", type=Path, default=Path("/home/ryan/toslop-model/.worktrees/temporal-publication-shift/services/data/publication_shift/infini_news_v1/normalized_rows.jsonl"))
+    parser.add_argument("--cross-dedupe", type=Path, default=default_cross_dedupe_path(), help=f"Private INFINI rows; override with ${CROSS_DEDUPE_ENV_VAR}.")
     parser.add_argument("--model-artifact", type=Path, default=FROZEN_ARTIFACT_PATH)
     parser.add_argument("--model-metadata", type=Path, default=FROZEN_METADATA_PATH)
     parser.add_argument("--infini-predictions", type=Path, default=FROZEN_PREDICTIONS_PATH)

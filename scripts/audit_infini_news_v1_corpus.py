@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import sqlite3
 import stat
 from collections import Counter, defaultdict
@@ -18,7 +19,8 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-PRIVATE_ROOT = REPO_ROOT / "services/data/publication_shift/infini_news_v1"
+PRIVATE_ROOT = Path(os.environ.get("PUBLICATION_SHIFT_PRIVATE_ROOT", REPO_ROOT / "services/data/publication_shift/infini_news_v1"))
+PRIVATE_ROOT_MARKER = Path("services/data/publication_shift/infini_news_v1")
 PUBLIC_ROOT = REPO_ROOT / "services/evals/publication_shift_model/infini_news_v1"
 PRIVATE_ROWS = PRIVATE_ROOT / "normalized_rows.jsonl"
 CANDIDATE_DB = PRIVATE_ROOT / "candidate_records.sqlite3"
@@ -40,6 +42,13 @@ TEXT_BEARING_KEYS = {
     "body",
     "content",
 }
+PUBLIC_RAW_IDENTIFIER_KEYS = {"sitename", "url_hostname", "source_domain", "url", "normalized_url", "link"}
+PUBLIC_COUNT_MAP_KEY_PATTERNS = {
+    "/counts_by_month": re.compile(r"\d{4}-(?:0[1-9]|1[0-2])"),
+    "/counts_by_role": re.compile(r"(?:historical_placebo|pre_llm_core|transition_2022|current_core|forward_2026)"),
+    "/counts_by_sitename_hash": re.compile(r"[0-9a-f]{64}"),
+}
+ABSOLUTE_LOCAL_PATH = re.compile(r"(?:^|\s)(?:/home/|/Users/|[A-Za-z]:[\\/]+Users[\\/]+)")
 PUBLIC_JSONS = [
     PUBLIC_REPORT,
     REQUEST_MANIFEST,
@@ -47,6 +56,13 @@ PUBLIC_JSONS = [
     PUBLIC_ROOT / "pilot_request_manifest.json",
 ]
 PRIVATE_ARTIFACTS = [PRIVATE_ROWS, CANDIDATE_DB, PROGRESS, PRIVATE_RECORD_REPORT]
+
+
+def display_path(path: Path) -> str:
+    try:
+        return (PRIVATE_ROOT_MARKER / path.relative_to(PRIVATE_ROOT)).as_posix()
+    except ValueError:
+        return path.name
 
 
 def sha256_file(path: Path, chunk_size: int = 1024 * 1024) -> str:
@@ -100,15 +116,31 @@ def quantiles(values: list[int]) -> dict[str, int | None]:
 def scan_public_payload_for_text_keys(payload: Any, path: str = "") -> list[str]:
     findings: list[str] = []
     if isinstance(payload, dict):
-        keys_are_data_values = path in {"/counts_by_month", "/counts_by_role", "/counts_by_sitename"}
+        count_map_pattern = PUBLIC_COUNT_MAP_KEY_PATTERNS.get(path)
         for key, value in payload.items():
             lowered = str(key).lower()
-            if not keys_are_data_values and (lowered in TEXT_BEARING_KEYS or "preview" in lowered):
-                findings.append(f"{path}/{key}")
-            findings.extend(scan_public_payload_for_text_keys(value, f"{path}/{key}"))
+            child_path = f"{path}/{key}"
+            if count_map_pattern is not None and (
+                count_map_pattern.fullmatch(str(key)) is None
+                or isinstance(value, bool)
+                or not isinstance(value, int)
+                or value < 0
+            ):
+                findings.append(child_path)
+            elif count_map_pattern is None and lowered.startswith("counts_by_") and child_path not in PUBLIC_COUNT_MAP_KEY_PATTERNS:
+                findings.append(child_path)
+            if count_map_pattern is None and (
+                lowered in TEXT_BEARING_KEYS
+                or lowered in PUBLIC_RAW_IDENTIFIER_KEYS
+                or "preview" in lowered
+            ):
+                findings.append(child_path)
+            findings.extend(scan_public_payload_for_text_keys(value, child_path))
     elif isinstance(payload, list):
         for idx, value in enumerate(payload):
             findings.extend(scan_public_payload_for_text_keys(value, f"{path}[{idx}]"))
+    elif isinstance(payload, str) and ABSOLUTE_LOCAL_PATH.search(payload):
+        findings.append(path)
     return findings
 
 
@@ -376,9 +408,9 @@ def audit_public_artifacts() -> dict[str, Any]:
 def audit_permissions_and_hashes() -> dict[str, Any]:
     dirs = [PRIVATE_ROOT, PRIVATE_ROOT / "logs"]
     return {
-        "directories": {str(path.relative_to(REPO_ROOT)): {"exists": path.exists(), "mode": mode_octal(path) if path.exists() else None} for path in dirs},
+        "directories": {display_path(path): {"exists": path.exists(), "mode": mode_octal(path) if path.exists() else None} for path in dirs},
         "private_files": {
-            str(path.relative_to(REPO_ROOT)): {
+            display_path(path): {
                 "exists": path.exists(),
                 "mode": mode_octal(path) if path.exists() else None,
                 "size_bytes": path.stat().st_size if path.exists() else None,

@@ -54,8 +54,30 @@ On the frozen publisher/domain-held-out primary lane:
 - [ ] No PR, deployment, commercial use, or production integration occurs from this research change.
 - [ ] Every output states: “This score does not establish AI authorship.”
 
+## Frozen evaluation-integrity audit (2026-07-13)
+
+- [x] Deterministic public-safe evidence is frozen under `services/evals/publication_shift_model/infini_news_v1/diagnostics/evaluation_integrity/`; local checksums and focused tests pass.
+- [ ] **FAILED — alternate-lane integrity:** the selected primary model was evaluated on alternate test sets containing primary-training rows: source `31,459/50,320`, topic `34,944/52,617`, author `30,197/45,237`, and random `34,153/50,751`.
+- [ ] **FAILED — historical placebo support:** both named contrasts contain only early-arm rows (the full candidates have 8,000 label-0 rows and zero label-1/later-arm rows), so placebo ROC-AUC and main-minus-placebo lift are undefined.
+- [ ] **HOLD — full encoder:** only a 160-row CPU smoke artifact exists (`26` train, `25` validation, `13` primary test); the unverified-accelerator blocker is measured and preserved, but no full 264,000-row candidate exists.
+- [ ] **FAILED — subgroup stability:** four source hashes with support >=100 have accuracy below 70%; April 2023 is `414/598` (69.23%) and January 2024 is `580/951` (60.99%).
+- **Recorded decision: REJECT this frozen evaluation run for final-test leakage.** The other failed/HOLD gates independently prevent promotion. No deployment or production wiring is authorized.
+
 ## Decision
 
 - **PASS:** all gates pass on frozen evidence.
 - **HOLD:** evidence is incomplete, rights remain research-only, or any required gate/model/lane is missing or fails.
 - **REJECT:** publication-date provenance, leakage, no-text boundaries, final-test integrity, or construct language is invalid.
+
+## Frozen v1 disposition correction
+
+- [x] The prior `PASS` was withdrawn; the regenerated final packet and model card say `HOLD` and select no model.
+- [x] Valid publisher/domain-held-out primary metrics are preserved separately from promotion eligibility.
+- [x] Source-, topic-, author-held-out, and random-diagnostic metrics are marked `invalid_for_selection` because critical review found 62%–67% primary-training-document reuse and the committed package cannot reproduce an exact zero-overlap audit without frozen primary train IDs.
+- [x] Unsupported declared historical-placebo files are reported without substituting primary/core rows; lift and lift-CI values remain unavailable.
+- [x] The encoder remains `SMOKE-HOLD`; severe source/month collapses and all frozen BBC/multisource external `HOLD` results are promotion blockers.
+- [x] Strict artifact/model ID/threshold/training identity/split identity/SHA-256 assertions pass for the reviewed lexical artifact before any copy decision.
+- [x] The stale selected-artifact copy was removed from the final package because a `HOLD` cannot freeze a selected release artifact.
+- [ ] Leakage-safe alternate lanes, supported placebo lift with CI, full encoder or measured hardware HOLD, subgroup robustness, external gates, and rights clearance remain unresolved.
+
+Current frozen v1 disposition: **HOLD — research-only, no selected model, no production authorization.** This score does not establish AI authorship.

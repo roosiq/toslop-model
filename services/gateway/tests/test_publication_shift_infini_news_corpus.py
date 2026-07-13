@@ -325,6 +325,11 @@ def test_private_and_public_outputs_are_restrictive_and_no_text(tmp_path):
     assert "normalized_text\"" not in encoded
     assert "title\"" not in encoded
     assert "preview\"" not in encoded
+    assert "\"sitename\"" not in encoded
+    assert "\"url_hostname\"" not in encoded
+    assert manifest["counts_by_sitename_hash"] == {collector.public_identifier_hash(row["sitename"]): 1}
+    assert manifest["records"][0]["sitename_hash"] == collector.public_identifier_hash(row["sitename"])
+    assert manifest["records"][0]["url_hostname_hash"] == collector.public_identifier_hash(row["url_hostname"])
     assert "this score does not establish ai authorship" in encoded
 
     public = tmp_path / "report.json"
@@ -379,9 +384,24 @@ def test_public_writer_rejects_text_like_public_artifacts(tmp_path):
         write_public_json(tmp_path / "bad.json", {"records": [{"title": "do not publish"}]})
 
 
-def test_public_writer_allows_text_like_sitename_as_a_count_key(tmp_path):
+@pytest.mark.parametrize(
+    "payload",
+    [
+        {"counts_by_sitename": {"Aston Villa v Juventus Odds & Match Preview": 3}},
+        {"counts_by_sitename_hash": {"Aston Villa v Juventus Odds & Match Preview": 3}},
+        {"counts_by_unregistered": {"arbitrary title-like value": 3}},
+        {"counts_by_sitename_hash": {"a" * 64: "not-an-integer"}},
+        {"private_path": "/home/example/private/article.jsonl"},
+    ],
+)
+def test_public_writer_fails_closed_on_unsafe_count_maps_and_local_paths(tmp_path, payload):
+    with pytest.raises(InfiniNewsSchemaError):
+        write_public_json(tmp_path / "unsafe.json", payload)
+
+
+def test_public_writer_allows_only_hashed_sitename_counts(tmp_path):
     path = tmp_path / "safe-counts.json"
-    payload = {"counts_by_sitename": {"Aston Villa v Juventus Odds & Match Preview": 3}}
+    payload = {"counts_by_sitename_hash": {"a" * 64: 3}}
 
     write_public_json(path, payload)
 

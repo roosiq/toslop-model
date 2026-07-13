@@ -132,3 +132,35 @@ def test_public_artifacts_reject_text_and_report_structural_domain_chance(tmp_pa
 
     with pytest.raises(ms.MultisourceExternalValidationError):
         ms.write_public_json(tmp_path / "bad_multisource_public.json", {"records": [{"maintext": "do not publish"}]})
+
+
+def test_multisource_public_manifest_uses_logical_cross_dedupe_reference_and_rejects_absolute_paths(tmp_path):
+    import build_multisource_external_publication_shift_validation as ms
+
+    rows = [
+        {
+            "document_id": "a0",
+            "publication_date": "2021-08-01",
+            "publication_year_month": "2021-08",
+            "corpus_role": "pre_llm_core",
+            "source_key": "pre_llm_2021",
+            "source_domain_hash": "dh-a",
+        }
+    ]
+    manifest = ms.build_public_corpus_manifest(
+        lanes={"all_valid_source_diverse": rows, "domain_matched_balanced": rows},
+        request_manifest=ms.default_request_manifest(),
+        rejected_counts={},
+        duplicate_counts={},
+        source_files=[],
+        cross_dedupe_reference=ms.CROSS_DEDUPE_LOGICAL_REFERENCE,
+        domain_balance_proof={"exact_per_domain_era_balance": True},
+    )
+
+    encoded = json.dumps(manifest, sort_keys=True).lower()
+    assert "/home/" not in encoded
+    assert manifest["cross_dedupe_reference"] == "infini_news_v1_normalized_rows"
+    assert "cross_dedupe_private_path" not in manifest
+
+    with pytest.raises(ms.MultisourceExternalValidationError):
+        ms.write_public_json(tmp_path / "bad-path.json", {"source_path": "/home/example/private/source.jsonl"})

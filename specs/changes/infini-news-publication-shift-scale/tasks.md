@@ -37,6 +37,9 @@
 3. Update global checksums only for selected frozen artifacts.
 4. Independently load/probe artifacts, recompute metrics, verify corpus/splits/permissions/checksums, and confirm authorship-runtime isolation.
 5. Return PASS, HOLD, or REJECT. Do not deploy.
+6. [x] Run the deterministic no-text evaluation-integrity audit and freeze its JSON, Markdown, and checksums. It returned **REJECT**: all four alternate test lanes overlap the primary model training IDs; both named placebo contrasts have no later-arm support; the encoder is a 160-row CPU smoke only; and four source groups plus two publication months fall below 70% accuracy.
+
+Disposition correction completed without retraining or tuning: the finalizer now applies all required global gates, preserves only the primary lane as valid selection evidence, labels overlapping alternate lanes diagnostic-only, rejects substituted placebo evidence, validates exact artifact identity before a possible freeze, and emits `HOLD` with no selected/frozen release artifact on the current evidence. Remaining research work is to produce new leakage-safe alternate evaluations, supported placebo lift/CI, adequate encoder evidence, robust subgroups, passing external validation, and rights clearance.
 
 ## Verification baseline
 

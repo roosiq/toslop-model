@@ -1,0 +1,468 @@
+{
+  "content_boundary": {
+    "article_content_published": false,
+    "private_corpus_streamed": true,
+    "public_identifier_policy": "aggregate identifier-set digests and hashed source-group identifiers only",
+    "row_level_identifiers_published": false
+  },
+  "decision": "REJECT",
+  "decision_scope": "frozen_infini_news_v1_evaluation_run",
+  "disclaimer": "This score does not establish AI authorship.",
+  "encoder_status": {
+    "accelerator_verified": false,
+    "artifact_sha256": "c6d80a349380c250d3c132f6db9a2a7917e587c3d285edb34f9b7d1dacfd7e56",
+    "decision": "SMOKE-HOLD",
+    "expected_corpus_rows": 264000,
+    "full_frozen_row_run_completed": false,
+    "gate": "HOLD",
+    "hardware_blocker_decision": "MEASURED_HOLD",
+    "hardware_blocker_documented": true,
+    "metadata_runtime_inputs": [],
+    "observed_counts": {
+      "corpus_rows": 160,
+      "test": 13,
+      "train": 26,
+      "validation": 25
+    },
+    "reason": "Only a 160-row CPU smoke artifact exists; the measured unverified-accelerator blocker does not constitute a full 264,000-row encoder candidate.",
+    "runtime_input_gate": "PASS",
+    "runtime_inputs": [
+      "input_ids",
+      "attention_mask"
+    ],
+    "selected_device": "cpu",
+    "status": "cpu_smoke_only"
+  },
+  "gates": {
+    "alternate_lane_split_integrity": "REJECT",
+    "full_multitask_encoder": "HOLD",
+    "historical_placebo_support": "FAIL",
+    "required_subgroup_stability": "FAIL"
+  },
+  "input_checksums_sha256": {
+    "audit_script": "a68f1aa7e7b5cdf607c6b76d116a3fbbbda3b950d79fb7b604f099c162940651",
+    "deberta_multitask_encoder_placebo_2016_2017_vs_2020_2021_predictions": "09d18eabadb3e29c58d5faf231849b30b08694ddc0d4b1e274adda754155ee9c",
+    "deberta_multitask_encoder_placebo_2016_2018_vs_2019_2021_predictions": "d86579af3cfecba22e2e29fb01aca9fafafcb3400a937afc4f75ede1bf5451f2",
+    "encoder_metadata": "9ed257bf853f6671c0bff5d44e7a455c0cc339a022d9b195492dde04572ace29",
+    "encoder_metrics": "6dbf47bc57068850020d2c6d7c96748349d867d345bbe47588eca765189cf768",
+    "encoder_preserved_failures": "669dca0e993bfc0ba735bd4baecf393d070eb6b2cd2639cdb3cbf79d97d84e1a",
+    "lexical_tfidf_logistic_placebo_2016_2017_vs_2020_2021_predictions": "c15d1fe5f005c903fcc500fdbdbf932ea0769542018d5041809291f992538782",
+    "lexical_tfidf_logistic_placebo_2016_2018_vs_2019_2021_predictions": "cc8bd5e073e01b00f05070df373601aec6d6910688c7d6de91d660d8ef169268",
+    "private_corpus": "66910e65a91c8b238846a491dbe8ebfa094157e7d365769a2043bdae082dfbc0",
+    "selected_candidate_author_heldout_predictions": "2882bc583d5a27857e8667a17ff0fde105875569ce9aab445ad7d9278cffcaa2",
+    "selected_candidate_metadata": "1917395aa1d71201d8680822658b8a74156ecc9b4e88a38d8ea936d95e234089",
+    "selected_candidate_publisher_domain_heldout_primary_predictions": "ea95783593fcbdd75dfe07c9156000dbc9f03de88360be0965bb8253b5b95c33",
+    "selected_candidate_random_diagnostic_predictions": "7b40e9204df1182ce6ea7ebb4848c62be15a2c71d991e50c1da94ee5430b673b",
+    "selected_candidate_source_sitename_heldout_predictions": "1fae3c890f9abbe23051a25c9bdf894c71f12ab5c656320bfc953c1939f2a9f2",
+    "selected_candidate_topic_heldout_predictions": "e84f627125f2b30f4eecd341ea75c944474b525ab71a5685b6860bed9082a03e",
+    "selected_frozen_primary_predictions": "ea95783593fcbdd75dfe07c9156000dbc9f03de88360be0965bb8253b5b95c33",
+    "split_summary": "4076e1be67990c0b241e159cafa4de3a54aec40a9ddfa7385631177566d8b2cf",
+    "stylometric_lightgbm_placebo_2016_2017_vs_2020_2021_predictions": "038bc50ec515104ed32dfbac11a680421f509c70ff5a893a23547f2369496806",
+    "stylometric_lightgbm_placebo_2016_2018_vs_2019_2021_predictions": "8e127cd645c4c9ec69298593bebe8f78b879e9b4a102dfa17639243d248e9336"
+  },
+  "placebo_support": {
+    "candidates": {
+      "deberta_multitask_encoder": {
+        "candidate_scope": "smoke",
+        "gate": "FAIL",
+        "lanes": {
+          "placebo_2016_2017_vs_2020_2021": {
+            "declared_label_counts": {
+              "0": 0,
+              "1": 0,
+              "null": 32,
+              "other": 0
+            },
+            "expected_early_years": [
+              2016,
+              2017
+            ],
+            "expected_later_years": [
+              2020,
+              2021
+            ],
+            "failure_reason": "The file contains no supported later arm and therefore cannot estimate the named historical contrast.",
+            "gate": "FAIL",
+            "observed_early_arm_support": 32,
+            "observed_later_arm_support": 0,
+            "observed_role_counts": {
+              "historical_placebo": 32
+            },
+            "observed_year_counts": {
+              "2016": 32
+            },
+            "row_count": 32,
+            "substitution_detected": true
+          },
+          "placebo_2016_2018_vs_2019_2021": {
+            "declared_label_counts": {
+              "0": 0,
+              "1": 0,
+              "null": 32,
+              "other": 0
+            },
+            "expected_early_years": [
+              2016,
+              2017,
+              2018
+            ],
+            "expected_later_years": [
+              2019,
+              2020,
+              2021
+            ],
+            "failure_reason": "The file contains no supported later arm and therefore cannot estimate the named historical contrast.",
+            "gate": "FAIL",
+            "observed_early_arm_support": 32,
+            "observed_later_arm_support": 0,
+            "observed_role_counts": {
+              "historical_placebo": 32
+            },
+            "observed_year_counts": {
+              "2016": 32
+            },
+            "row_count": 32,
+            "substitution_detected": true
+          }
+        }
+      },
+      "lexical_tfidf_logistic": {
+        "candidate_scope": "full",
+        "gate": "FAIL",
+        "lanes": {
+          "placebo_2016_2017_vs_2020_2021": {
+            "declared_label_counts": {
+              "0": 8000,
+              "1": 0,
+              "null": 0,
+              "other": 0
+            },
+            "expected_early_years": [
+              2016,
+              2017
+            ],
+            "expected_later_years": [
+              2020,
+              2021
+            ],
+            "failure_reason": "The file contains no supported later arm and therefore cannot estimate the named historical contrast.",
+            "gate": "FAIL",
+            "observed_early_arm_support": 8000,
+            "observed_later_arm_support": 0,
+            "observed_role_counts": {
+              "historical_placebo": 8000
+            },
+            "observed_year_counts": {
+              "2016": 4000,
+              "2017": 4000
+            },
+            "row_count": 8000,
+            "substitution_detected": true
+          },
+          "placebo_2016_2018_vs_2019_2021": {
+            "declared_label_counts": {
+              "0": 8000,
+              "1": 0,
+              "null": 0,
+              "other": 0
+            },
+            "expected_early_years": [
+              2016,
+              2017,
+              2018
+            ],
+            "expected_later_years": [
+              2019,
+              2020,
+              2021
+            ],
+            "failure_reason": "The file contains no supported later arm and therefore cannot estimate the named historical contrast.",
+            "gate": "FAIL",
+            "observed_early_arm_support": 8000,
+            "observed_later_arm_support": 0,
+            "observed_role_counts": {
+              "historical_placebo": 8000
+            },
+            "observed_year_counts": {
+              "2016": 4000,
+              "2017": 4000
+            },
+            "row_count": 8000,
+            "substitution_detected": true
+          }
+        }
+      },
+      "stylometric_lightgbm": {
+        "candidate_scope": "full",
+        "gate": "FAIL",
+        "lanes": {
+          "placebo_2016_2017_vs_2020_2021": {
+            "declared_label_counts": {
+              "0": 8000,
+              "1": 0,
+              "null": 0,
+              "other": 0
+            },
+            "expected_early_years": [
+              2016,
+              2017
+            ],
+            "expected_later_years": [
+              2020,
+              2021
+            ],
+            "failure_reason": "The file contains no supported later arm and therefore cannot estimate the named historical contrast.",
+            "gate": "FAIL",
+            "observed_early_arm_support": 8000,
+            "observed_later_arm_support": 0,
+            "observed_role_counts": {
+              "historical_placebo": 8000
+            },
+            "observed_year_counts": {
+              "2016": 4000,
+              "2017": 4000
+            },
+            "row_count": 8000,
+            "substitution_detected": true
+          },
+          "placebo_2016_2018_vs_2019_2021": {
+            "declared_label_counts": {
+              "0": 8000,
+              "1": 0,
+              "null": 0,
+              "other": 0
+            },
+            "expected_early_years": [
+              2016,
+              2017,
+              2018
+            ],
+            "expected_later_years": [
+              2019,
+              2020,
+              2021
+            ],
+            "failure_reason": "The file contains no supported later arm and therefore cannot estimate the named historical contrast.",
+            "gate": "FAIL",
+            "observed_early_arm_support": 8000,
+            "observed_later_arm_support": 0,
+            "observed_role_counts": {
+              "historical_placebo": 8000
+            },
+            "observed_year_counts": {
+              "2016": 4000,
+              "2017": 4000
+            },
+            "row_count": 8000,
+            "substitution_detected": true
+          }
+        }
+      }
+    },
+    "corpus_arm_support": {
+      "placebo_2016_2017_vs_2020_2021": {
+        "available_early_arm_rows": 8000,
+        "available_later_arm_rows": 72000
+      },
+      "placebo_2016_2018_vs_2019_2021": {
+        "available_early_arm_rows": 44000,
+        "available_later_arm_rows": 108000
+      }
+    },
+    "gate": "FAIL",
+    "reason": "All emitted placebo files substitute early-only rows for the named two-arm comparisons; ROC-AUC and lift gates are undefined."
+  },
+  "production_integration": "none",
+  "schema": "publication_shift.infini_news_evaluation_integrity_audit.v1",
+  "split_integrity": {
+    "author_assignment_drops": {
+      "bridge": 0,
+      "missing_author": 38237
+    },
+    "gate": "REJECT",
+    "primary_training_count": 169261,
+    "primary_training_identifier_set_sha256": "32e8ba4416a3c13a4ee485bf7ff076c8e86a3e0d163fa366e0e7c4bb9db58225",
+    "protocols": {
+      "author_heldout": {
+        "frozen_summary_counts_match": true,
+        "gate": "REJECT",
+        "overlap_identifier_set_sha256": "8dca38d407f9837b417f4fdb9b2469f6b3b0f7d5da432d4b9b57ab1f39fd067f",
+        "primary_training_overlap_count": 30197,
+        "primary_training_overlap_fraction": 0.6675287928023521,
+        "recomputed_counts": {
+          "test": 45237,
+          "train": 149091,
+          "validation": 19435
+        },
+        "test_count": 45237,
+        "test_identifier_set_sha256": "c2c9eda0ed0103ebfc03ea6324edf000ffe9f2a8bed447831d086cd6834d8ea8",
+        "tracked_predictions_match_recomputed_test": true
+      },
+      "publisher_domain_heldout_primary": {
+        "frozen_summary_counts_match": true,
+        "gate": "PASS",
+        "overlap_identifier_set_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "primary_training_overlap_count": 0,
+        "primary_training_overlap_fraction": 0.0,
+        "recomputed_counts": {
+          "test": 55383,
+          "train": 169261,
+          "validation": 27356
+        },
+        "test_count": 55383,
+        "test_identifier_set_sha256": "32f7626e4459c5ec4ad3d1eaedc9db1c2c5f3a2a0e13210f52de27e66d2bce78",
+        "tracked_predictions_match_recomputed_test": true
+      },
+      "random_diagnostic": {
+        "frozen_summary_counts_match": true,
+        "gate": "REJECT",
+        "overlap_identifier_set_sha256": "4a004d6315554804945b203635bc7e9a19713d09b5cdd1ce6d2daacb61996d4f",
+        "primary_training_overlap_count": 34153,
+        "primary_training_overlap_fraction": 0.6729522570983822,
+        "recomputed_counts": {
+          "test": 50751,
+          "train": 176128,
+          "validation": 25121
+        },
+        "test_count": 50751,
+        "test_identifier_set_sha256": "92846f2f3f2bb32a9da8f824ea2d4a653410e0a4a4ed806e0a57c97fb4ac4d3f",
+        "tracked_predictions_match_recomputed_test": true
+      },
+      "source_sitename_heldout": {
+        "frozen_summary_counts_match": true,
+        "gate": "REJECT",
+        "overlap_identifier_set_sha256": "24ba349015580549e9bbfdedeae0a004b677a10963447dc28665947ac0e641e0",
+        "primary_training_overlap_count": 31459,
+        "primary_training_overlap_fraction": 0.6251788553259141,
+        "recomputed_counts": {
+          "test": 50320,
+          "train": 179640,
+          "validation": 22040
+        },
+        "test_count": 50320,
+        "test_identifier_set_sha256": "dadf4f5d28e4c46d2dd87f3e3a06f837c1611e4b57e3126edb4b2eb6b878717a",
+        "tracked_predictions_match_recomputed_test": true
+      },
+      "topic_heldout": {
+        "frozen_summary_counts_match": true,
+        "gate": "REJECT",
+        "overlap_identifier_set_sha256": "7e0b9066b492f30635c9e7217e9bf7dbe5433a7659b20b1624cf53a3abd1504b",
+        "primary_training_overlap_count": 34944,
+        "primary_training_overlap_fraction": 0.6641199612292605,
+        "recomputed_counts": {
+          "test": 52617,
+          "train": 172293,
+          "validation": 27090
+        },
+        "test_count": 52617,
+        "test_identifier_set_sha256": "5b2d9a0e31715321dede01182d38d31d2291c2b3fc6a336dd61b516def531c83",
+        "tracked_predictions_match_recomputed_test": true
+      }
+    },
+    "reason": "Alternate-lane scores were computed with the primary model even though alternate test rows overlap that model's training IDs.",
+    "rejected_alternate_lanes": [
+      "source_sitename_heldout",
+      "topic_heldout",
+      "author_heldout",
+      "random_diagnostic"
+    ],
+    "seed": "infini_news_v1_protocols"
+  },
+  "subgroup_collapse": {
+    "collapse_accuracy_threshold": 0.7,
+    "frozen_threshold": 0.49690983649044096,
+    "gate": "FAIL",
+    "monthly_groups": {
+      "below_threshold": [
+        {
+          "accuracy": 0.6923076923076923,
+          "correct_count": 414,
+          "count": 598,
+          "error_count": 184,
+          "false_negative": 184,
+          "false_positive": 0,
+          "label_0_count": 0,
+          "label_1_count": 598,
+          "publication_year_month": "2023-04"
+        },
+        {
+          "accuracy": 0.6098843322818086,
+          "correct_count": 580,
+          "count": 951,
+          "error_count": 371,
+          "false_negative": 371,
+          "false_positive": 0,
+          "label_0_count": 0,
+          "label_1_count": 951,
+          "publication_year_month": "2024-01"
+        }
+      ],
+      "below_threshold_group_count": 2,
+      "january_2024_reproduced": true,
+      "total_group_count": 84
+    },
+    "overall_primary_test": {
+      "accuracy": 0.8801978946608165,
+      "correct_count": 48748,
+      "count": 55383,
+      "error_count": 6635,
+      "false_negative": 3734,
+      "false_positive": 2901,
+      "label_0_count": 32260,
+      "label_1_count": 23123
+    },
+    "reason": "4 source groups with support >= 100 and 2 publication months fall below 70% accuracy.",
+    "source_groups": {
+      "below_threshold": [
+        {
+          "accuracy": 0.14859437751004015,
+          "correct_count": 37,
+          "count": 249,
+          "error_count": 212,
+          "false_negative": 212,
+          "false_positive": 0,
+          "label_0_count": 6,
+          "label_1_count": 243,
+          "source_group_hash": "01749ccf37ee4b7bce18df5a"
+        },
+        {
+          "accuracy": 0.5235294117647059,
+          "correct_count": 89,
+          "count": 170,
+          "error_count": 81,
+          "false_negative": 77,
+          "false_positive": 4,
+          "label_0_count": 8,
+          "label_1_count": 162,
+          "source_group_hash": "104cc9195ca721f03f030df2"
+        },
+        {
+          "accuracy": 0.6120689655172413,
+          "correct_count": 71,
+          "count": 116,
+          "error_count": 45,
+          "false_negative": 45,
+          "false_positive": 0,
+          "label_0_count": 0,
+          "label_1_count": 116,
+          "source_group_hash": "1c1544646ec3c45118e4bc7c"
+        },
+        {
+          "accuracy": 0.6632653061224489,
+          "correct_count": 130,
+          "count": 196,
+          "error_count": 66,
+          "false_negative": 66,
+          "false_positive": 0,
+          "label_0_count": 0,
+          "label_1_count": 196,
+          "source_group_hash": "a745402bc4b4920fb330b434"
+        }
+      ],
+      "below_threshold_group_count": 4,
+      "eligible_group_count": 90,
+      "minimum_support": 100,
+      "total_group_count": 3330
+    }
+  }
+}

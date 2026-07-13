@@ -97,17 +97,23 @@ def test_bbc_public_writer_rejects_text_fields_and_public_manifest_is_safe(tmp_p
         rejected_counts={},
         duplicate_counts={},
         source_files=[],
-        cross_dedupe_path="/private/infini.jsonl",
+        cross_dedupe_reference=bbc.CROSS_DEDUPE_LOGICAL_REFERENCE,
     )
 
     encoded = json.dumps(manifest, sort_keys=True).lower()
     assert "\"content\":" not in encoded
     assert "normalized_text\"" not in encoded
+    assert "/private/infini.jsonl" not in encoded
+    assert manifest["cross_dedupe_reference"] == "infini_news_v1_normalized_rows"
+    assert "cross_dedupe_private_path" not in manifest
     assert "this score does not establish ai authorship" in encoded
+    assert "cross_dedupe_private_input" not in manifest
     assert_public_safe(manifest)
 
     with pytest.raises(bbc.BbcExternalValidationError):
         bbc.write_public_json(tmp_path / "bad.json", {"records": [{"content": "do not publish"}]})
+    with pytest.raises(bbc.BbcExternalValidationError):
+        bbc.write_public_json(tmp_path / "bad-path.json", {"source_predictions": "/home/example/private/predictions.jsonl"})
 
 
 def test_bbc_evaluator_verifies_frozen_identity_and_reports_single_source_gates(tmp_path):

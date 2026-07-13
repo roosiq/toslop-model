@@ -261,7 +261,7 @@
   "schema": "publication_shift.infini_news_encoder_metrics.v1",
   "score_name": "current_era_similarity",
   "training_history": {
-    "checkpoint": "/tmp/infini_news_encoder_checkpoint_smoke/latest.pt",
+    "checkpoint_reference": "private_encoder_smoke_checkpoint_latest",
     "history": [
       {
         "epoch": 0,
