@@ -62,7 +62,7 @@ FROZEN_CONFIG = {
     "random_seed": 20260712,
 }
 SOURCE_RIGHTS_STATUS = "HOLD_combined_cc_and_unspecified_public_no_text_only"
-SOURCE_SCHEMA_FIELDS = ["date_publish", "date_download", "date_modify", "maintext", "source_domain", "url", "authors"]
+SOURCE_SCHEMA_FIELDS = ["date_publish", "date_download", "date_modify", "maintext", "source_domain", "url"]
 SOURCES = {
     "pre_llm_2021": {
         "repo_id": "RealTimeData/News_Seq_2021",

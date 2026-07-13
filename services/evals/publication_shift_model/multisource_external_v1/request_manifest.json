@@ -22,8 +22,7 @@
     "date_modify",
     "maintext",
     "source_domain",
-    "url",
-    "authors"
+    "url"
   ],
   "sources": {
     "current_2023": {

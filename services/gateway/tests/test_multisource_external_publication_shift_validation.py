@@ -35,6 +35,7 @@ def test_default_manifest_freezes_two_realtime_revisions_and_date_publish_axis()
     assert manifest["sources"]["pre_llm_2021"]["revision"] == "b703213f35f4b604a15ffa92d3bb4090dba25ad5"
     assert manifest["sources"]["current_2023"]["repo_id"] == "RealTimeData/News_August_2023"
     assert manifest["sources"]["current_2023"]["revision"] == "eedb055bf0b5583f22854c347e51a0b5a5d76f49"
+    assert manifest["source_schema_fields"] == ["date_publish", "date_download", "date_modify", "maintext", "source_domain", "url"]
     assert manifest["minimum_words"] == 150
     assert manifest["disclaimer"] == ms.DISCLAIMER
 
