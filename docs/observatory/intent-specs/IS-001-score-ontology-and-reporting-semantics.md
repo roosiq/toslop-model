@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Proposed |
+| Status | Implementation authorized by DR-001; multi-role G0 approval pending |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Intent owner | Research lead |
@@ -256,10 +256,11 @@ make every analytical level public by default.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for implementation; public release pending multi-role G0 review |
+| Approved version | 0.1.0 implementation scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-001 |
 
-Implementation is blocked until this table records approval.
+Implementation is authorized under DR-001. G0 closure and public release remain
+blocked until every required role records review.

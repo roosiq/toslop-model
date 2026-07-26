@@ -10,9 +10,6 @@ Supersede it with a new record and link both directions.
 
 ## Registry
 
-No decisions have been approved. Proposed records should be added here as
-blocking choices are prepared for review.
-
 | ID | Decision | Status | Gate | Affected specs |
 | --- | --- | --- | --- | --- |
-| None | No records yet | Not applicable | Not applicable | Not applicable |
+| [DR-001](DR-001-implementation-directive.md) | Observatory implementation directive | Approved | G0 implementation start | IS-001-IS-008; ES-001-ES-014 |

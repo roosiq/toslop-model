@@ -1,0 +1,39 @@
+name: Observatory contracts
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/observatory-contracts.yml"
+      - "docs/observatory/contracts/**"
+      - "scripts/build_observatory_contract_fixtures.py"
+      - "scripts/check_observatory_contracts.py"
+      - "scripts/mirror_observatory_contracts.py"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/observatory-contracts.yml"
+      - "docs/observatory/contracts/**"
+      - "scripts/build_observatory_contract_fixtures.py"
+      - "scripts/check_observatory_contracts.py"
+      - "scripts/mirror_observatory_contracts.py"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check canonical contracts
+        run: python scripts/check_observatory_contracts.py
+      - name: Prove fixture generation is deterministic
+        run: |
+          python scripts/build_observatory_contract_fixtures.py
+          python scripts/generate_observatory_contract_reference.py
+          git diff --exit-code -- docs/observatory/contracts/fixtures
+          git diff --exit-code -- docs/observatory/contracts/reference.md

@@ -7,6 +7,8 @@
   "additionalProperties": false,
   "required": [
     "schema_version",
+    "release_id",
+    "study_release_id",
     "score_id",
     "score_name",
     "entity",
@@ -35,6 +37,14 @@
   "properties": {
     "schema_version": {
       "const": "observatory.score_output.v1"
+    },
+    "release_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
+    },
+    "study_release_id": {
+      "type": ["string", "null"],
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,127}$"
     },
     "score_id": {
       "enum": ["S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8"]
@@ -344,7 +354,10 @@
         "feature_pipeline",
         "corpus",
         "benchmark",
-        "ontology"
+        "ontology",
+        "score_registry",
+        "warning_registry",
+        "release_registry"
       ],
       "properties": {
         "scorer": {
@@ -360,6 +373,15 @@
           "$ref": "#/$defs/semver"
         },
         "ontology": {
+          "$ref": "#/$defs/semver"
+        },
+        "score_registry": {
+          "$ref": "#/$defs/semver"
+        },
+        "warning_registry": {
+          "$ref": "#/$defs/semver"
+        },
+        "release_registry": {
           "$ref": "#/$defs/semver"
         }
       }
@@ -388,8 +410,10 @@
   "allOf": [
     {
       "if": {
+        "type": "object",
         "properties": {
           "suppression": {
+            "type": "object",
             "properties": {
               "status": {
                 "const": "suppressed"
@@ -400,11 +424,13 @@
         }
       },
       "then": {
+        "type": "object",
         "properties": {
           "score": {
             "type": "null"
           },
           "confidence": {
+            "type": "object",
             "properties": {
               "value": {
                 "type": "null"
@@ -412,6 +438,7 @@
             }
           },
           "uncertainty_interval": {
+            "type": "object",
             "properties": {
               "lower": {
                 "type": "null"
@@ -422,6 +449,7 @@
             }
           },
           "baseline": {
+            "type": "object",
             "properties": {
               "value": {
                 "type": "null"
@@ -432,6 +460,7 @@
             "type": "null"
           },
           "change": {
+            "type": "object",
             "properties": {
               "absolute": {
                 "type": "null"
@@ -442,7 +471,9 @@
             }
           },
           "components": {
+            "type": "object",
             "additionalProperties": {
+              "type": "object",
               "properties": {
                 "raw_value": {
                   "type": "null"
@@ -460,8 +491,10 @@
             "const": "insufficient"
           },
           "suppression": {
+            "type": "object",
             "properties": {
               "reasons": {
+                "type": "array",
                 "minItems": 1
               }
             }
@@ -469,11 +502,13 @@
         }
       },
       "else": {
+        "type": "object",
         "properties": {
           "score": {
             "type": "number"
           },
           "confidence": {
+            "type": "object",
             "properties": {
               "value": {
                 "type": "number"
@@ -481,6 +516,7 @@
             }
           },
           "uncertainty_interval": {
+            "type": "object",
             "properties": {
               "lower": {
                 "type": "number"
@@ -491,6 +527,7 @@
             }
           },
           "coverage": {
+            "type": "object",
             "properties": {
               "complete": {
                 "const": true
@@ -498,6 +535,7 @@
             }
           },
           "baseline": {
+            "type": "object",
             "properties": {
               "value": {
                 "type": "number"
@@ -511,6 +549,7 @@
             "type": "number"
           },
           "change": {
+            "type": "object",
             "properties": {
               "absolute": {
                 "type": "number"
@@ -518,7 +557,9 @@
             }
           },
           "components": {
+            "type": "object",
             "additionalProperties": {
+              "type": "object",
               "properties": {
                 "raw_value": {
                   "type": "number"
@@ -533,8 +574,10 @@
             }
           },
           "suppression": {
+            "type": "object",
             "properties": {
               "reasons": {
+                "type": "array",
                 "maxItems": 0
               }
             }
@@ -597,6 +640,7 @@
       "allOf": [
         {
           "if": {
+            "type": "object",
             "properties": {
               "status": {
                 "enum": ["missing", "suppressed"]
@@ -605,6 +649,7 @@
             "required": ["status"]
           },
           "then": {
+            "type": "object",
             "properties": {
               "raw_value": {
                 "type": "null"
@@ -615,6 +660,7 @@
             }
           },
           "else": {
+            "type": "object",
             "properties": {
               "raw_value": {
                 "type": "number"

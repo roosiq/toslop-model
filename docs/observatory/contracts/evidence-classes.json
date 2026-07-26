@@ -1,0 +1,24 @@
+{
+  "schema_version": "observatory.evidence_class_registry.v1",
+  "registry_version": "1.0.0",
+  "classes": [
+    {
+      "id": "descriptive",
+      "meaning": "A documented measurement changed in the observed sample.",
+      "requires_study_release": false,
+      "prohibited_shorthand": "LLMs caused the change"
+    },
+    {
+      "id": "exposure_association",
+      "meaning": "A predeclared exposure measure is associated with the outcome after stated controls.",
+      "requires_study_release": true,
+      "prohibited_shorthand": "The effect of LLMs"
+    },
+    {
+      "id": "causal_estimate",
+      "meaning": "A separately reviewed design estimates an intervention effect under explicit assumptions.",
+      "requires_study_release": true,
+      "prohibited_shorthand": "Proven cause"
+    }
+  ]
+}

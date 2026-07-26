@@ -1,0 +1,15 @@
+{
+  "schema_version": "observatory.version_bridge_registry.v1",
+  "registry_version": "1.0.0",
+  "bridges": [
+    {
+      "id": "fixture-s3-1-to-2",
+      "score_id": "S3",
+      "from_scorer_major": 1,
+      "to_scorer_major": 2,
+      "status": "approved_fixture_only",
+      "method": "separate_series_with_visible_break",
+      "automatic_join_allowed": false
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "expected_error": "schema_error",
+  "fixture_version": "observatory.contract_negative_fixture.v1",
+  "name": "missing_lineage",
+  "payload": {
+    "baseline": {
+      "complete": true,
+      "end": "2021-12-31",
+      "id": "synthetic-baseline",
+      "start": "2020-01-01",
+      "value": 44.0,
+      "version": "1.0.0"
+    },
+    "calculated_at": "2026-07-25T12:00:00Z",
+    "change": {
+      "absolute": 10.0,
+      "relative": 0.22727272727272727
+    },
+    "components": {
+      "lexical_convergence": {
+        "normalized_value": 54.0,
+        "raw_value": 54.0,
+        "status": "available",
+        "unit": "contract_fixture_unit",
+        "weight": 0.25
+      },
+      "rhetorical_convergence": {
+        "normalized_value": 54.0,
+        "raw_value": 54.0,
+        "status": "available",
+        "unit": "contract_fixture_unit",
+        "weight": 0.25
+      },
+      "semantic_convergence": {
+        "normalized_value": 54.0,
+        "raw_value": 54.0,
+        "status": "available",
+        "unit": "contract_fixture_unit",
+        "weight": 0.25
+      },
+      "syntactic_convergence": {
+        "normalized_value": 54.0,
+        "raw_value": 54.0,
+        "status": "available",
+        "unit": "contract_fixture_unit",
+        "weight": 0.25
+      }
+    },
+    "confidence": {
+      "calibration_version": "1.0.0",
+      "method": "contract_fixture_calibration",
+      "value": 0.8
+    },
+    "coverage": {
+      "complete": true,
+      "dimensions": {
+        "fixture": true
+      },
+      "eligible_rate": 0.9,
+      "entity_count": 24,
+      "matched_rate": 0.85,
+      "source_count": 2,
+      "source_family_count": 2
+    },
+    "current_value": 54.0,
+    "entity": {
+      "id": "aggregate",
+      "label": "All eligible observations",
+      "type": "aggregate",
+      "version": "1.0.0"
+    },
+    "evidence_class": "descriptive",
+    "links": {
+      "benchmark": "/observatory/benchmarks/contract-fixtures-v1",
+      "methodology": "/observatory/methods",
+      "release": "/observatory/releases/contract-fixtures-v1"
+    },
+    "period": {
+      "end": "2026-06-30",
+      "granularity": "quarter",
+      "id": "2026-Q2",
+      "start": "2026-04-01"
+    },
+    "release_id": "contract-fixtures-v1",
+    "release_state": "experimental",
+    "sample": {
+      "effective_size": 180.0,
+      "size": 240,
+      "unit": "eligible_documents"
+    },
+    "schema_version": "observatory.score_output.v1",
+    "score": 54.0,
+    "score_id": "S3",
+    "score_name": "Language Homogenization",
+    "source_frame": {
+      "id": "synthetic-contract-frame",
+      "label": "Synthetic contract frame",
+      "source_family_count": 2,
+      "version": "1.0.0"
+    },
+    "study_release_id": null,
+    "suppression": {
+      "reasons": [],
+      "status": "released"
+    },
+    "topic": null,
+    "trend": "increasing",
+    "uncertainty_interval": {
+      "cluster_unit": "synthetic_entity",
+      "level": 0.95,
+      "lower": 52.0,
+      "method": "cluster_bootstrap",
+      "replicates": 1000,
+      "upper": 56.0
+    },
+    "versions": {
+      "benchmark": "1.0.0",
+      "corpus": "1.0.0",
+      "feature_pipeline": "1.0.0",
+      "ontology": "0.1.0",
+      "release_registry": "1.0.0",
+      "score_registry": "1.0.0",
+      "scorer": "1.0.0",
+      "warning_registry": "1.0.0"
+    },
+    "warnings": [
+      {
+        "code": "EXPERIMENTAL",
+        "message": "This scorer or series has not completed all validation and production gates.",
+        "severity": "info"
+      }
+    ]
+  }
+}

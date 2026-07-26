@@ -2,11 +2,11 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Draft, implementation blocked |
+| Status | Implementing under DR-001; shadow release pending |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Applied science lead |
-| Approved intent reference | IS-001 v0.1.0, approval pending |
+| Approved intent reference | IS-001 v0.1.0, implementation scope authorized by DR-001 |
 | Repositories | `toslop-model`, `slopslingers-infra`, `toslop` |
 | Gates | G0, G3, G5 |
 | Start prerequisites | None beyond exact intent approval |
@@ -14,11 +14,11 @@
 
 ## Implementation authorization
 
-Implementation may begin only after
+Implementation began under DR-001 after
 [IS-001](../intent-specs/IS-001-score-ontology-and-reporting-semantics.md)
-records approval for the exact referenced version and the unresolved baseline,
-confidence, minimum-sample, normalization, and publication decisions have
-versioned decision records.
+received program-owner authorization for code and shadow validation. Scorer
+release remains blocked until baseline, confidence, minimum-sample,
+normalization, and publication decisions have narrower versioned records.
 
 ## Outcome
 
@@ -254,12 +254,12 @@ text, or stack trace.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved execution version | None |
-| Approved intent version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for implementation and synthetic shadow validation |
+| Approved execution version | 0.1.0 implementation scope |
+| Approved intent version | IS-001 v0.1.0 implementation scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-001 and RR-CONTRACT-v1.0.0 |
 
-Implementation is blocked until this table records approval for this exact
-execution version and the exact approved intent version.
+Production release remains blocked until the definition of done and remaining
+G0, G3, and G5 approvals are complete.

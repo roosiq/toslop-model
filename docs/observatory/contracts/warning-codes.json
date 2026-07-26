@@ -1,7 +1,7 @@
 {
   "schema_version": "observatory.warning_registry.v1",
-  "registry_version": "0.1.0",
-  "status": "proposed",
+  "registry_version": "1.0.0",
+  "status": "implementation_candidate",
   "warnings": [
     {
       "code": "EXPERIMENTAL",
@@ -72,6 +72,11 @@
       "code": "RELATIVE_CHANGE_UNDEFINED",
       "default_severity": "info",
       "message": "Relative change is null because the approved baseline value is zero."
+    },
+    {
+      "code": "VERSION_BREAK",
+      "default_severity": "warning",
+      "message": "A major scorer version starts a separate series unless an approved bridge permits comparison."
     },
     {
       "code": "SUPPRESSED",

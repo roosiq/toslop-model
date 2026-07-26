@@ -1,0 +1,141 @@
+{
+  "expected_error": "invalid_period",
+  "fixture_version": "observatory.contract_negative_fixture.v1",
+  "name": "invalid_period",
+  "payload": {
+    "baseline": {
+      "complete": true,
+      "end": "2021-12-31",
+      "id": "synthetic-baseline",
+      "start": "2020-01-01",
+      "value": 45.0,
+      "version": "1.0.0"
+    },
+    "calculated_at": "2026-07-25T12:00:00Z",
+    "change": {
+      "absolute": 10.0,
+      "relative": 0.2222222222222222
+    },
+    "components": {
+      "action_breadth": {
+        "normalized_value": 55.0,
+        "raw_value": 55.0,
+        "status": "available",
+        "unit": "contract_fixture_unit",
+        "weight": 0.25
+      },
+      "argument_breadth": {
+        "normalized_value": 55.0,
+        "raw_value": 55.0,
+        "status": "available",
+        "unit": "contract_fixture_unit",
+        "weight": 0.25
+      },
+      "cause_breadth": {
+        "normalized_value": 55.0,
+        "raw_value": 55.0,
+        "status": "available",
+        "unit": "contract_fixture_unit",
+        "weight": 0.25
+      },
+      "frame_breadth": {
+        "normalized_value": 55.0,
+        "raw_value": 55.0,
+        "status": "available",
+        "unit": "contract_fixture_unit",
+        "weight": 0.25
+      }
+    },
+    "confidence": {
+      "calibration_version": "1.0.0",
+      "method": "contract_fixture_calibration",
+      "value": 0.8
+    },
+    "coverage": {
+      "complete": true,
+      "dimensions": {
+        "fixture": true
+      },
+      "eligible_rate": 0.9,
+      "entity_count": 24,
+      "matched_rate": 0.85,
+      "source_count": 2,
+      "source_family_count": 2
+    },
+    "current_value": 55.0,
+    "entity": {
+      "id": "aggregate",
+      "label": "All eligible observations",
+      "type": "aggregate",
+      "version": "1.0.0"
+    },
+    "evidence_class": "descriptive",
+    "lineage": {
+      "data_snapshot_ids": [
+        "synthetic-s4-snapshot-v1"
+      ],
+      "manifest_sha256": "b1d3eb8f32936fa9cf89d2240bd10734270fd55ff4644ad254b3b237468bad88",
+      "run_id": "contract-fixture-s4"
+    },
+    "links": {
+      "benchmark": "/observatory/benchmarks/contract-fixtures-v1",
+      "methodology": "/observatory/methods",
+      "release": "/observatory/releases/contract-fixtures-v1"
+    },
+    "period": {
+      "end": "2026-06-30",
+      "granularity": "quarter",
+      "id": "2026-Q2",
+      "start": "2026-07-01"
+    },
+    "release_id": "contract-fixtures-v1",
+    "release_state": "experimental",
+    "sample": {
+      "effective_size": 180.0,
+      "size": 240,
+      "unit": "eligible_documents"
+    },
+    "schema_version": "observatory.score_output.v1",
+    "score": 55.0,
+    "score_id": "S4",
+    "score_name": "Perspective Diversity",
+    "source_frame": {
+      "id": "synthetic-contract-frame",
+      "label": "Synthetic contract frame",
+      "source_family_count": 2,
+      "version": "1.0.0"
+    },
+    "study_release_id": null,
+    "suppression": {
+      "reasons": [],
+      "status": "released"
+    },
+    "topic": null,
+    "trend": "increasing",
+    "uncertainty_interval": {
+      "cluster_unit": "synthetic_entity",
+      "level": 0.95,
+      "lower": 53.0,
+      "method": "cluster_bootstrap",
+      "replicates": 1000,
+      "upper": 57.0
+    },
+    "versions": {
+      "benchmark": "1.0.0",
+      "corpus": "1.0.0",
+      "feature_pipeline": "1.0.0",
+      "ontology": "0.1.0",
+      "release_registry": "1.0.0",
+      "score_registry": "1.0.0",
+      "scorer": "1.0.0",
+      "warning_registry": "1.0.0"
+    },
+    "warnings": [
+      {
+        "code": "EXPERIMENTAL",
+        "message": "This scorer or series has not completed all validation and production gates.",
+        "severity": "info"
+      }
+    ]
+  }
+}

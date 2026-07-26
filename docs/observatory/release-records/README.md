@@ -11,8 +11,6 @@ without rewriting the original authorization.
 
 ## Registry
 
-No observatory artifacts have been released.
-
 | Record | Artifact and version | Disposition | Effective date |
 | --- | --- | --- | --- |
-| None | No records yet | Not released | Not applicable |
+| [RR-CONTRACT-v1.0.0](RR-CONTRACT-v1.0.0.md) | Observatory score contract 1.0.0 | Shadow candidate | Pending |

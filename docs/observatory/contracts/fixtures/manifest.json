@@ -1,0 +1,113 @@
+{
+  "files": [
+    {
+      "path": "fixtures/negative/arithmetic_mismatch.json",
+      "sha256": "0964ce2f9724e7d9cdfbb888b4e4cbe2321b4763b8c82e305a2f485a94949d42"
+    },
+    {
+      "path": "fixtures/negative/component_weight_mismatch.json",
+      "sha256": "d85277f15bd8ccb968a12e06a8c7ed7d2c4472a68464c6eb203e0abb56fe0ef2"
+    },
+    {
+      "path": "fixtures/negative/incomplete_released_coverage.json",
+      "sha256": "e64bcd88e2c088a4e259545c63acc4f6e30762e67267fff7d9dafb299c57c57e"
+    },
+    {
+      "path": "fixtures/negative/invalid_confidence.json",
+      "sha256": "648d52e78452893bbf1072846d290331321d6b75f394febd7517fee9284dd4a8"
+    },
+    {
+      "path": "fixtures/negative/invalid_period.json",
+      "sha256": "2cbf69195ad40ee9769733bbdd1a79538f7fc31eb5e040581f3b0f34702bde0d"
+    },
+    {
+      "path": "fixtures/negative/invalid_uncertainty.json",
+      "sha256": "9ad603337f0b47d8d44bf137981d28180c58f6960cff725626c7da2472dfe43e"
+    },
+    {
+      "path": "fixtures/negative/missing_lineage.json",
+      "sha256": "1ae937752cc4a35ec295ea0cee7f9ed46c85c1e6f1d37e8e272abf1a1737f7c9"
+    },
+    {
+      "path": "fixtures/negative/missing_required_component.json",
+      "sha256": "dd439f9c9966ac3ac3fc2126424d44e487fe22fc0d4f47ba8674a08c9d1d01f5"
+    },
+    {
+      "path": "fixtures/negative/missing_study_release.json",
+      "sha256": "0b2176775dddd024b5320ac0ac9f12a396a84833b9d8a0b74f66d43eca33b0e7"
+    },
+    {
+      "path": "fixtures/negative/public_composite.json",
+      "sha256": "98cc88778f241b905e0459ad6cbbc54d943fe8360e4bb06b28a5b1ace5606b38"
+    },
+    {
+      "path": "fixtures/negative/suppressed_non_null.json",
+      "sha256": "756684a0bebc4eecfb049187d8ab006bb5ef91d68b2da3e96d5e5fb872e7ebb5"
+    },
+    {
+      "path": "fixtures/negative/unapproved_causal_class.json",
+      "sha256": "985169a1a07c6e55525fe11371cb27395b8064d2407afe4c7efeecf26c3b3326"
+    },
+    {
+      "path": "fixtures/negative/unknown_field.json",
+      "sha256": "016ccb9e38c1f115642d51fc17a028361409b9201cca583f17e099567ae719af"
+    },
+    {
+      "path": "fixtures/negative/unknown_warning.json",
+      "sha256": "bf019fe476fb7896b35b1ed64f392adcd174363e24cbd139498b0b34bf972fed"
+    },
+    {
+      "path": "fixtures/positive/causal_estimate.json",
+      "sha256": "6d310393698008a57039f7da76e051c9eadad15f59cd8713ae3a6a12996fbc33"
+    },
+    {
+      "path": "fixtures/positive/exposure_association.json",
+      "sha256": "b74eb52acdf6083c9685fb5c13b328afe03600f1faccf4f816770d2b41aeeefe"
+    },
+    {
+      "path": "fixtures/positive/s1.json",
+      "sha256": "1c36e866ae208aa92f0bebd6e086a682742f4c65f01f93578c0bcd6fae3cfc25"
+    },
+    {
+      "path": "fixtures/positive/s2.json",
+      "sha256": "2d851d902572e40519d3292c9aeb57a616a056927d925400ba7eec1de913636e"
+    },
+    {
+      "path": "fixtures/positive/s3.json",
+      "sha256": "635af73516a91621bc8168eeb5019ecc02afa3a94f1ec1198d7ade0ad5c9a40d"
+    },
+    {
+      "path": "fixtures/positive/s4.json",
+      "sha256": "7152365b2124218a729fd7896ebf9e728f83dfd6e3bd67733e52381bb0162b5e"
+    },
+    {
+      "path": "fixtures/positive/s5.json",
+      "sha256": "ea35cf76674e1ace441f86ed42a9e95ecd4b5c0a0d7d2dc26b5fe32f08f60f5c"
+    },
+    {
+      "path": "fixtures/positive/s6.json",
+      "sha256": "f226d3388458957769a9261ba41844c7c5294feb9f65af5e0230671ce6bfe2b4"
+    },
+    {
+      "path": "fixtures/positive/s7.json",
+      "sha256": "17257680e68d292b9846ff9a5cd45b77c2f821e724c182b0ac7d8bf816ca1f8f"
+    },
+    {
+      "path": "fixtures/positive/s8.json",
+      "sha256": "3e40fc908ba00b501d47ebb43445a444e0c8b7af4bcb92eb61ac3a490bd8591c"
+    },
+    {
+      "path": "fixtures/positive/suppressed.json",
+      "sha256": "2b846f60863e2831480f3049f030b8c19833d8613e4b463a9c484f9f8d672006"
+    },
+    {
+      "path": "fixtures/positive/version_break.json",
+      "sha256": "15fd1e07cdfb19c4bfa627682281094f76a57e68106e9674877c860975cdbe35"
+    },
+    {
+      "path": "fixtures/positive/warned.json",
+      "sha256": "477a5223ea99340d17bdb033d9f25127cff9c7dbdffb9419d455d92be7597e5c"
+    }
+  ],
+  "schema_version": "observatory.fixture_manifest.v1"
+}

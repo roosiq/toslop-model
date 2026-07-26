@@ -26,6 +26,8 @@ execution-spec version are both approved.
    [decision-record index](decision-records/README.md), scorer cutovers in the
    [release-record index](release-records/README.md), and completed work
    packages in the [closure-record index](closure-records/README.md).
+6. Track implementation progress and evidence in the
+   [build work queue](work-queue.md).
 
 ## Repository boundaries
 
