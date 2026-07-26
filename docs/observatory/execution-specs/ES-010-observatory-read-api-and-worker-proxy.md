@@ -2,11 +2,11 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Draft, implementation blocked |
+| Status | Fixture and disabled-route implementation complete; activation blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Backend lead |
-| Approved intent reference | IS-007 v0.1.0, approval pending |
+| Approved intent reference | IS-007 v0.1.0, fixture boundary approved by DR-008 |
 | Repositories | `slopslingers-infra`, `toslop` |
 | Gates | G3, G5 |
 | Start prerequisites | ES-001 stable contract candidate |
@@ -14,7 +14,7 @@
 
 ## Implementation authorization
 
-Implementation may begin after IS-007 approval and ES-001 contract stability.
+Fixture and disabled-route implementation is authorized by DR-008.
 Production data routes remain disabled until at least one S7 or S3 release is
 approved for public access and the public entity/filter policy is approved.
 
@@ -32,8 +32,12 @@ exports, and never exposes private credentials or diagnostics.
 - `toslop/src/index.js` proxies the current summary and scoring services and
   includes strict bounded-response handling and public regression tests.
 - `toslop/wrangler.jsonc` is the public Worker source of truth.
-- No observatory routes, query policy, pagination, ETag, or export contract
-  exists.
+- Private release-only routes, query policy, signed pagination, ETags, metadata,
+  coverage, health, and an empty-by-default store now exist.
+- The Worker proxy now enforces exact routes and queries, upstream
+  authentication, bounded reads, shared-contract validation, aggregate
+  minimization, public-safe errors, and JSON or CSV output.
+- `OBSERVATORY_API_ENABLED` defaults to `false`; no public score is activated.
 
 ## Architecture and boundaries
 
@@ -312,5 +316,6 @@ Exports use the same query and released rows as series:
 | Decision date | None |
 | Evidence | None |
 
-Implementation is blocked until this table records approval for this exact
-execution version and the exact approved intent version.
+Fixture and disabled-route execution is complete under DR-008. Production
+activation remains blocked until this table records approval for this exact
+execution version, the exact approved intent version, and the public policies.

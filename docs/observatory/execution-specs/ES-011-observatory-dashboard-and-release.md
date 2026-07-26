@@ -2,11 +2,11 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Draft, implementation blocked |
+| Status | Fixture UI complete; production release blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Product and UX lead |
-| Approved intent reference | IS-007 v0.1.0, approval pending |
+| Approved intent reference | IS-007 v0.1.0, fixture boundary approved by DR-008 |
 | Repositories | `toslop`, `toslop-model`, `slopslingers-infra` |
 | Gates | G3, G5 |
 | Start prerequisites | ES-010 fixture routes |
@@ -14,7 +14,7 @@
 
 ## Implementation authorization
 
-Implementation may begin after IS-007 approval and ES-010 fixture routes exist.
+Fixture implementation is authorized by DR-008 and uses ES-010 fixture routes.
 Production cutover requires an approved public score release, completed claims
 review, accessibility and browser QA, operations evidence, and explicit program
 owner approval.
@@ -33,8 +33,13 @@ suppression, staleness, version breaks, or API failure.
 - Static assets live under `toslop/public/`.
 - The current site uses a self-hosted vendored chart bundle and has extensive
   Node regression checks.
-- No observatory page, navigation entry, client state, browser acceptance suite,
-  or observatory release canary exists.
+- A separate `/observatory/` page, client state module, responsive stylesheet,
+  score modes, filter and export controls, trend and table views, component and
+  evidence views, and Node acceptance suite now exist.
+- Browser checks cover the empty release state and populated contract fixtures
+  at desktop and mobile widths with no console errors or document overflow.
+- Production canaries, alerts, accessibility audit, and public release remain
+  open.
 
 ## Architecture and boundaries
 
@@ -317,5 +322,6 @@ evidence until both workers.dev and the custom domain pass.
 | Decision date | None |
 | Evidence | None |
 
-Implementation is blocked until this table records approval for this exact
-execution version and the exact approved intent version.
+The fixture UI is implemented under DR-008. Production release remains blocked
+until this table records approval for this exact execution version, the exact
+approved intent version, and all G5 evidence.

@@ -16,7 +16,7 @@ still requires the narrower G1-G5 gates.
 | IS-004 | Deliver controlled professional-writing corpus | Synthetic bootstrap complete | ES-006 |
 | IS-005 | Deliver Language Homogenization scorer | Synthetic bootstrap complete | ES-007, ES-008 |
 | IS-006 | Deliver synthetic, labeled, and protected benchmark | Framework implementing | ES-009 |
-| IS-007 | Deliver research API and dashboard | Queued | ES-010, ES-011 |
+| IS-007 | Deliver research API and dashboard | Fixture delivery complete | ES-010, ES-011 |
 | IS-008 | Close administration conformance and production gates | Implementing | ES-012, ES-013, ES-014 |
 | ES-001 | Build score registries and cross-runtime contract validation | Complete | RR-CONTRACT-v1.0.0 |
 | ES-002 | Build source registry and immutable snapshot storage | Foundation complete | PostgreSQL and object-store tests; infra PR #12 |
@@ -27,8 +27,8 @@ still requires the narrower G1-G5 gates.
 | ES-007 | Build S3 linguistic feature and control pipeline | Synthetic fallbacks complete | 50-test observatory suite |
 | ES-008 | Build S3 aggregation, uncertainty, and release artifacts | Synthetic formula complete | 50-test suite; suppressed contract projection |
 | ES-009 | Build benchmark, protected evaluation, and gate engine | Synthetic framework complete | Protected evaluator tests; infra PR #12 |
-| ES-010 | Build private read API and public Worker proxy | Queued | Pending |
-| ES-011 | Build and release the Observatory dashboard | Queued | Pending |
+| ES-010 | Build private read API and public Worker proxy | Disabled delivery complete | Python and Worker suites; infra PR #12; public PR #2 |
+| ES-011 | Build and release the Observatory dashboard | Fixture UI complete | Desktop/mobile browser evidence; public PR #2 |
 | ES-012 | Close Astro admin interface conformance | Implementing | Existing admin UI and browser tests |
 | ES-013 | Replace broad credential and close workflow conformance | Implementing | API contract and failure suite |
 | ES-014 | Replace Basic Auth, add external alerts, run recovery drills | Blocked externally | Access permission and alert destination |
@@ -92,6 +92,47 @@ intent or execution specs. They remain explicit build todos:
   for each approved scorer lineage.
 - [ ] Publish independently reviewed benchmark 1.0.0 evidence without
   restricted text or labels.
+
+## ES-010 checklist
+
+- [x] Approve a fixture-only, disabled-route delivery boundary.
+- [x] Add a score-output table and security-barrier release-only view.
+- [x] Remove direct release-manifest access from the API role.
+- [x] Implement strict score, series, coverage, release, methodology, and
+  health contracts.
+- [x] Implement stable sorting and signed cursors bound to normalized queries.
+- [x] Revalidate every stored result through the shared ES-001 contract.
+- [x] Require explicit release approval in the in-memory fixture store.
+- [x] Implement exact Worker path and query allowlists, upstream
+  authentication, timeout, redirect, byte, schema, and error controls.
+- [x] Implement bounded JSON and formula-safe CSV exports.
+- [x] Preserve current Worker route regressions and pass Cloudflare dry-run.
+- [ ] Approve public frames, entities, cache, stale, export, and rate policies.
+- [ ] Deploy the private database view and authenticated API service.
+- [ ] Run cache purge, stale serve, load, security, and rollback exercises.
+- [ ] Enable one G5-approved score release and verify workers.dev plus the
+  custom domain independently.
+
+## ES-011 checklist
+
+- [x] Approve a fixture-only dashboard implementation boundary.
+- [x] Add a separate `/observatory/` Worker page and static client assets.
+- [x] Keep S7 and S3 in separate segmented modes with score-specific frames.
+- [x] Implement normalized public URL state and bounded same-origin queries.
+- [x] Implement loading, not-released, unavailable, empty, ready, partial, and
+  suppressed state logic.
+- [x] Implement trend, uncertainty, table equivalent, selected components,
+  coverage, warnings, versions, and evidence links.
+- [x] Implement JSON and CSV view exports through ES-010.
+- [x] Use the self-hosted ECharts asset and Toslop brand image.
+- [x] Pass Node regressions and fixture-backed desktop/mobile browser checks
+  with chart pixels, clean console, and no document overflow.
+- [ ] Complete keyboard, screen-reader, 200% zoom, contrast, and reduced-motion
+  accessibility audit.
+- [ ] Add version-break and maximum-warning browser fixtures.
+- [ ] Add production source freshness, Worker, API, and custom-domain canaries.
+- [ ] Complete claims review and explicit G5 production cutover approval.
+
 
 ## ES-002 checklist
 
