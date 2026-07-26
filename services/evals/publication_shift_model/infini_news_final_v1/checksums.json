@@ -1,0 +1,8 @@
+{
+  "files": {
+    "services/evals/publication_shift_model/infini_news_final_v1/MODEL_CARD.md": "5237b6a456176f51130055b50fe0c93ec6bd9623aafdbb59b4af79fe8941708d",
+    "services/evals/publication_shift_model/infini_news_final_v1/decision_packet.json": "c64a776ed7215ca015a776cf9a450786b3e0546ea2b9cf82ea32fd506c22b52f",
+    "services/evals/publication_shift_model/infini_news_final_v1/publisher_domain_heldout_primary_predictions.jsonl": "ea95783593fcbdd75dfe07c9156000dbc9f03de88360be0965bb8253b5b95c33"
+  },
+  "schema": "publication_shift.infini_news_final_checksums.v2"
+}

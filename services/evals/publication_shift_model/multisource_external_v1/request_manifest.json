@@ -1,0 +1,53 @@
+{
+  "created_at": "2026-07-13T00:00:00Z",
+  "date_axis": "date_publish_only",
+  "date_policy": "reject_missing_or_out_of_window_date_publish_do_not_substitute_dataset_names_download_or_modify_dates",
+  "disclaimer": "This score does not establish AI authorship.",
+  "external_source_note": "Two independent RealTimeData news snapshots with actual date_publish values mostly in 2021-08 and 2023-07/08.",
+  "lanes": [
+    "all_valid_source_diverse",
+    "domain_matched_balanced"
+  ],
+  "language_policy": "english_heuristic_ascii_function_word_screen",
+  "manifest_id": "multisource_external_v1_all_and_domain_matched",
+  "minimum_words": 150,
+  "public_artifact_policy": "no_text_no_titles_no_descriptions_no_urls_hashes_counts_metadata_predictions_only",
+  "sample_seed": 20260713,
+  "schema": "publication_shift.multisource_external_request_manifest.v1",
+  "source_license_note": "News_August_2023 declares license cc; News_Seq_2021 has no explicit license, so combined rights/redistribution remain HOLD.",
+  "source_rights_status": "HOLD_combined_cc_and_unspecified_public_no_text_only",
+  "source_schema_fields": [
+    "date_publish",
+    "date_download",
+    "date_modify",
+    "maintext",
+    "source_domain",
+    "url"
+  ],
+  "sources": {
+    "current_2023": {
+      "date_end": "2023-08-31",
+      "date_start": "2023-07-01",
+      "expected_lfs_sha256": "54edee87f3492d01a4921e5571b81d3c3297deff30fb4d8ec55d5780218aeff7",
+      "filename": "data/train-00000-of-00001-4ad0fe9bc38de63f.parquet",
+      "label": 1,
+      "license": "cc",
+      "license_note": "Dataset declares license cc; combined challenge remains HOLD because the 2021 source has no explicit license.",
+      "repo_id": "RealTimeData/News_August_2023",
+      "revision": "eedb055bf0b5583f22854c347e51a0b5a5d76f49",
+      "role": "current_core"
+    },
+    "pre_llm_2021": {
+      "date_end": "2021-08-31",
+      "date_start": "2021-08-01",
+      "expected_lfs_sha256": "252b4f93c4123053a2e32b85d8b5c4df247f5d7704a62cc7baecfca03f6eac48",
+      "filename": "data/train-00000-of-00001-347d4b994ed4dc71.parquet",
+      "label": 0,
+      "license": null,
+      "license_note": "Dataset card has no explicit license; redistribution remains HOLD.",
+      "repo_id": "RealTimeData/News_Seq_2021",
+      "revision": "b703213f35f4b604a15ffa92d3bb4090dba25ad5",
+      "role": "pre_llm_core"
+    }
+  }
+}

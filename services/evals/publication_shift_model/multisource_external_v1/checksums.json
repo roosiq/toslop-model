@@ -1,0 +1,14 @@
+{
+  "created_at": "2026-07-13T00:00:00Z",
+  "files": {
+    "services/evals/publication_shift_model/multisource_external_v1/all_valid_source_diverse/masked_predictions.jsonl": "f52f53d7d4834a9cfe8d8ca046bbab043463098da4110ecb00e7a6a64b23884b",
+    "services/evals/publication_shift_model/multisource_external_v1/all_valid_source_diverse/predictions.jsonl": "346b6fe4014e3470561b913135d7cb00b96f37b79bafdf76b74e38d4386f32bd",
+    "services/evals/publication_shift_model/multisource_external_v1/all_valid_source_diverse/report.json": "944f55ced0c77e488042a6b3da6d5c02b3aff22cfc83190958e2a6181559448e",
+    "services/evals/publication_shift_model/multisource_external_v1/corpus_manifest.json": "ff02991040a97e93a0b196e45d36eb2631f8eee3360824a930d717254bc449e6",
+    "services/evals/publication_shift_model/multisource_external_v1/domain_matched_balanced/masked_predictions.jsonl": "17c9567b412164310f9daf307112cd9e1095c5822c7645172c20e6be9db5cb04",
+    "services/evals/publication_shift_model/multisource_external_v1/domain_matched_balanced/predictions.jsonl": "09666b1f80f23c620de9e07f08a02da3ed15f1b540dfb46b7edf7bbc375833c5",
+    "services/evals/publication_shift_model/multisource_external_v1/domain_matched_balanced/report.json": "2fdb9f0479292bde5ab1bbebf398631f105e3d53a62d38676adfab8d48e3c858",
+    "services/evals/publication_shift_model/multisource_external_v1/request_manifest.json": "b1e78c2a6fca0a250a884f59b1a29a98b2b544b1855d0c306472741b1464cf50"
+  },
+  "schema": "publication_shift.multisource_external_checksums.v1"
+}

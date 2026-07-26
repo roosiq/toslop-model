@@ -1,0 +1,382 @@
+{
+  "candidate_name": "stylometric_lightgbm",
+  "counts": {
+    "corpus_rows": 264000,
+    "test": 55383,
+    "train": 169261,
+    "validation": 27356
+  },
+  "created_at": "2026-07-13T01:41:50Z",
+  "decision": "PASS-HOLD",
+  "decision_reason": "Candidate artifacts and frozen-lane diagnostics produced; held for downstream review/no production wiring and this score does not establish AI authorship.",
+  "disclaimer": "This score does not establish AI authorship.",
+  "feature_audit": {
+    "feature_importances": [
+      {
+        "feature": "colon_per_1k",
+        "importance": 794.0
+      },
+      {
+        "feature": "repeated_bigram_ratio",
+        "importance": 765.0
+      },
+      {
+        "feature": "comma_per_1k",
+        "importance": 759.0
+      },
+      {
+        "feature": "titlecase_token_ratio",
+        "importance": 706.0
+      },
+      {
+        "feature": "std_sentence_words",
+        "importance": 681.0
+      },
+      {
+        "feature": "quote_per_1k",
+        "importance": 671.0
+      },
+      {
+        "feature": "mean_sentence_words",
+        "importance": 669.0
+      },
+      {
+        "feature": "dash_per_1k",
+        "importance": 665.0
+      },
+      {
+        "feature": "mean_word_len",
+        "importance": 658.0
+      },
+      {
+        "feature": "function_word_ratio",
+        "importance": 621.0
+      },
+      {
+        "feature": "sentence_count",
+        "importance": 553.0
+      },
+      {
+        "feature": "uppercase_token_ratio",
+        "importance": 508.0
+      },
+      {
+        "feature": "digit_char_ratio",
+        "importance": 493.0
+      },
+      {
+        "feature": "first_person_ratio",
+        "importance": 476.0
+      },
+      {
+        "feature": "numeric_token_ratio",
+        "importance": 465.0
+      },
+      {
+        "feature": "third_person_ratio",
+        "importance": 464.0
+      },
+      {
+        "feature": "std_word_len",
+        "importance": 451.0
+      },
+      {
+        "feature": "short_word_ratio",
+        "importance": 449.0
+      },
+      {
+        "feature": "unique_word_ratio",
+        "importance": 441.0
+      },
+      {
+        "feature": "char_count",
+        "importance": 418.0
+      },
+      {
+        "feature": "question_per_1k",
+        "importance": 413.0
+      },
+      {
+        "feature": "paren_per_1k",
+        "importance": 376.0
+      },
+      {
+        "feature": "word_count",
+        "importance": 360.0
+      },
+      {
+        "feature": "long_word_ratio",
+        "importance": 262.0
+      },
+      {
+        "feature": "exclamation_per_1k",
+        "importance": 196.0
+      },
+      {
+        "feature": "semicolon_per_1k",
+        "importance": 158.0
+      },
+      {
+        "feature": "mean_paragraph_words",
+        "importance": 28.0
+      },
+      {
+        "feature": "paragraph_count",
+        "importance": 0.0
+      }
+    ]
+  },
+  "lanes": {
+    "author_heldout": {
+      "balanced_accuracy": 0.6620743114050953,
+      "brier": 0.20728146588798588,
+      "count": 45237,
+      "ece": 0.07160790056032758,
+      "f1": 0.5947777777777777,
+      "negative_count": 25627,
+      "positive_count": 19610,
+      "pr_auc": 0.704513321415819,
+      "roc_auc": 0.7325506008441385,
+      "threshold": 0.5264848260412621
+    },
+    "forward_2026_jan_apr": {
+      "count": 2000,
+      "mean": 0.604138769121321,
+      "median": 0.5836271820771077,
+      "p05": 0.36962627902619344,
+      "p25": 0.48878014871803765,
+      "p75": 0.706483358187548,
+      "p95": 0.9058996202689658,
+      "std": 0.15881313527068472
+    },
+    "length_quartiles_primary": {
+      "q1_shortest": {
+        "balanced_accuracy": 0.5768820652587,
+        "brier": 0.2278523296418713,
+        "count": 13762,
+        "ece": 0.07486191901767912,
+        "f1": 0.3953545836422041,
+        "negative_count": 8635,
+        "positive_count": 5127,
+        "pr_auc": 0.5091081485156834,
+        "roc_auc": 0.6180993726345609,
+        "threshold": 0.5264848260412621,
+        "word_count_range": [
+          150.0,
+          311.0
+        ]
+      },
+      "q2": {
+        "balanced_accuracy": 0.6194089908914122,
+        "brier": 0.22652063766921715,
+        "count": 13917,
+        "ece": 0.06617772717811557,
+        "f1": 0.5532804739914612,
+        "negative_count": 7814,
+        "positive_count": 6103,
+        "pr_auc": 0.6336795422225353,
+        "roc_auc": 0.6656886111849811,
+        "threshold": 0.5264848260412621,
+        "word_count_range": [
+          311.0,
+          467.0
+        ]
+      },
+      "q3": {
+        "balanced_accuracy": 0.645728413963372,
+        "brier": 0.20987657525741218,
+        "count": 13858,
+        "ece": 0.05827914140383787,
+        "f1": 0.5941046925292224,
+        "negative_count": 7751,
+        "positive_count": 6107,
+        "pr_auc": 0.68310320671516,
+        "roc_auc": 0.7186052911780089,
+        "threshold": 0.5264848260412621,
+        "word_count_range": [
+          467.0,
+          707.5
+        ]
+      },
+      "q4_longest": {
+        "balanced_accuracy": 0.666449391403396,
+        "brier": 0.19954786436864586,
+        "count": 13846,
+        "ece": 0.07747847883303413,
+        "f1": 0.6084669997370497,
+        "negative_count": 8060,
+        "positive_count": 5786,
+        "pr_auc": 0.7035818869878179,
+        "roc_auc": 0.7501700433749986,
+        "threshold": 0.5264848260412621,
+        "word_count_range": [
+          707.5,
+          62518.0
+        ]
+      }
+    },
+    "masked_primary_test": {
+      "balanced_accuracy": 0.5942422218235647,
+      "brier": 0.24479434280532897,
+      "count": 55383,
+      "ece": 0.13083858739573953,
+      "f1": 0.5641074454111062,
+      "negative_count": 32260,
+      "positive_count": 23123,
+      "pr_auc": 0.5747716641460047,
+      "roc_auc": 0.6417335844250158,
+      "threshold": 0.5264848260412621
+    },
+    "matched_2016_2021_placebos": {
+      "placebo_2016_2017_vs_2020_2021": {
+        "balanced_accuracy": null,
+        "brier": null,
+        "count": 8000,
+        "ece": null,
+        "f1": null,
+        "negative_count": 8000,
+        "positive_count": 0,
+        "pr_auc": null,
+        "roc_auc": null,
+        "threshold": 0.5264848260412621
+      },
+      "placebo_2016_2018_vs_2019_2021": {
+        "balanced_accuracy": null,
+        "brier": null,
+        "count": 8000,
+        "ece": null,
+        "f1": null,
+        "negative_count": 8000,
+        "positive_count": 0,
+        "pr_auc": null,
+        "roc_auc": null,
+        "threshold": 0.5264848260412621
+      }
+    },
+    "primary_validation": {
+      "balanced_accuracy": 0.6753815679454365,
+      "brier": 0.19788085782570947,
+      "count": 27356,
+      "ece": 0.07168751938059853,
+      "f1": 0.616766198194962,
+      "negative_count": 15344,
+      "positive_count": 12012,
+      "pr_auc": 0.7409990980616645,
+      "roc_auc": 0.752602378938406,
+      "threshold": 0.5264848260412621
+    },
+    "publisher_domain_heldout_primary": {
+      "balanced_accuracy": 0.631543254530966,
+      "brier": 0.21594353474783626,
+      "count": 55383,
+      "ece": 0.06850197419680437,
+      "f1": 0.549385312952835,
+      "negative_count": 32260,
+      "positive_count": 23123,
+      "pr_auc": 0.6427390359276779,
+      "roc_auc": 0.6941007843469192,
+      "threshold": 0.5264848260412621
+    },
+    "random_diagnostic": {
+      "balanced_accuracy": 0.6708401563092758,
+      "brier": 0.20208108698544142,
+      "count": 50751,
+      "ece": 0.06859572731024062,
+      "f1": 0.6062807303634522,
+      "negative_count": 28883,
+      "positive_count": 21868,
+      "pr_auc": 0.7151358133011521,
+      "roc_auc": 0.74677998779266,
+      "threshold": 0.5264848260412621
+    },
+    "source_sitename_heldout": {
+      "balanced_accuracy": 0.6900198311152939,
+      "brier": 0.19002762268088452,
+      "count": 50320,
+      "ece": 0.07449583523794058,
+      "f1": 0.6289915230926959,
+      "negative_count": 28546,
+      "positive_count": 21774,
+      "pr_auc": 0.7588997440226737,
+      "roc_auc": 0.7734978406063844,
+      "threshold": 0.5264848260412621
+    },
+    "topic_heldout": {
+      "balanced_accuracy": 0.632993042616397,
+      "brier": 0.21699385647097727,
+      "count": 52617,
+      "ece": 0.07581971500371994,
+      "f1": 0.5364343505294102,
+      "negative_count": 31313,
+      "positive_count": 21304,
+      "pr_auc": 0.6248857702285067,
+      "roc_auc": 0.6989728699431619,
+      "threshold": 0.5264848260412621
+    },
+    "transition_2022": {
+      "count": 2000,
+      "mean": 0.4868514986290443,
+      "median": 0.4763723386946139,
+      "p05": 0.25115981868195103,
+      "p25": 0.3898633030121027,
+      "p75": 0.5767143251865827,
+      "p95": 0.7587813097460039,
+      "std": 0.15775742405731458
+    }
+  },
+  "model_family": "infini_news_stylometric_lightgbm",
+  "model_id": "infini-news-stylometric_lightgbm-v1-c7d371ffb96e",
+  "prediction_files": {
+    "author_heldout": "services/evals/publication_shift_model/infini_news_v1/candidates/stylometric_lightgbm/author_heldout_predictions.jsonl",
+    "forward_2026_jan_apr": "services/evals/publication_shift_model/infini_news_v1/candidates/stylometric_lightgbm/forward_2026_jan_apr_predictions.jsonl",
+    "placebo_2016_2017_vs_2020_2021": "services/evals/publication_shift_model/infini_news_v1/candidates/stylometric_lightgbm/placebo_2016_2017_vs_2020_2021_predictions.jsonl",
+    "placebo_2016_2018_vs_2019_2021": "services/evals/publication_shift_model/infini_news_v1/candidates/stylometric_lightgbm/placebo_2016_2018_vs_2019_2021_predictions.jsonl",
+    "publisher_domain_heldout_primary": "services/evals/publication_shift_model/infini_news_v1/candidates/stylometric_lightgbm/publisher_domain_heldout_primary_predictions.jsonl",
+    "random_diagnostic": "services/evals/publication_shift_model/infini_news_v1/candidates/stylometric_lightgbm/random_diagnostic_predictions.jsonl",
+    "source_sitename_heldout": "services/evals/publication_shift_model/infini_news_v1/candidates/stylometric_lightgbm/source_sitename_heldout_predictions.jsonl",
+    "topic_heldout": "services/evals/publication_shift_model/infini_news_v1/candidates/stylometric_lightgbm/topic_heldout_predictions.jsonl",
+    "transition_2022": "services/evals/publication_shift_model/infini_news_v1/candidates/stylometric_lightgbm/transition_2022_predictions.jsonl"
+  },
+  "schema": "publication_shift.infini_news_candidate_metrics.v1",
+  "score_name": "current_era_similarity",
+  "shortcut_diagnostics": {
+    "fields": {
+      "metadata_only": [
+        "url_hostname",
+        "sitename",
+        "topic",
+        "author_hash",
+        "publication_year",
+        "publication_month"
+      ],
+      "source_only": [
+        "sitename"
+      ]
+    },
+    "metadata_only_primary_test": {
+      "balanced_accuracy": 1.0,
+      "brier": 1.2151519508756884e-07,
+      "count": 55383,
+      "ece": 0.0003465671604443274,
+      "f1": 1.0,
+      "negative_count": 32260,
+      "positive_count": 23123,
+      "pr_auc": 1.0,
+      "roc_auc": 1.0,
+      "threshold": 0.5
+    },
+    "source_only_primary_test": {
+      "balanced_accuracy": 0.4860384346104134,
+      "brier": 0.25435708478240343,
+      "count": 55383,
+      "ece": 0.06329899220151437,
+      "f1": 0.09704594783504396,
+      "negative_count": 32260,
+      "positive_count": 23123,
+      "pr_auc": 0.4163111813637498,
+      "roc_auc": 0.4881020510304217,
+      "threshold": 0.5
+    }
+  },
+  "training_protocol": "publisher_domain_heldout_primary"
+}

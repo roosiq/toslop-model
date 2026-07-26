@@ -1,0 +1,33 @@
+{
+  "author_heldout": {
+    "counts": {
+      "test": 830,
+      "train": 10907,
+      "validation": 330
+    },
+    "dropped_bridge_work_count": 34933,
+    "overlap_audit": {
+      "author_ids": 0,
+      "doi": 0,
+      "near_duplicate_cluster_id": 0,
+      "normalized_text_sha256": 0,
+      "work_id": 0
+    }
+  },
+  "schema": "publication_shift.split_summary.v1",
+  "source_publisher_heldout": {
+    "counts": {
+      "test": 15079,
+      "train": 25627,
+      "validation": 6294
+    },
+    "overlap_audit": {
+      "doi": 0,
+      "near_duplicate_cluster_id": 0,
+      "normalized_text_sha256": 0,
+      "publisher_id": 0,
+      "source_id": 0,
+      "work_id": 0
+    }
+  }
+}

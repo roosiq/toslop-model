@@ -1,0 +1,53 @@
+{
+  "accelerator_probe": {
+    "cuda_available": false,
+    "cuda_device_count": 0,
+    "platform": "Linux-7.0.12-201.fc44.x86_64-x86_64-with-glibc2.43",
+    "python": "3.11.15",
+    "selected_device": "cpu",
+    "torch": "2.12.1+cu130",
+    "torch_cuda_version": "13.0",
+    "torch_hip_version": null,
+    "verified": false
+  },
+  "artifact_path": "services/gateway/model_artifacts/publication_shift/infini_news_v1/deberta_multitask_encoder",
+  "artifact_sha256": "c6d80a349380c250d3c132f6db9a2a7917e587c3d285edb34f9b7d1dacfd7e56",
+  "artifact_size_bytes": 8352842,
+  "base_model": "microsoft/deberta-v3-small",
+  "candidate_name": "deberta_multitask_encoder",
+  "created_at": "2026-07-13T02:01:30Z",
+  "disclaimer": "This score does not establish AI authorship.",
+  "environment": {
+    "platform": "Linux-7.0.12-201.fc44.x86_64-x86_64-with-glibc2.43",
+    "python": "3.11.15",
+    "torch": "2.12.1+cu130"
+  },
+  "excluded_from_training": [
+    "historical_placebo",
+    "transition_2022",
+    "forward_2026"
+  ],
+  "metadata_runtime_inputs": [],
+  "model_family": "infini_news_deberta_multitask_encoder",
+  "model_id": "infini-news-deberta_multitask_encoder-v1-6433a75b5e52",
+  "model_revision": "a36c739020e01763fe789b4b85e2df55d6180012",
+  "runtime_inputs": [
+    "input_ids",
+    "attention_mask"
+  ],
+  "schema": "publication_shift.infini_news_encoder_metadata.v1",
+  "score_name": "current_era_similarity",
+  "split_summary_sha256": "82d6c214a2545b18ee3cf7c22f9992d2b1e881018b640b1770208c44abb56852",
+  "tasks": [
+    "era_classification",
+    "publication_year_regression",
+    "pairwise_recency_ranking"
+  ],
+  "threshold": 0.25227048993110657,
+  "tokenizer_revision": "a36c739020e01763fe789b4b85e2df55d6180012",
+  "training_identity_sha256": "6433a75b5e5218ffedb4bbfb308980e1154eee2c5f7f843d79c6809c0fbc9c1d",
+  "training_roles": {
+    "current_core": 1,
+    "pre_llm_core": 0
+  }
+}

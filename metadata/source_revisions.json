@@ -151,6 +151,25 @@
           "sha256": "98aed4a23f227c0ebfe426298e256491e4d4ec193d541b2493c44338ebb60db9"
         }
       ]
+    },
+    {
+      "repo_id": "ruggsea/infini-news-corpus",
+      "revision": "5b78199b86a838a5634b2d3267d72b98b8f71721",
+      "license": "research-only dataset-card/publisher-rights review required before production use",
+      "source_files": [
+        {
+          "path": "services/evals/publication_shift_model/infini_news_v1/frozen_request_manifest_264000.json",
+          "sha256": "0f8dc427a8ce0b79ab115f181571bcd88c264b42cd6d184a746b4447a8dd51b0"
+        },
+        {
+          "path": "services/evals/publication_shift_model/infini_news_v1/pilot_request_manifest.json",
+          "sha256": "ccf62eb3617c421ce3810d8145481b34aa68ab8ca87af6cb513643ad93814f85"
+        },
+        {
+          "path": "services/evals/publication_shift_model/infini_news_v1/pilot_report.json",
+          "sha256": "61a2f21e337a226093e402385100977d2efb8cd0c637b9388eb93422193dd49d"
+        }
+      ]
     }
   ]
 }

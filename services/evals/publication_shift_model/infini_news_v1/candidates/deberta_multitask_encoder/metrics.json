@@ -1,0 +1,295 @@
+{
+  "candidate_name": "deberta_multitask_encoder",
+  "counts": {
+    "corpus_rows": 160,
+    "test": 13,
+    "train": 26,
+    "validation": 25
+  },
+  "created_at": "2026-07-13T02:01:30Z",
+  "decision": "SMOKE-HOLD",
+  "decision_reason": "CPU smoke candidate only because --limit-per-role was set; held from production and serious claims until a full frozen-row run completes on feasible verified hardware.",
+  "disclaimer": "This score does not establish AI authorship.",
+  "lanes": {
+    "author_heldout": {
+      "era": {
+        "balanced_accuracy": null,
+        "brier": null,
+        "count": 6,
+        "ece": null,
+        "f1": null,
+        "negative_count": 6,
+        "positive_count": 0,
+        "pr_auc": null,
+        "roc_auc": null,
+        "threshold": 0.25227048993110657
+      },
+      "publication_year": {
+        "count": 6,
+        "mae_years": 3.9810145050287247,
+        "rmse_years": 4.002703328005516
+      },
+      "recency_rank": {
+        "accuracy": null,
+        "pair_count": 0
+      }
+    },
+    "forward_2026_jan_apr": {
+      "era_score_distribution": {
+        "count": 32,
+        "mean": 0.3544762386009097,
+        "median": 0.35123758018016815,
+        "p05": 0.2988550901412964,
+        "p25": 0.32006286829710007,
+        "p75": 0.37663016468286514,
+        "p95": 0.4235930874943733,
+        "std": 0.04008273377351048
+      },
+      "predicted_year_distribution": {
+        "count": 32,
+        "mean": 2021.1872561499476,
+        "median": 2021.1621503829956,
+        "p05": 2020.6069646716119,
+        "p25": 2021.0322816371918,
+        "p75": 2021.3043162822723,
+        "p95": 2021.8777896285058,
+        "std": 0.36008665087667246
+      }
+    },
+    "matched_2016_2021_placebos": {
+      "placebo_2016_2017_vs_2020_2021": {
+        "era": {
+          "balanced_accuracy": null,
+          "brier": null,
+          "count": 32,
+          "ece": null,
+          "f1": null,
+          "negative_count": 32,
+          "positive_count": 0,
+          "pr_auc": null,
+          "roc_auc": null,
+          "threshold": 0.25227048993110657
+        },
+        "publication_year": {
+          "count": 32,
+          "mae_years": 5.622205771505833,
+          "rmse_years": 5.632614008957123
+        },
+        "recency_rank": {
+          "accuracy": null,
+          "pair_count": 0
+        }
+      },
+      "placebo_2016_2018_vs_2019_2021": {
+        "era": {
+          "balanced_accuracy": null,
+          "brier": null,
+          "count": 32,
+          "ece": null,
+          "f1": null,
+          "negative_count": 32,
+          "positive_count": 0,
+          "pr_auc": null,
+          "roc_auc": null,
+          "threshold": 0.25227048993110657
+        },
+        "publication_year": {
+          "count": 32,
+          "mae_years": 5.622205771505833,
+          "rmse_years": 5.632614008957123
+        },
+        "recency_rank": {
+          "accuracy": null,
+          "pair_count": 0
+        }
+      }
+    },
+    "primary_validation": {
+      "epoch": 0,
+      "threshold": 0.25227048993110657,
+      "train_loss_mean": 0.8359077274799347,
+      "validation_era": {
+        "balanced_accuracy": 0.4772727272727273,
+        "brier": 0.44628483712182115,
+        "count": 25,
+        "ece": 0.6618954432010651,
+        "f1": 0.9130434782608695,
+        "negative_count": 3,
+        "positive_count": 22,
+        "pr_auc": 0.7296420666699763,
+        "roc_auc": 0.0,
+        "threshold": 0.25227048993110657
+      },
+      "validation_recency_rank": {
+        "accuracy": 0.09090909090909091,
+        "pair_count": 66
+      },
+      "validation_year": {
+        "count": 25,
+        "mae_years": 2.1834790718555452,
+        "rmse_years": 2.392256590647356
+      }
+    },
+    "publisher_domain_heldout_primary": {
+      "era": {
+        "balanced_accuracy": 0.5,
+        "brier": 0.17761194017308257,
+        "count": 13,
+        "ece": 0.3268962869277367,
+        "f1": 0.14285714285714285,
+        "negative_count": 12,
+        "positive_count": 1,
+        "pr_auc": 0.2,
+        "roc_auc": 0.6666666666666667,
+        "threshold": 0.25227048993110657
+      },
+      "publication_year": {
+        "count": 13,
+        "mae_years": 3.410428129709684,
+        "rmse_years": 3.4547236227989413
+      },
+      "recency_rank": {
+        "accuracy": 0.16666666666666666,
+        "pair_count": 12
+      }
+    },
+    "random_diagnostic": {
+      "era": {
+        "balanced_accuracy": 0.5,
+        "brier": 0.3020891006951379,
+        "count": 17,
+        "ece": 0.45856134155217343,
+        "f1": 0.64,
+        "negative_count": 9,
+        "positive_count": 8,
+        "pr_auc": 0.3419516859774213,
+        "roc_auc": 0.1388888888888889,
+        "threshold": 0.25227048993110657
+      },
+      "publication_year": {
+        "count": 17,
+        "mae_years": 2.6846982959438774,
+        "rmse_years": 2.8937651860188276
+      },
+      "recency_rank": {
+        "accuracy": 0.3472222222222222,
+        "pair_count": 72
+      }
+    },
+    "source_sitename_heldout": {
+      "era": {
+        "balanced_accuracy": 0.5,
+        "brier": 0.2229327635023563,
+        "count": 10,
+        "ece": 0.11410510241985322,
+        "f1": 0.46153846153846156,
+        "negative_count": 7,
+        "positive_count": 3,
+        "pr_auc": 0.3373015873015873,
+        "roc_auc": 0.4761904761904762,
+        "threshold": 0.25227048993110657
+      },
+      "publication_year": {
+        "count": 10,
+        "mae_years": 3.0379384368658067,
+        "rmse_years": 3.199377673582494
+      },
+      "recency_rank": {
+        "accuracy": 0.3333333333333333,
+        "pair_count": 21
+      }
+    },
+    "topic_heldout": {
+      "era": {
+        "balanced_accuracy": 0.3333333333333333,
+        "brier": 0.25540279109538755,
+        "count": 14,
+        "ece": 0.39022631304604666,
+        "f1": 0.25,
+        "negative_count": 11,
+        "positive_count": 3,
+        "pr_auc": 0.1504884004884005,
+        "roc_auc": 0.0,
+        "threshold": 0.25227048993110657
+      },
+      "publication_year": {
+        "count": 14,
+        "mae_years": 3.2691838485854015,
+        "rmse_years": 3.372250598123596
+      },
+      "recency_rank": {
+        "accuracy": 0.3333333333333333,
+        "pair_count": 33
+      }
+    },
+    "transition_2022": {
+      "era_score_distribution": {
+        "count": 32,
+        "mean": 0.4096866911277175,
+        "median": 0.41383156180381775,
+        "p05": 0.33839754611253736,
+        "p25": 0.37871871143579483,
+        "p75": 0.43504349887371063,
+        "p95": 0.4606757313013077,
+        "std": 0.043417661313073175
+      },
+      "predicted_year_distribution": {
+        "count": 32,
+        "mean": 2021.5922341556288,
+        "median": 2021.5655829906464,
+        "p05": 2020.9646304130554,
+        "p25": 2021.3152975440025,
+        "p75": 2021.8752616643906,
+        "p95": 2022.3944467753172,
+        "std": 0.5102164130004588
+      }
+    }
+  },
+  "model_family": "infini_news_deberta_multitask_encoder",
+  "model_id": "infini-news-deberta_multitask_encoder-v1-6433a75b5e52",
+  "prediction_files": {
+    "author_heldout": "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/author_heldout_predictions.jsonl",
+    "forward_2026_jan_apr": "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/forward_2026_jan_apr_predictions.jsonl",
+    "placebo_2016_2017_vs_2020_2021": "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/placebo_2016_2017_vs_2020_2021_predictions.jsonl",
+    "placebo_2016_2018_vs_2019_2021": "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/placebo_2016_2018_vs_2019_2021_predictions.jsonl",
+    "publisher_domain_heldout_primary": "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/publisher_domain_heldout_primary_predictions.jsonl",
+    "random_diagnostic": "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/random_diagnostic_predictions.jsonl",
+    "source_sitename_heldout": "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/source_sitename_heldout_predictions.jsonl",
+    "topic_heldout": "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/topic_heldout_predictions.jsonl",
+    "transition_2022": "services/evals/publication_shift_model/infini_news_v1/candidates/deberta_multitask_encoder/transition_2022_predictions.jsonl"
+  },
+  "schema": "publication_shift.infini_news_encoder_metrics.v1",
+  "score_name": "current_era_similarity",
+  "training_history": {
+    "checkpoint_reference": "private_encoder_smoke_checkpoint_latest",
+    "history": [
+      {
+        "epoch": 0,
+        "threshold": 0.25227048993110657,
+        "train_loss_mean": 0.8359077274799347,
+        "validation_era": {
+          "balanced_accuracy": 0.4772727272727273,
+          "brier": 0.44628483712182115,
+          "count": 25,
+          "ece": 0.6618954432010651,
+          "f1": 0.9130434782608695,
+          "negative_count": 3,
+          "positive_count": 22,
+          "pr_auc": 0.7296420666699763,
+          "roc_auc": 0.0,
+          "threshold": 0.25227048993110657
+        },
+        "validation_recency_rank": {
+          "accuracy": 0.09090909090909091,
+          "pair_count": 66
+        },
+        "validation_year": {
+          "count": 25,
+          "mae_years": 2.1834790718555452,
+          "rmse_years": 2.392256590647356
+        }
+      }
+    ]
+  },
+  "training_protocol": "publisher_domain_heldout_primary"
+}

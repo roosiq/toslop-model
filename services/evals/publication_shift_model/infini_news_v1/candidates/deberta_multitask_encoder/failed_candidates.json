@@ -1,0 +1,27 @@
+{
+  "candidate_name": "deberta_multitask_encoder",
+  "disclaimer": "This score does not establish AI authorship.",
+  "preserved_failures": [
+    {
+      "decision": "HOLD",
+      "reason": "Codex CLI unavailable: OpenAI API returned 401 Unauthorized, so implementation continued manually.",
+      "stage": "codex_assist"
+    },
+    {
+      "decision": "HOLD",
+      "reason": "Initial CPU smoke hit dtype mismatch: DeBERTa pooled output loaded as half while task heads were float; fixed by casting pooled representations to head dtype and forcing CPU model float.",
+      "stage": "deberta_v3_small_cpu_smoke_attempt_1"
+    },
+    {
+      "decision": "HOLD",
+      "reason": "Follow-up CPU smoke produced NaN era scores before CPU float conversion; fixed by forcing CPU model float before training.",
+      "stage": "deberta_v3_small_cpu_smoke_attempt_2"
+    },
+    {
+      "decision": "MEASURED_HOLD",
+      "reason": "No verified accelerator was available. torch reports cuda_available=false, cuda_device_count=0, torch_hip_version=null; full 264k-row encoder training was not claimed.",
+      "stage": "serious_full_frozen_row_run"
+    }
+  ],
+  "schema": "publication_shift.infini_news_encoder_failed_candidates.v1"
+}

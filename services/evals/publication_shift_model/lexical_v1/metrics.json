@@ -1,0 +1,1044 @@
+{
+  "author_heldout_retrained": {
+    "counts": {
+      "test": 518,
+      "train": 7783,
+      "validation": 208
+    },
+    "test": {
+      "balanced_accuracy": 0.7832069970845481,
+      "brier": 0.14573889780566593,
+      "count": 518,
+      "ece": 0.11295113891888403,
+      "f1": 0.7151515151515152,
+      "negative_count": 343,
+      "positive_count": 175,
+      "pr_auc": 0.8097449333059326,
+      "roc_auc": 0.84323198667222,
+      "threshold": 0.4937620704827608
+    },
+    "validation": {
+      "balanced_accuracy": 0.7956679470763979,
+      "brier": 0.14512338228690877,
+      "count": 208,
+      "ece": 0.14608934926786563,
+      "f1": 0.7244094488188977,
+      "negative_count": 142,
+      "positive_count": 66,
+      "pr_auc": 0.8058125085457225,
+      "roc_auc": 0.8392018779342724,
+      "threshold": 0.4937620704827608
+    }
+  },
+  "created_at": "2026-07-12T17:03:10Z",
+  "decision": "HOLD",
+  "decision_reason": "Pilot lexical baseline; full 252k planned corpus and all preregistered candidate families are not yet complete.",
+  "disclaimer": "This score does not establish AI authorship.",
+  "forward_2026_partial_year_month_matched_through_july": {
+    "count": 2000,
+    "mean": 0.6438962370011275,
+    "median": 0.6750568601234188,
+    "p05": 0.23234721793762927,
+    "p25": 0.460047697978605,
+    "p75": 0.8469101331043147,
+    "p95": 0.9623601172394048,
+    "std": 0.23336350455824445
+  },
+  "historical_placebos": {
+    "2014_2017_vs_2018_2021": {
+      "counts": {
+        "test": 8508,
+        "train": 15101,
+        "validation": 4391
+      },
+      "grouped_bootstrap_roc_auc_95ci": {
+        "lower": 0.618707957014166,
+        "median": 0.6497155290604453,
+        "samples_requested": 300,
+        "samples_valid": 300,
+        "upper": 0.7121339034139801
+      },
+      "test": {
+        "balanced_accuracy": 0.6041654373142962,
+        "brier": 0.22729806082156476,
+        "count": 8508,
+        "ece": 0.12806165048401086,
+        "f1": 0.6194893173527879,
+        "negative_count": 2709,
+        "positive_count": 5799,
+        "pr_auc": 0.8004631292863532,
+        "roc_auc": 0.6458994756736549,
+        "threshold": 0.5793841988735947
+      },
+      "validation": {
+        "balanced_accuracy": 0.6384430485765963,
+        "brier": 0.22104467479846432,
+        "count": 4391,
+        "ece": 0.11097118794519638,
+        "f1": 0.6087146923582221,
+        "negative_count": 1537,
+        "positive_count": 2854,
+        "pr_auc": 0.8097891561719304,
+        "roc_auc": 0.6888741571486605,
+        "threshold": 0.5793841988735947
+      }
+    },
+    "2016_2018_vs_2019_2021": {
+      "counts": {
+        "test": 7148,
+        "train": 13260,
+        "validation": 3592
+      },
+      "grouped_bootstrap_roc_auc_95ci": {
+        "lower": 0.5735442563038144,
+        "median": 0.6031602701117359,
+        "samples_requested": 300,
+        "samples_valid": 300,
+        "upper": 0.7221840242658685
+      },
+      "test": {
+        "balanced_accuracy": 0.5673881571151876,
+        "brier": 0.24598725524129283,
+        "count": 7148,
+        "ece": 0.0963740361596742,
+        "f1": 0.5886832086123146,
+        "negative_count": 2954,
+        "positive_count": 4194,
+        "pr_auc": 0.7042154798832584,
+        "roc_auc": 0.6034353974420691,
+        "threshold": 0.499967800533038
+      },
+      "validation": {
+        "balanced_accuracy": 0.6249635081309522,
+        "brier": 0.22707442207216907,
+        "count": 3592,
+        "ece": 0.05759060289790133,
+        "f1": 0.6065620542082739,
+        "negative_count": 1614,
+        "positive_count": 1978,
+        "pr_auc": 0.7407086399407133,
+        "roc_auc": 0.669889227600257,
+        "threshold": 0.499967800533038
+      }
+    }
+  },
+  "main_minus_strongest_placebo": {
+    "lower": 0.08351481860176187,
+    "median": 0.14992497805508725,
+    "point_estimate": 0.14785813743315224,
+    "samples_valid": 300,
+    "strongest_placebo": "2014_2017_vs_2018_2021",
+    "upper": 0.19821144441082383
+  },
+  "model_id": "publication-shift-lexical-v1-8bfb37991329",
+  "primary_source_publisher_heldout": {
+    "counts": {
+      "test": 10819,
+      "train": 19938,
+      "validation": 4243
+    },
+    "grouped_bootstrap_roc_auc_95ci": {
+      "lower": 0.7841795021974489,
+      "median": 0.7980524810784493,
+      "samples_requested": 300,
+      "samples_valid": 300,
+      "upper": 0.8345427725858767
+    },
+    "masked_test": {
+      "balanced_accuracy": 0.6989972683846439,
+      "brier": 0.1876341046831082,
+      "count": 10819,
+      "ece": 0.045674325781380365,
+      "f1": 0.6665974241794765,
+      "negative_count": 5799,
+      "positive_count": 5020,
+      "pr_auc": 0.7937544167139736,
+      "roc_auc": 0.7726395332620201,
+      "threshold": 0.4301355210826429
+    },
+    "per_year": {
+      "2018": {
+        "count": 1605,
+        "current_era_similarity": {
+          "count": 1605,
+          "mean": 0.31822424768798147,
+          "median": 0.29302823856284493,
+          "p05": 0.09131943204675765,
+          "p25": 0.18809560789327628,
+          "p75": 0.4351986005935904,
+          "p95": 0.6168351509529587,
+          "std": 0.16520088041029057
+        },
+        "label": 0
+      },
+      "2019": {
+        "count": 1406,
+        "current_era_similarity": {
+          "count": 1406,
+          "mean": 0.3280458348097167,
+          "median": 0.3009752579269185,
+          "p05": 0.09706273729977495,
+          "p25": 0.19946669004210182,
+          "p75": 0.4356489206419706,
+          "p95": 0.6591352040854962,
+          "std": 0.17051054915824754
+        },
+        "label": 0
+      },
+      "2020": {
+        "count": 1409,
+        "current_era_similarity": {
+          "count": 1409,
+          "mean": 0.3283437914148596,
+          "median": 0.3074007766116991,
+          "p05": 0.06631003402203925,
+          "p25": 0.17840213366721938,
+          "p75": 0.4496665666864948,
+          "p95": 0.6596930862475924,
+          "std": 0.18445285010308485
+        },
+        "label": 0
+      },
+      "2021": {
+        "count": 1379,
+        "current_era_similarity": {
+          "count": 1379,
+          "mean": 0.3661899620510571,
+          "median": 0.3481937003603481,
+          "p05": 0.09022793593790322,
+          "p25": 0.2192122269583161,
+          "p75": 0.49610710311491074,
+          "p95": 0.7005258984557843,
+          "std": 0.1870560031757091
+        },
+        "label": 0
+      },
+      "2023": {
+        "count": 1361,
+        "current_era_similarity": {
+          "count": 1361,
+          "mean": 0.4583161748523486,
+          "median": 0.42982073135860777,
+          "p05": 0.1339736224319765,
+          "p25": 0.28855493357925327,
+          "p75": 0.616971415564532,
+          "p95": 0.850818562086949,
+          "std": 0.21978365658912077
+        },
+        "label": 1
+      },
+      "2024": {
+        "count": 1536,
+        "current_era_similarity": {
+          "count": 1536,
+          "mean": 0.6153224639230385,
+          "median": 0.6224007718556319,
+          "p05": 0.19613059907850228,
+          "p25": 0.39576829102379263,
+          "p75": 0.8641883087195968,
+          "p95": 0.9764605606205007,
+          "std": 0.2596157848888441
+        },
+        "label": 1
+      },
+      "2025": {
+        "count": 2123,
+        "current_era_similarity": {
+          "count": 2123,
+          "mean": 0.703144378083114,
+          "median": 0.763335399780931,
+          "p05": 0.2465887830559008,
+          "p25": 0.5194311335685868,
+          "p75": 0.9165235361410097,
+          "p95": 0.9832686531717981,
+          "std": 0.24060414825496518
+        },
+        "label": 1
+      }
+    },
+    "test": {
+      "balanced_accuracy": 0.7096800416887374,
+      "brier": 0.17907613276712214,
+      "count": 10819,
+      "ece": 0.03393473007091376,
+      "f1": 0.6927822936049358,
+      "negative_count": 5799,
+      "positive_count": 5020,
+      "pr_auc": 0.8110557922965107,
+      "roc_auc": 0.7937576131068071,
+      "threshold": 0.4301355210826429
+    },
+    "top_sources": [
+      {
+        "count": 777,
+        "mean_score": 0.45227489400664034,
+        "source_id": "https://openalex.org/S23181512"
+      },
+      {
+        "count": 770,
+        "mean_score": 0.5181893020597768,
+        "source_id": "https://openalex.org/S316438"
+      },
+      {
+        "count": 517,
+        "mean_score": 0.5439267094087182,
+        "source_id": "https://openalex.org/S2481244646"
+      },
+      {
+        "count": 426,
+        "mean_score": 0.3393060642213047,
+        "source_id": "https://openalex.org/S120348307"
+      },
+      {
+        "count": 322,
+        "mean_score": 0.5151808837353964,
+        "source_id": "https://openalex.org/S184645833"
+      },
+      {
+        "count": 307,
+        "mean_score": 0.3154150645082791,
+        "source_id": "https://openalex.org/S2483688756"
+      },
+      {
+        "count": 275,
+        "mean_score": 0.5533848734392706,
+        "source_id": "https://openalex.org/S2479884170"
+      },
+      {
+        "count": 236,
+        "mean_score": 0.3722871830012847,
+        "source_id": "https://openalex.org/S181332294"
+      },
+      {
+        "count": 207,
+        "mean_score": 0.5302664821081832,
+        "source_id": "https://openalex.org/S116836101"
+      },
+      {
+        "count": 200,
+        "mean_score": 0.472381192630613,
+        "source_id": "https://openalex.org/S2898612692"
+      },
+      {
+        "count": 193,
+        "mean_score": 0.4934306091345675,
+        "source_id": "https://openalex.org/S2494179437"
+      },
+      {
+        "count": 168,
+        "mean_score": 0.5294476594624269,
+        "source_id": "https://openalex.org/S152760256"
+      },
+      {
+        "count": 167,
+        "mean_score": 0.5036002084954337,
+        "source_id": "https://openalex.org/S2764539591"
+      },
+      {
+        "count": 142,
+        "mean_score": 0.6484604504718007,
+        "source_id": "https://openalex.org/S2764386229"
+      },
+      {
+        "count": 136,
+        "mean_score": 0.37422597335021335,
+        "source_id": "https://openalex.org/S2898194095"
+      },
+      {
+        "count": 125,
+        "mean_score": 0.4033710468799217,
+        "source_id": "https://openalex.org/S166159787"
+      },
+      {
+        "count": 125,
+        "mean_score": 0.5082261402141636,
+        "source_id": "https://openalex.org/S4210236938"
+      },
+      {
+        "count": 107,
+        "mean_score": 0.44380472366191515,
+        "source_id": "https://openalex.org/S2898224164"
+      },
+      {
+        "count": 101,
+        "mean_score": 0.5349732472002466,
+        "source_id": "https://openalex.org/S4210240921"
+      },
+      {
+        "count": 97,
+        "mean_score": 0.4288451779470824,
+        "source_id": "https://openalex.org/S6377669"
+      },
+      {
+        "count": 88,
+        "mean_score": 0.5778879122897185,
+        "source_id": "https://openalex.org/S4210179183"
+      },
+      {
+        "count": 83,
+        "mean_score": 0.42213455279320394,
+        "source_id": "https://openalex.org/S105746325"
+      },
+      {
+        "count": 69,
+        "mean_score": 0.5043979583449607,
+        "source_id": "https://openalex.org/S4210212333"
+      },
+      {
+        "count": 63,
+        "mean_score": 0.3039024526351984,
+        "source_id": "https://openalex.org/S2898447089"
+      },
+      {
+        "count": 63,
+        "mean_score": 0.39532392137309236,
+        "source_id": "https://openalex.org/S2898565713"
+      },
+      {
+        "count": 62,
+        "mean_score": 0.4332894547226985,
+        "source_id": "https://openalex.org/S18855311"
+      },
+      {
+        "count": 62,
+        "mean_score": 0.39098157543938666,
+        "source_id": "https://openalex.org/S2764889447"
+      },
+      {
+        "count": 58,
+        "mean_score": 0.23485578577380425,
+        "source_id": "https://openalex.org/S2764757124"
+      },
+      {
+        "count": 58,
+        "mean_score": 0.5771795333948816,
+        "source_id": "https://openalex.org/S4210183364"
+      },
+      {
+        "count": 56,
+        "mean_score": 0.3280591382470159,
+        "source_id": "https://openalex.org/S11290066"
+      },
+      {
+        "count": 55,
+        "mean_score": 0.20449997677623666,
+        "source_id": "https://openalex.org/S61175029"
+      },
+      {
+        "count": 54,
+        "mean_score": 0.26561653817235387,
+        "source_id": "https://openalex.org/S66388299"
+      },
+      {
+        "count": 51,
+        "mean_score": 0.25678568666875984,
+        "source_id": "https://openalex.org/S95464858"
+      },
+      {
+        "count": 50,
+        "mean_score": 0.21999408533077147,
+        "source_id": "https://openalex.org/S235346"
+      },
+      {
+        "count": 49,
+        "mean_score": 0.3363073920086983,
+        "source_id": "https://openalex.org/S6640965"
+      },
+      {
+        "count": 47,
+        "mean_score": 0.3594978089696316,
+        "source_id": "https://openalex.org/S2898321583"
+      },
+      {
+        "count": 46,
+        "mean_score": 0.685772767146566,
+        "source_id": "https://openalex.org/S194154261"
+      },
+      {
+        "count": 46,
+        "mean_score": 0.3340944966991733,
+        "source_id": "https://openalex.org/S2481255041"
+      },
+      {
+        "count": 46,
+        "mean_score": 0.4926728416390746,
+        "source_id": "https://openalex.org/S2764943563"
+      },
+      {
+        "count": 45,
+        "mean_score": 0.5909159292318075,
+        "source_id": "https://openalex.org/S4210226396"
+      },
+      {
+        "count": 42,
+        "mean_score": 0.5826667285604225,
+        "source_id": "https://openalex.org/S13733787"
+      },
+      {
+        "count": 41,
+        "mean_score": 0.2764087957572429,
+        "source_id": "https://openalex.org/S2898269294"
+      },
+      {
+        "count": 40,
+        "mean_score": 0.3045592967914043,
+        "source_id": "https://openalex.org/S4210217024"
+      },
+      {
+        "count": 40,
+        "mean_score": 0.33324804756306514,
+        "source_id": "https://openalex.org/S87202501"
+      },
+      {
+        "count": 39,
+        "mean_score": 0.23612395203933126,
+        "source_id": "https://openalex.org/S103097414"
+      },
+      {
+        "count": 39,
+        "mean_score": 0.4251598113102989,
+        "source_id": "https://openalex.org/S113214489"
+      },
+      {
+        "count": 37,
+        "mean_score": 0.5486176508283961,
+        "source_id": "https://openalex.org/S204847658"
+      },
+      {
+        "count": 37,
+        "mean_score": 0.7966076451266978,
+        "source_id": "https://openalex.org/S32776067"
+      },
+      {
+        "count": 37,
+        "mean_score": 0.5615073348436164,
+        "source_id": "https://openalex.org/S4210181981"
+      },
+      {
+        "count": 35,
+        "mean_score": 0.7070647728886775,
+        "source_id": "https://openalex.org/S57950554"
+      },
+      {
+        "count": 35,
+        "mean_score": 0.5391410964001121,
+        "source_id": "https://openalex.org/S74970393"
+      },
+      {
+        "count": 31,
+        "mean_score": 0.4213290291695201,
+        "source_id": "https://openalex.org/S26760650"
+      },
+      {
+        "count": 30,
+        "mean_score": 0.44453080567802095,
+        "source_id": "https://openalex.org/S2898307581"
+      },
+      {
+        "count": 30,
+        "mean_score": 0.37075981122807217,
+        "source_id": "https://openalex.org/S2898482455"
+      },
+      {
+        "count": 29,
+        "mean_score": 0.2455829777994502,
+        "source_id": "https://openalex.org/S2898405271"
+      },
+      {
+        "count": 29,
+        "mean_score": 0.3928533159221287,
+        "source_id": "https://openalex.org/S4210237483"
+      },
+      {
+        "count": 28,
+        "mean_score": 0.6822304822076145,
+        "source_id": "https://openalex.org/S336866"
+      },
+      {
+        "count": 28,
+        "mean_score": 0.5171891164443363,
+        "source_id": "https://openalex.org/S71144982"
+      },
+      {
+        "count": 27,
+        "mean_score": 0.35970629587016995,
+        "source_id": "https://openalex.org/S140251998"
+      },
+      {
+        "count": 27,
+        "mean_score": 0.2707704633609506,
+        "source_id": "https://openalex.org/S2764743394"
+      },
+      {
+        "count": 27,
+        "mean_score": 0.3861637095830556,
+        "source_id": "https://openalex.org/S4210238114"
+      },
+      {
+        "count": 26,
+        "mean_score": 0.645327110535885,
+        "source_id": "https://openalex.org/S2764911704"
+      },
+      {
+        "count": 26,
+        "mean_score": 0.2971675047052622,
+        "source_id": "https://openalex.org/S2765065622"
+      },
+      {
+        "count": 25,
+        "mean_score": 0.2576355863404143,
+        "source_id": "https://openalex.org/S110060079"
+      },
+      {
+        "count": 24,
+        "mean_score": 0.3871785242513514,
+        "source_id": "https://openalex.org/S4210227652"
+      },
+      {
+        "count": 24,
+        "mean_score": 0.6368738153240323,
+        "source_id": "https://openalex.org/S4210236447"
+      },
+      {
+        "count": 24,
+        "mean_score": 0.6254106182967766,
+        "source_id": "https://openalex.org/S58516903"
+      },
+      {
+        "count": 23,
+        "mean_score": 0.3522168408450992,
+        "source_id": "https://openalex.org/S10446503"
+      },
+      {
+        "count": 23,
+        "mean_score": 0.32805220133516266,
+        "source_id": "https://openalex.org/S11400418"
+      },
+      {
+        "count": 23,
+        "mean_score": 0.2543797057826301,
+        "source_id": "https://openalex.org/S2738498342"
+      },
+      {
+        "count": 23,
+        "mean_score": 0.32298014792431307,
+        "source_id": "https://openalex.org/S4210194774"
+      },
+      {
+        "count": 22,
+        "mean_score": 0.30091529987418736,
+        "source_id": "https://openalex.org/S167961193"
+      },
+      {
+        "count": 22,
+        "mean_score": 0.6497378545836102,
+        "source_id": "https://openalex.org/S170358085"
+      },
+      {
+        "count": 22,
+        "mean_score": 0.35391662726140916,
+        "source_id": "https://openalex.org/S179810352"
+      },
+      {
+        "count": 22,
+        "mean_score": 0.40523133538986805,
+        "source_id": "https://openalex.org/S2898569932"
+      },
+      {
+        "count": 22,
+        "mean_score": 0.6744130982413038,
+        "source_id": "https://openalex.org/S4210191235"
+      },
+      {
+        "count": 22,
+        "mean_score": 0.8159599397715155,
+        "source_id": "https://openalex.org/S4210227372"
+      },
+      {
+        "count": 22,
+        "mean_score": 0.809489210224842,
+        "source_id": "https://openalex.org/S4387288079"
+      },
+      {
+        "count": 21,
+        "mean_score": 0.4051249348638136,
+        "source_id": "https://openalex.org/S129150467"
+      },
+      {
+        "count": 21,
+        "mean_score": 0.48886047635210883,
+        "source_id": "https://openalex.org/S2765010971"
+      },
+      {
+        "count": 21,
+        "mean_score": 0.691328453769567,
+        "source_id": "https://openalex.org/S4387292877"
+      },
+      {
+        "count": 20,
+        "mean_score": 0.6369002781964286,
+        "source_id": "https://openalex.org/S143381477"
+      },
+      {
+        "count": 20,
+        "mean_score": 0.6609121445866617,
+        "source_id": "https://openalex.org/S172540258"
+      },
+      {
+        "count": 20,
+        "mean_score": 0.4806006047897403,
+        "source_id": "https://openalex.org/S4210223023"
+      },
+      {
+        "count": 19,
+        "mean_score": 0.3211308864294905,
+        "source_id": "https://openalex.org/S2898182138"
+      },
+      {
+        "count": 19,
+        "mean_score": 0.4319627840032931,
+        "source_id": "https://openalex.org/S4210177785"
+      },
+      {
+        "count": 19,
+        "mean_score": 0.567262472378043,
+        "source_id": "https://openalex.org/S4210189394"
+      },
+      {
+        "count": 19,
+        "mean_score": 0.7198968583291683,
+        "source_id": "https://openalex.org/S4210211861"
+      },
+      {
+        "count": 19,
+        "mean_score": 0.4677559322472435,
+        "source_id": "https://openalex.org/S54761077"
+      },
+      {
+        "count": 18,
+        "mean_score": 0.4871248975410602,
+        "source_id": "https://openalex.org/S2764641825"
+      },
+      {
+        "count": 18,
+        "mean_score": 0.3406919329598457,
+        "source_id": "https://openalex.org/S4210175756"
+      },
+      {
+        "count": 17,
+        "mean_score": 0.7767785546294527,
+        "source_id": "https://openalex.org/S149937609"
+      },
+      {
+        "count": 17,
+        "mean_score": 0.28840210286156565,
+        "source_id": "https://openalex.org/S2765061010"
+      },
+      {
+        "count": 17,
+        "mean_score": 0.6566673057809341,
+        "source_id": "https://openalex.org/S4210180977"
+      },
+      {
+        "count": 17,
+        "mean_score": 0.5459178074708411,
+        "source_id": "https://openalex.org/S4210221648"
+      },
+      {
+        "count": 17,
+        "mean_score": 0.37267520245553515,
+        "source_id": "https://openalex.org/S4306400425"
+      },
+      {
+        "count": 16,
+        "mean_score": 0.27019769838176483,
+        "source_id": "https://openalex.org/S27728379"
+      },
+      {
+        "count": 16,
+        "mean_score": 0.28852057524035485,
+        "source_id": "https://openalex.org/S60865174"
+      },
+      {
+        "count": 16,
+        "mean_score": 0.3680063864348496,
+        "source_id": "https://openalex.org/S98723585"
+      },
+      {
+        "count": 15,
+        "mean_score": 0.1716024268751779,
+        "source_id": "https://openalex.org/S2764371953"
+      }
+    ],
+    "validation": {
+      "balanced_accuracy": 0.7106898581960674,
+      "brier": 0.16717509277587383,
+      "count": 4243,
+      "ece": 0.04772983255814876,
+      "f1": 0.6109716744352814,
+      "negative_count": 2854,
+      "positive_count": 1389,
+      "pr_auc": 0.6939390807518394,
+      "roc_auc": 0.7827580100529589,
+      "threshold": 0.4301355210826429
+    }
+  },
+  "schema": "publication_shift.evaluation.v1",
+  "score_name": "current_era_similarity",
+  "top_coefficients": {
+    "current_era": [
+      {
+        "coefficient": 3.478510833040291,
+        "feature": "char__202"
+      },
+      {
+        "coefficient": 3.334702666650542,
+        "feature": "word__2022"
+      },
+      {
+        "coefficient": 3.1567692700319374,
+        "feature": "char__\u2019s "
+      },
+      {
+        "coefficient": 3.1427171528846407,
+        "feature": "word__2023"
+      },
+      {
+        "coefficient": 3.0111333083196166,
+        "feature": "char__ 202"
+      },
+      {
+        "coefficient": 2.3227837345137448,
+        "feature": "word__ai"
+      },
+      {
+        "coefficient": 2.183671272546001,
+        "feature": "word__abstract"
+      },
+      {
+        "coefficient": 2.086482568037595,
+        "feature": "word__this study"
+      },
+      {
+        "coefficient": 1.940175768798936,
+        "feature": "word__transformer"
+      },
+      {
+        "coefficient": 1.923731799998847,
+        "feature": "word__additionally"
+      },
+      {
+        "coefficient": 1.921376463130084,
+        "feature": "word__crucial"
+      },
+      {
+        "coefficient": 1.832845189186192,
+        "feature": "char__2022"
+      },
+      {
+        "coefficient": 1.831133028751481,
+        "feature": "char__022"
+      },
+      {
+        "coefficient": 1.7728596579005056,
+        "feature": "char__023"
+      },
+      {
+        "coefficient": 1.769970855551614,
+        "feature": "word__while"
+      },
+      {
+        "coefficient": 1.757347470962349,
+        "feature": "word__2021"
+      },
+      {
+        "coefficient": 1.7363901541035414,
+        "feature": "char__2023"
+      },
+      {
+        "coefficient": 1.6905126985606342,
+        "feature": "word__2024"
+      },
+      {
+        "coefficient": 1.6625257779835092,
+        "feature": "word__this research"
+      },
+      {
+        "coefficient": 1.5346517795981596,
+        "feature": "char__ 2022"
+      },
+      {
+        "coefficient": 1.5108088430270337,
+        "feature": "char__ 2023"
+      },
+      {
+        "coefficient": 1.48182979461007,
+        "feature": "word__study"
+      },
+      {
+        "coefficient": 1.4716559497803088,
+        "feature": "word__the suggested"
+      },
+      {
+        "coefficient": 1.4705683839616863,
+        "feature": "word__findings"
+      },
+      {
+        "coefficient": 1.4450356562011533,
+        "feature": "word__6g"
+      },
+      {
+        "coefficient": 1.4202642708956355,
+        "feature": "word__datasets"
+      },
+      {
+        "coefficient": 1.3502913669530419,
+        "feature": "word__enhance"
+      },
+      {
+        "coefficient": 1.346704919461571,
+        "feature": "char__ormer"
+      },
+      {
+        "coefficient": 1.34651083773202,
+        "feature": "word__notably"
+      },
+      {
+        "coefficient": 1.3071615468484141,
+        "feature": "char__rmer"
+      }
+    ],
+    "pre_llm_era": [
+      {
+        "coefficient": -1.7775830011330218,
+        "feature": "word__this paper"
+      },
+      {
+        "coefficient": -1.702580516444561,
+        "feature": "char__201"
+      },
+      {
+        "coefficient": -1.6841834046440276,
+        "feature": "word__in this paper"
+      },
+      {
+        "coefficient": -1.5707021182339864,
+        "feature": "char__ 201"
+      },
+      {
+        "coefficient": -1.566876524893301,
+        "feature": "word__paper"
+      },
+      {
+        "coefficient": -1.5095019279616033,
+        "feature": "word__many"
+      },
+      {
+        "coefficient": -1.4806934155015616,
+        "feature": "word__be"
+      },
+      {
+        "coefficient": -1.4469525673132158,
+        "feature": "word__of the"
+      },
+      {
+        "coefficient": -1.3339579700086888,
+        "feature": "word__big"
+      },
+      {
+        "coefficient": -1.3331508925684983,
+        "feature": "word__are"
+      },
+      {
+        "coefficient": -1.3032058124034287,
+        "feature": "word__big data"
+      },
+      {
+        "coefficient": -1.2864843661829897,
+        "feature": "word__presented"
+      },
+      {
+        "coefficient": -1.2480960575808997,
+        "feature": "char__s' "
+      },
+      {
+        "coefficient": -1.236150019032308,
+        "feature": "word__is"
+      },
+      {
+        "coefficient": -1.1971028383972935,
+        "feature": "word__were"
+      },
+      {
+        "coefficient": -1.1490270337591262,
+        "feature": "word__2016"
+      },
+      {
+        "coefficient": -1.1460027891689741,
+        "feature": "word__and to"
+      },
+      {
+        "coefficient": -1.1150282199731318,
+        "feature": "word__2017"
+      },
+      {
+        "coefficient": -1.07685033518603,
+        "feature": "word__2018"
+      },
+      {
+        "coefficient": -1.0762520632870893,
+        "feature": "word__the experimental"
+      },
+      {
+        "coefficient": -1.060081980303285,
+        "feature": "word__of this"
+      },
+      {
+        "coefficient": -1.0600489064368015,
+        "feature": "word__an"
+      },
+      {
+        "coefficient": -1.050573943093979,
+        "feature": "word__by using"
+      },
+      {
+        "coefficient": -1.044650084258623,
+        "feature": "word__important"
+      },
+      {
+        "coefficient": -1.0442379850947388,
+        "feature": "word__to be"
+      },
+      {
+        "coefficient": -1.0113581670147842,
+        "feature": "word__the experimental results"
+      },
+      {
+        "coefficient": -1.0062923333979747,
+        "feature": "word__covid 19"
+      },
+      {
+        "coefficient": -0.9909020747346265,
+        "feature": "word__to the"
+      },
+      {
+        "coefficient": -0.9727086042174403,
+        "feature": "word__relative"
+      },
+      {
+        "coefficient": -0.9528992964590541,
+        "feature": "word__covid"
+      }
+    ]
+  },
+  "transition_2022": {
+    "count": 2000,
+    "mean": 0.45804580102586134,
+    "median": 0.43719695650390245,
+    "p05": 0.1329479696964124,
+    "p25": 0.2820121492836024,
+    "p75": 0.6192176225906901,
+    "p95": 0.8606434477996167,
+    "std": 0.2224553182687822
+  }
+}
