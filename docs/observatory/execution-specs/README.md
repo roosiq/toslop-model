@@ -17,6 +17,26 @@ Drafting an execution spec does not waive G0-G5.
 | [ES-009](ES-009-mvp-benchmark-and-protected-evaluation.md) | Synthetic, labeled, protected-final, and regression benchmark system | IS-006 v0.1.0 | Draft, implementation blocked |
 | [ES-010](ES-010-observatory-read-api-and-worker-proxy.md) | Private read API, public Worker proxy, caching, and exports | IS-007 v0.1.0 | Draft, implementation blocked |
 | [ES-011](ES-011-observatory-dashboard-and-release.md) | Research dashboard, accessibility, QA, monitoring, and production cutover | IS-007 v0.1.0 | Draft, implementation blocked |
+| [ES-012](ES-012-astro-administration-interface.md) | Astro admin interface, public/admin boundaries, responsive layout, and browser behavior | IS-008 v0.1.0 | Draft, retrospective conformance review required |
+| [ES-013](ES-013-github-specification-workflow.md) | GitHub discovery, validation, concurrency, branch, and pull-request workflow | IS-008 v0.1.0 | Draft, retrospective conformance review required |
+| [ES-014](ES-014-admin-access-tunnel-and-operations.md) | Authentication, edge proxy, Cloudflare Tunnel, services, monitoring, and recovery | IS-008 v0.1.0 | Draft, retrospective conformance review required |
+
+## Administration dependency model
+
+```text
+IS-008 approval
+      |
+      +--> ES-012 interface --------+
+      |                             |
+      +--> ES-013 GitHub workflow --+--> retrospective conformance and G5
+      |                             |
+      +--> ES-014 access/operations +
+```
+
+ES-012 through ES-014 document an existing baseline. Their presence does not
+retroactively grant approval. Corrective security, availability, and
+accessibility work may preserve the baseline; material expansion remains
+blocked until the exact versions are approved.
 
 ## Staged dependency model
 

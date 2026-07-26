@@ -17,6 +17,7 @@ intent; it does not block approval unless it is promoted to this column.
 | [IS-005](IS-005-language-homogenization-scorer.md) | Language Homogenization scorer | Proposed | 0.1.0 | IS-001, IS-004 |
 | [IS-006](IS-006-mvp-validation-benchmark.md) | MVP validation benchmark | Proposed | 0.1.0 | IS-001, IS-003, IS-005 |
 | [IS-007](IS-007-mvp-research-dashboard.md) | MVP research dashboard | Proposed | 0.1.0 | IS-001, IS-003, IS-005, IS-006 |
+| [IS-008](IS-008-observatory-specification-administration.md) | Observatory specification administration | Proposed, as-built baseline exists | 0.1.0 | None |
 
 ## Approval order
 
@@ -27,6 +28,10 @@ The acyclic approval sequence is:
 3. IS-003 after IS-002; IS-005 after IS-004.
 4. IS-006 after the two scorer intents freeze their benchmark obligations.
 5. IS-007 after the scorer and benchmark intents are approved.
+
+IS-008 has no scorer approval dependency because it administers specifications
+without calculating or publishing observatory results. Its existing as-built
+baseline requires retrospective G0 and G5 review before material expansion.
 
 ## Approval rule
 

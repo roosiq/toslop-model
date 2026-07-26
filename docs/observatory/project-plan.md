@@ -130,6 +130,7 @@ approved no-text evidence.
 | IS-005 | Language Homogenization scorer | WP3.2-WP3.3, WP4.2 |
 | IS-006 | MVP validation benchmark | WP8.1-WP8.3, WP8.5 |
 | IS-007 | MVP research dashboard | WP4.3, WP9.1-WP9.4 |
+| IS-008 | Authenticated observatory specification administration | WP1.4, WP9.3, WP9.4 |
 
 ## Delivery sequence
 

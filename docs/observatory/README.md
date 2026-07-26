@@ -33,7 +33,7 @@ execution-spec version are both approved.
 | --- | --- | --- |
 | `toslop-model` | Public-safe constructs, methods, benchmark definitions, specifications, aggregate evaluation artifacts, and scorer documentation | Redistributable raw corpus text, secrets, private source paths, or production activation state |
 | `slopslingers-infra` | Private collectors, storage, feature pipelines, scoring jobs, APIs, operations, and production configuration | Public browser credentials or undocumented direct browser access to the private gateway |
-| `toslop` | Public Cloudflare Worker, observatory dashboard, public methodology pages, and same-origin API proxy | Raw corpora, private gateway secrets, or scorer training and batch execution |
+| `toslop` | Public Cloudflare Worker, observatory dashboard, public methodology pages, same-origin API proxy, and authenticated specification-administration application | Raw corpora, browser-visible credentials, private gateway secrets, or scorer training and batch execution |
 
 The existing Toslop AI-likeness measurement is a separate instrument. It may
 be used as an input to future model-language research only after an approved
