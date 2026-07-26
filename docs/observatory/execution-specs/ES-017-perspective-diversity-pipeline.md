@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Synthetic bootstrap implementing; release blocked |
+| Status | Synthetic formula complete; taxonomy extraction blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Applied science lead |
@@ -24,8 +24,10 @@ action breadth with explicit unknown coverage and fail-closed release.
 
 ## Current state
 
-No governed frame taxonomy, extraction runtime, category observation model,
-diversity kernel, or S4 benchmark exists.
+The strict aggregate category model, capacity and unknown controls, diversity
+kernel, and suppressed ES-001 projection are implemented in
+`slopslingers-infra` PR 12. No governed real taxonomy, extraction runtime, or
+protected S4 benchmark exists.
 
 ## Architecture and boundaries
 

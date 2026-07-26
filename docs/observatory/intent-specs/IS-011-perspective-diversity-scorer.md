@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Synthetic bootstrap authorized; scorer release blocked |
+| Status | Synthetic formula bootstrap complete; empirical scorer blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Intent owner | Research lead |

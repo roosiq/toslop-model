@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Synthetic bootstrap implementing; provider capture blocked |
+| Status | Synthetic formula complete; provider capture blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Applied science lead |
@@ -26,9 +26,11 @@ document-level authorship output.
 
 ## Current state
 
-The current Toslop detector is a separate AI-likeness instrument. No approved
-prompt suite, controlled response corpus, diffusion pattern registry, lag
-analysis, or S5 benchmark exists.
+The current Toslop detector remains a separate AI-likeness instrument. Strict
+aggregate pattern inputs, prevalence, cross-domain, placebo-gated lag, and
+suppressed ES-001 projection code are implemented in `slopslingers-infra` PR
+12. No approved prompt suite, response corpus, pattern registry, or protected
+benchmark exists.
 
 ## Architecture and boundaries
 

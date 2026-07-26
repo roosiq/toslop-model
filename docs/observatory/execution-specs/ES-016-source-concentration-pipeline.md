@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Synthetic bootstrap implementing; release blocked |
+| Status | Synthetic formula complete; mappings and release blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Applied science lead |
@@ -25,8 +25,10 @@ suppression.
 
 ## Current state
 
-S2 exists in the shared registry, but no canonical link/citation model,
-ownership mapping pipeline, concentration kernel, or benchmark exists.
+Strict aggregate distributions, mapping coverage, HHI, top-k, entropy,
+effective-count diagnostics, and a suppressed ES-001 projection are implemented
+in `slopslingers-infra` PR 12. Real link extraction, canonical mappings, and
+benchmarks do not exist.
 
 ## Architecture and boundaries
 

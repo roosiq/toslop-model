@@ -18,12 +18,12 @@ intent; it does not block approval unless it is promoted to this column.
 | [IS-006](IS-006-mvp-validation-benchmark.md) | MVP validation benchmark | Proposed | 0.1.0 | IS-001, IS-003, IS-005 |
 | [IS-007](IS-007-mvp-research-dashboard.md) | MVP research dashboard | Proposed | 0.1.0 | IS-001, IS-003, IS-005, IS-006 |
 | [IS-008](IS-008-observatory-specification-administration.md) | Observatory specification administration | Proposed, as-built baseline exists | 0.1.0 | None |
-| [IS-009](IS-009-external-exploration-scorer.md) | External Exploration scorer | Synthetic bootstrap authorized | 0.1.0 | IS-001 |
-| [IS-010](IS-010-source-concentration-scorer.md) | Source Concentration scorer | Synthetic bootstrap authorized | 0.1.0 | IS-001 |
-| [IS-011](IS-011-perspective-diversity-scorer.md) | Perspective Diversity scorer | Synthetic bootstrap authorized | 0.1.0 | IS-001 |
-| [IS-012](IS-012-model-language-diffusion-scorer.md) | Model-Language Diffusion scorer | Synthetic bootstrap authorized | 0.1.0 | IS-001, IS-004 |
-| [IS-013](IS-013-human-knowledge-contribution-scorer.md) | Human Knowledge Contribution scorer | Synthetic bootstrap authorized | 0.1.0 | IS-001 |
-| [IS-014](IS-014-novel-information-density-scorer.md) | Novel Information Density scorer | Synthetic bootstrap authorized | 0.1.0 | IS-001 |
+| [IS-009](IS-009-external-exploration-scorer.md) | External Exploration scorer | Synthetic formula complete; empirical scorer blocked | 0.1.0 | IS-001 |
+| [IS-010](IS-010-source-concentration-scorer.md) | Source Concentration scorer | Synthetic formula complete; empirical scorer blocked | 0.1.0 | IS-001 |
+| [IS-011](IS-011-perspective-diversity-scorer.md) | Perspective Diversity scorer | Synthetic formula complete; empirical scorer blocked | 0.1.0 | IS-001 |
+| [IS-012](IS-012-model-language-diffusion-scorer.md) | Model-Language Diffusion scorer | Synthetic formula complete; provider capture blocked | 0.1.0 | IS-001, IS-004 |
+| [IS-013](IS-013-human-knowledge-contribution-scorer.md) | Human Knowledge Contribution scorer | Synthetic formula complete; real collection blocked | 0.1.0 | IS-001 |
+| [IS-014](IS-014-novel-information-density-scorer.md) | Novel Information Density scorer | Synthetic formula complete; real extraction blocked | 0.1.0 | IS-001 |
 
 ## Approval order
 

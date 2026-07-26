@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Synthetic bootstrap implementing; real collection blocked |
+| Status | Synthetic formula complete; real collection blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Applied science lead |
@@ -25,8 +25,10 @@ components, fixed-panel weighting, bot coverage, and fail-closed score output.
 
 ## Current state
 
-No shared activity ontology, platform adapters, bot rules, cohort store,
-normalization baseline, or S6 scorer exists.
+Strict platform aggregate inputs, baseline-ratio normalization, fixed weights,
+bot/source-break controls, and suppressed ES-001 projection code are
+implemented in `slopslingers-infra` PR 12. No approved activity ontology,
+platform adapter, cohort store, or fitted baseline exists.
 
 ## Architecture and boundaries
 

@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Synthetic bootstrap implementing; real extraction blocked |
+| Status | Synthetic formula complete; real extraction blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Applied science lead |
@@ -26,8 +26,10 @@ suppression.
 
 ## Current state
 
-No governed claim schema, extractor, entailment clusterer, denominator
-registry, novelty kernel, or S8 benchmark exists.
+Strict aggregate hierarchy, density normalization, coverage and stability
+controls, and suppressed ES-001 projection code are implemented in
+`slopslingers-infra` PR 12. No governed claim schema, extractor, entailment
+clusterer, fitted denominator registry, or protected benchmark exists.
 
 ## Architecture and boundaries
 

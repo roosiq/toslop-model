@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Synthetic bootstrap implementing; release blocked |
+| Status | Synthetic formula complete; real sources and release blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Applied science lead |
@@ -26,8 +26,10 @@ depth components plus source-panel diagnostics.
 
 ## Current state
 
-The shared score contract supports S1, but there is no S1 observation model,
-aggregation kernel, baseline, collector, benchmark, or release artifact.
+The strict aggregate observation model, deterministic component kernel,
+source-break controls, and suppressed ES-001 projection are implemented in
+`slopslingers-infra` PR 12. No real collector, fitted baseline, benchmark, or
+release artifact exists.
 
 ## Architecture and boundaries
 
