@@ -2,11 +2,11 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Draft, implementation blocked |
+| Status | Implementing under DR-002; production and collection blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Data lead |
-| Approved intent reference | IS-002 v0.1.0, approval pending |
+| Approved intent reference | IS-002 v0.1.0, foundation implementation authorized |
 | Repositories | `slopslingers-infra`, `toslop-model` |
 | Gates | G1, G5 |
 | Start prerequisites | ES-001 stable contract candidate |
@@ -14,11 +14,11 @@
 
 ## Implementation authorization
 
-Implementation may begin only after
+Foundation implementation began after
 [IS-002](../intent-specs/IS-002-public-job-posting-data-foundation.md)
-is approved, ES-001 has a stable contract candidate, and the program owner
-approves the production database, object-store provider, region, encryption,
-retention, and source-decision workflow.
+received program-owner authorization, ES-001 produced a stable contract
+candidate, and DR-002 approved the development/shadow database, object-store,
+encryption, retention, and source-decision boundary.
 
 No source collection is authorized by this execution spec. Each source requires
 its own approved decision record.
@@ -336,12 +336,12 @@ migrations or a reviewed restore.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved execution version | None |
-| Approved intent version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for development and synthetic shadow implementation |
+| Approved execution version | 0.1.0 implementation scope |
+| Approved intent version | IS-002 v0.1.0 implementation scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-002 and PostgreSQL migration/role test |
 
-Implementation is blocked until this table records approval for this exact
-execution version and the exact approved intent version.
+Production provisioning and real collection remain blocked until their
+provider, operations, and source-specific decisions are approved.

@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Proposed |
+| Status | Implementing under DR-001 and DR-002; collection blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Intent owner | Data lead |
@@ -221,11 +221,11 @@ the policy was enforced, or that a worker used AI.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for foundation implementation; real source collection pending source decisions |
+| Approved version | 0.1.0 implementation scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-001 and DR-002 |
 
-Collection and implementation are blocked until this table and each source
-decision record show approval.
+Foundation implementation is authorized. Collection remains blocked until each
+source decision record shows approval.
