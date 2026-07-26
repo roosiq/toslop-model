@@ -3,7 +3,7 @@
 | Field | Value |
 | --- | --- |
 | Status | Draft, retrospective conformance review required |
-| Version | 0.1.0 |
+| Version | 0.1.1 |
 | Created | 2026-07-26 |
 | Execution owner | Data engineering lead |
 | Approved intent reference | IS-008 v0.1.0, approval pending |
@@ -41,6 +41,9 @@ This execution spec satisfies IS-008 success measures 1-5, 7, 9, 10, and 12.
 - Contents API update and pull-request creation;
 - best-effort branch cleanup when pull-request creation fails;
 - bounded GitHub response reads and a 15-second timeout;
+- adversarial path, Unicode, control-character, and exact byte-boundary tests;
+- mocked failure coverage for tree, payload, timeout, permission, branch,
+  content, pull-request, and cleanup failures;
 - stable JSON errors without token or upstream-body leakage.
 
 The configured source is `roosiq/toslop-model`, reference `main`, root
@@ -203,7 +206,8 @@ have succeeded. Recovery inspects GitHub state before repeating.
    the repository or merge.
 8. Publish a versioned API schema or equivalent contract fixtures.
 
-Tasks 1-4 exist in code. Tasks 5-8 require closure evidence.
+Tasks 1-6 have implementation and deterministic test evidence. Tasks 7-8
+remain required before G5 approval.
 
 ## Test and benchmark plan
 
@@ -311,7 +315,7 @@ retaining authenticated read/validation only if a read credential is approved.
 | Approved intent version | None |
 | Approver | None |
 | Decision date | None |
-| Evidence | Existing mocked integration suite and 2026-07-26 live read/validation |
+| Evidence | 2026-07-26 adversarial path/size suite, complete mocked GitHub failure matrix, and live read/validation canary |
 
 Material repository-workflow expansion is blocked until this table records
 approval.
