@@ -1,0 +1,82 @@
+{
+  "schema_version": "observatory.warning_registry.v1",
+  "registry_version": "0.1.0",
+  "status": "proposed",
+  "warnings": [
+    {
+      "code": "EXPERIMENTAL",
+      "default_severity": "info",
+      "message": "This scorer or series has not completed all validation and production gates."
+    },
+    {
+      "code": "LOW_SAMPLE_SIZE",
+      "default_severity": "error",
+      "message": "The eligible observation count is below the approved release threshold."
+    },
+    {
+      "code": "LOW_EFFECTIVE_SAMPLE_SIZE",
+      "default_severity": "error",
+      "message": "Clustering or weighting reduces the effective sample below the approved threshold."
+    },
+    {
+      "code": "BASELINE_INCOMPLETE",
+      "default_severity": "error",
+      "message": "The approved historical baseline does not have sufficient eligible coverage."
+    },
+    {
+      "code": "SOURCE_OUTAGE",
+      "default_severity": "error",
+      "message": "One or more required sources did not complete collection for this period."
+    },
+    {
+      "code": "SOURCE_MIX_SHIFT",
+      "default_severity": "warning",
+      "message": "The source-family composition changed beyond the approved comparison tolerance."
+    },
+    {
+      "code": "COVERAGE_SHIFT",
+      "default_severity": "warning",
+      "message": "Entity, topic, genre, occupation, jurisdiction, or field coverage changed beyond tolerance."
+    },
+    {
+      "code": "TOPIC_OR_GENRE_CONFOUNDER",
+      "default_severity": "warning",
+      "message": "The requested comparison has residual topic, event, template, or genre confounding."
+    },
+    {
+      "code": "BENCHMARK_REGRESSION",
+      "default_severity": "error",
+      "message": "A required benchmark or safety slice regressed below its frozen threshold."
+    },
+    {
+      "code": "EXTRACTOR_DRIFT",
+      "default_severity": "error",
+      "message": "Feature or label extraction changed beyond the approved drift tolerance."
+    },
+    {
+      "code": "LINEAGE_INCOMPLETE",
+      "default_severity": "error",
+      "message": "One or more inputs, transformations, or versions cannot be reconstructed."
+    },
+    {
+      "code": "LICENSE_RESTRICTED",
+      "default_severity": "error",
+      "message": "Source rights or retention state prohibit this calculation or publication."
+    },
+    {
+      "code": "CONFIDENCE_UNAVAILABLE",
+      "default_severity": "warning",
+      "message": "The approved confidence calculation could not be completed."
+    },
+    {
+      "code": "RELATIVE_CHANGE_UNDEFINED",
+      "default_severity": "info",
+      "message": "Relative change is null because the approved baseline value is zero."
+    },
+    {
+      "code": "SUPPRESSED",
+      "default_severity": "error",
+      "message": "The result is intentionally withheld because one or more required gates failed."
+    }
+  ]
+}
