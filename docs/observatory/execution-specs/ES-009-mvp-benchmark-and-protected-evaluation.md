@@ -2,11 +2,11 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Draft, implementation blocked |
+| Status | Synthetic framework complete; human benchmark blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Applied science lead |
-| Approved intent reference | IS-006 v0.1.0, approval pending |
+| Approved intent reference | IS-006 v0.1.0, synthetic framework boundary approved by DR-007 |
 | Repositories | `slopslingers-infra`, `toslop-model` |
 | Gates | G2, G3 |
 | Start prerequisites | ES-001 contract; approved IS-006 |
@@ -14,7 +14,7 @@
 
 ## Implementation authorization
 
-Synthetic framework work may begin only after IS-006 approval. Human label
+Synthetic framework work is authorized by DR-007. Human label
 collection requires approved sources, annotator procedure, protected-store
 policy, and governance review. Protected final evaluation requires frozen
 scorer release candidates and a named research approver.
@@ -32,8 +32,13 @@ regression history, and no-text evidence packets for S7 and S3.
   protected evaluation concepts, checksums, and explicit HOLD/REJECT decisions
   for AI-likeness research.
 - Those artifacts address a different construct and cannot validate S7 or S3.
-- No observatory annotation schema, synthetic suite, final-label store,
-  evaluation runner, or gate packet exists.
+- A synthetic-only implementation now provides strict benchmark contracts,
+  grouped splits, append-only annotation transitions, protected-label role
+  checks, classification and pairwise metrics, immutable gates, a
+  prediction-only evaluator, lineage-consumption controls, and an aggregate
+  public packet.
+- Human labels, production protected storage, benchmark 1.0.0, and scorer
+  validation remain blocked.
 
 ## Architecture and boundaries
 
@@ -362,5 +367,7 @@ review for text, identity, path, and claim leakage.
 | Decision date | None |
 | Evidence | None |
 
-Implementation is blocked until this table records approval for this exact
-execution version and the exact approved intent version.
+The synthetic framework is implemented under DR-007. Human benchmark
+construction and protected final scorer evaluation remain blocked until this
+table records approval for this exact execution version and the exact approved
+intent version.

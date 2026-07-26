@@ -14,7 +14,7 @@ Drafting an execution spec does not waive G0-G5.
 | [ES-006](ES-006-professional-writing-corpus-pipeline.md) | Professional-writing ingestion, controls, and corpus releases | IS-004 v0.1.0 | Synthetic corpus complete; real collection blocked |
 | [ES-007](ES-007-language-feature-and-control-pipeline.md) | S3 lexical, syntactic, rhetorical, semantic, and matching features | IS-005 v0.1.0 | Synthetic fallbacks complete; feature release blocked |
 | [ES-008](ES-008-language-homogenization-aggregation.md) | S3 formula, uncertainty, sensitivities, backfill, and release | IS-005 v0.1.0 | Synthetic formula complete; scorer release blocked |
-| [ES-009](ES-009-mvp-benchmark-and-protected-evaluation.md) | Synthetic, labeled, protected-final, and regression benchmark system | IS-006 v0.1.0 | Draft, implementation blocked |
+| [ES-009](ES-009-mvp-benchmark-and-protected-evaluation.md) | Synthetic, labeled, protected-final, and regression benchmark system | IS-006 v0.1.0 | Synthetic framework complete; human benchmark blocked |
 | [ES-010](ES-010-observatory-read-api-and-worker-proxy.md) | Private read API, public Worker proxy, caching, and exports | IS-007 v0.1.0 | Draft, implementation blocked |
 | [ES-011](ES-011-observatory-dashboard-and-release.md) | Research dashboard, accessibility, QA, monitoring, and production cutover | IS-007 v0.1.0 | Draft, implementation blocked |
 | [ES-012](ES-012-astro-administration-interface.md) | Astro admin interface, public/admin boundaries, responsive layout, and browser behavior | IS-008 v0.1.0 | Draft, retrospective conformance review required |

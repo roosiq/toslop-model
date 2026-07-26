@@ -15,7 +15,7 @@ still requires the narrower G1-G5 gates.
 | IS-003 | Deliver Employer AI Compulsion scorer | Bootstrap implementing | ES-004, ES-005 |
 | IS-004 | Deliver controlled professional-writing corpus | Synthetic bootstrap complete | ES-006 |
 | IS-005 | Deliver Language Homogenization scorer | Synthetic bootstrap complete | ES-007, ES-008 |
-| IS-006 | Deliver synthetic, labeled, and protected benchmark | Queued | ES-009 |
+| IS-006 | Deliver synthetic, labeled, and protected benchmark | Framework implementing | ES-009 |
 | IS-007 | Deliver research API and dashboard | Queued | ES-010, ES-011 |
 | IS-008 | Close administration conformance and production gates | Implementing | ES-012, ES-013, ES-014 |
 | ES-001 | Build score registries and cross-runtime contract validation | Complete | RR-CONTRACT-v1.0.0 |
@@ -26,7 +26,7 @@ still requires the narrower G1-G5 gates.
 | ES-006 | Build professional-writing corpus pipeline | Synthetic corpus complete | 50-test observatory suite |
 | ES-007 | Build S3 linguistic feature and control pipeline | Synthetic fallbacks complete | 50-test observatory suite |
 | ES-008 | Build S3 aggregation, uncertainty, and release artifacts | Synthetic formula complete | 50-test suite; suppressed contract projection |
-| ES-009 | Build benchmark, protected evaluation, and gate engine | Queued | Pending |
+| ES-009 | Build benchmark, protected evaluation, and gate engine | Synthetic framework complete | Protected evaluator tests; infra PR #12 |
 | ES-010 | Build private read API and public Worker proxy | Queued | Pending |
 | ES-011 | Build and release the Observatory dashboard | Queued | Pending |
 | ES-012 | Close Astro admin interface conformance | Implementing | Existing admin UI and browser tests |
@@ -64,6 +64,34 @@ intent or execution specs. They remain explicit build todos:
   and validation.
 - [ ] S8 Novel Information Density intent, execution specs, implementation, and
   validation.
+
+## ES-009 checklist
+
+- [x] Approve a synthetic-only benchmark framework boundary.
+- [x] Implement strict benchmark-item, prediction, and candidate freeze
+  contracts.
+- [x] Implement deterministic transitive grouping, split assignment, and
+  zero-overlap audit.
+- [x] Implement append-only double annotation and adjudication transitions.
+- [x] Enforce evaluator-only final-label reads with an access audit.
+- [x] Implement classification, ordinal-error, confusion, and S3 pairwise
+  metrics.
+- [x] Implement immutable required gates with PASS, HOLD, and REJECT behavior.
+- [x] Verify manifest, prediction, artifact, freeze, exact coverage, and
+  candidate-lineage constraints before protected evaluation.
+- [x] Implement aggregate-only public packets with restricted-field hygiene.
+- [x] Prove reference acceptance, rejection, malformed-submission, overlap,
+  role-isolation, and lineage-reuse behavior with synthetic tests.
+- [ ] Approve source frame, annotator training, protected-store operator, split
+  proportions, S3 task design, and immutable final thresholds.
+- [ ] Build synthetic monotonicity, confounder, interval-coverage, and external
+  negative-control fixture inventory.
+- [ ] Complete human S7 double annotation and S3 ranking benchmark at the
+  required sizes and agreement thresholds.
+- [ ] Freeze non-overlapping final manifests and run one protected evaluation
+  for each approved scorer lineage.
+- [ ] Publish independently reviewed benchmark 1.0.0 evidence without
+  restricted text or labels.
 
 ## ES-002 checklist
 
