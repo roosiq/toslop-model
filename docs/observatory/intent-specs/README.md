@@ -18,6 +18,12 @@ intent; it does not block approval unless it is promoted to this column.
 | [IS-006](IS-006-mvp-validation-benchmark.md) | MVP validation benchmark | Proposed | 0.1.0 | IS-001, IS-003, IS-005 |
 | [IS-007](IS-007-mvp-research-dashboard.md) | MVP research dashboard | Proposed | 0.1.0 | IS-001, IS-003, IS-005, IS-006 |
 | [IS-008](IS-008-observatory-specification-administration.md) | Observatory specification administration | Proposed, as-built baseline exists | 0.1.0 | None |
+| [IS-009](IS-009-external-exploration-scorer.md) | External Exploration scorer | Synthetic bootstrap authorized | 0.1.0 | IS-001 |
+| [IS-010](IS-010-source-concentration-scorer.md) | Source Concentration scorer | Synthetic bootstrap authorized | 0.1.0 | IS-001 |
+| [IS-011](IS-011-perspective-diversity-scorer.md) | Perspective Diversity scorer | Synthetic bootstrap authorized | 0.1.0 | IS-001 |
+| [IS-012](IS-012-model-language-diffusion-scorer.md) | Model-Language Diffusion scorer | Synthetic bootstrap authorized | 0.1.0 | IS-001, IS-004 |
+| [IS-013](IS-013-human-knowledge-contribution-scorer.md) | Human Knowledge Contribution scorer | Synthetic bootstrap authorized | 0.1.0 | IS-001 |
+| [IS-014](IS-014-novel-information-density-scorer.md) | Novel Information Density scorer | Synthetic bootstrap authorized | 0.1.0 | IS-001 |
 
 ## Approval order
 
@@ -32,6 +38,10 @@ The acyclic approval sequence is:
 IS-008 has no scorer approval dependency because it administers specifications
 without calculating or publishing observatory results. Its existing as-built
 baseline requires retrospective G0 and G5 review before material expansion.
+
+IS-009 through IS-014 may proceed in parallel after IS-001 for synthetic
+bootstrap. IS-012 also coordinates with IS-004. Real source, taxonomy,
+provider, benchmark, and release work remains gated inside each intent.
 
 ## Approval rule
 

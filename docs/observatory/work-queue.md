@@ -18,6 +18,12 @@ still requires the narrower G1-G5 gates.
 | IS-006 | Deliver synthetic, labeled, and protected benchmark | Framework implementing | ES-009 |
 | IS-007 | Deliver research API and dashboard | Fixture delivery complete | ES-010, ES-011 |
 | IS-008 | Close administration conformance and production gates | Implementing | ES-012, ES-013, ES-014 |
+| IS-009 | Deliver External Exploration scorer | Synthetic bootstrap implementing | ES-015 |
+| IS-010 | Deliver Source Concentration scorer | Synthetic bootstrap implementing | ES-016 |
+| IS-011 | Deliver Perspective Diversity scorer | Synthetic bootstrap implementing | ES-017 |
+| IS-012 | Deliver Model-Language Diffusion scorer | Synthetic bootstrap implementing | ES-018 |
+| IS-013 | Deliver Human Knowledge Contribution scorer | Synthetic bootstrap implementing | ES-019 |
+| IS-014 | Deliver Novel Information Density scorer | Synthetic bootstrap implementing | ES-020 |
 | ES-001 | Build score registries and cross-runtime contract validation | Complete | RR-CONTRACT-v1.0.0 |
 | ES-002 | Build source registry and immutable snapshot storage | Foundation complete | PostgreSQL and object-store tests; infra PR #12 |
 | ES-003 | Build bounded job-posting collectors and normalization | Synthetic shadow complete | 21-test observatory suite; infra PR #12 |
@@ -32,6 +38,12 @@ still requires the narrower G1-G5 gates.
 | ES-012 | Close Astro admin interface conformance | Implementing | Existing admin UI and browser tests |
 | ES-013 | Replace broad credential and close workflow conformance | Implementing | API contract and failure suite |
 | ES-014 | Replace Basic Auth, add external alerts, run recovery drills | Blocked externally | Access permission and alert destination |
+| ES-015 | Build S1 aggregate contracts and scoring pipeline | Synthetic bootstrap implementing | DR-009 |
+| ES-016 | Build S2 aggregate contracts and scoring pipeline | Synthetic bootstrap implementing | DR-009 |
+| ES-017 | Build S4 aggregate contracts and scoring pipeline | Synthetic bootstrap implementing | DR-009 |
+| ES-018 | Build S5 aggregate contracts and scoring pipeline | Synthetic bootstrap implementing | DR-009 |
+| ES-019 | Build S6 aggregate contracts and scoring pipeline | Synthetic bootstrap implementing | DR-009 |
+| ES-020 | Build S8 aggregate contracts and scoring pipeline | Synthetic bootstrap implementing | DR-009 |
 
 ## ES-001 checklist
 
@@ -47,23 +59,64 @@ still requires the narrower G1-G5 gates.
 - [x] Generate public registry reference documentation.
 - [x] Record contract release and rollback evidence.
 
-## Remaining scorer-spec backlog
+## Post-MVP scorer checklists
 
-The parent plan defines six post-MVP scorers that do not yet have dedicated
-intent or execution specs. They remain explicit build todos:
+### ES-015: External Exploration
 
-- [ ] S1 External Exploration intent, execution specs, implementation, and
-  validation.
-- [ ] S2 Source Concentration intent, execution specs, implementation, and
-  validation.
-- [ ] S4 Perspective Diversity intent, execution specs, implementation, and
-  validation.
-- [ ] S5 Model-Language Diffusion intent, execution specs, implementation, and
-  validation.
-- [ ] S6 Human Knowledge Contribution intent, execution specs, implementation,
-  and validation.
-- [ ] S8 Novel Information Density intent, execution specs, implementation, and
-  validation.
+- [x] Define S1 intent, semantics, exclusions, and source/privacy boundary.
+- [x] Define aggregate observation, component, suppression, and release design.
+- [ ] Implement strict aggregate observation contracts.
+- [ ] Implement entropy, effective breadth, activity, depth, and panel controls.
+- [ ] Add synthetic invariants and suppressed ES-001 projection.
+- [ ] Approve source families, rights, baseline, weights, and break policy.
+- [ ] Run protected benchmark, negative controls, G4, and G5.
+
+### ES-016: Source Concentration
+
+- [x] Define S2 intent, entity levels, semantics, and exclusions.
+- [x] Define reference distribution, mapping, formula, and release design.
+- [ ] Implement strict distribution and mapping contracts.
+- [ ] Implement HHI, top-k, entropy, effective count, and level components.
+- [ ] Add monopoly, equal-share, merge, duplicate, and suppression tests.
+- [ ] Approve link sources, canonicalization, publisher/owner evidence, and baseline.
+- [ ] Run extraction/mapping benchmarks, sensitivities, and G5.
+
+### ES-017: Perspective Diversity
+
+- [x] Define S4 intent, taxonomy boundary, semantics, and exclusions.
+- [x] Define category aggregate, breadth, unknown, and release design.
+- [ ] Implement strict category-count contracts and diversity kernel.
+- [ ] Add balance, monopoly, unknown, minority, and monotonic tests.
+- [ ] Approve taxonomy, labels, capacities, and extraction candidate.
+- [ ] Run protected benchmark, matched controls, G4, and G5.
+
+### ES-018: Model-Language Diffusion
+
+- [x] Define S5 intent and prohibit document-level authorship inference.
+- [x] Define reference-corpus, pattern, aggregate, placebo, and release design.
+- [ ] Implement strict aggregate and pattern-statistic contracts.
+- [ ] Implement prevalence, cross-domain diffusion, lag, and suppression.
+- [ ] Add preexisting-pattern, leakage, placebo, and no-authorship tests.
+- [ ] Approve provider/model/prompt rights and capture the controlled corpus.
+- [ ] Freeze patterns, run protected/placebo validation, G4, and G5.
+
+### ES-019: Human Knowledge Contribution
+
+- [x] Define S6 intent, activity boundary, privacy, semantics, and exclusions.
+- [x] Define platform aggregate, bot, baseline, panel, and release design.
+- [ ] Implement strict platform aggregate contracts and normalization.
+- [ ] Add duplicate, bot, import, break, panel, and monotonic tests.
+- [ ] Approve platform sources, activity ontologies, bot and identity rules.
+- [ ] Run platform benchmarks, backfill, external controls, G4, and G5.
+
+### ES-020: Novel Information Density
+
+- [x] Define S8 intent, novelty semantics, and truth/quality exclusions.
+- [x] Define aggregate claim/cluster, denominator, density, and release design.
+- [ ] Implement strict aggregate hierarchy and density normalization.
+- [ ] Add repetition, distinctness, contradiction, coverage, and stability tests.
+- [ ] Approve claim ontology, extraction, clustering, denominator, and baseline.
+- [ ] Run protected benchmark, matched sensitivities, G4, and G5.
 
 ## ES-009 checklist
 

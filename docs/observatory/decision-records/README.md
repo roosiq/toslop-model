@@ -20,3 +20,4 @@ Supersede it with a new record and link both directions.
 | [DR-006](DR-006-s3-synthetic-bootstrap-boundary.md) | S3 synthetic corpus, feature, and formula boundary | Approved | G1-G2 synthetic bootstrap only | IS-004; IS-005; ES-006; ES-007; ES-008 |
 | [DR-007](DR-007-benchmark-synthetic-framework-boundary.md) | Benchmark synthetic framework boundary | Approved | G2 framework bootstrap only | IS-006; ES-009 |
 | [DR-008](DR-008-delivery-fixture-boundary.md) | Observatory delivery fixture boundary | Approved | G3-G5 fixture and disabled-route bootstrap only | IS-007; ES-010; ES-011 |
+| [DR-009](DR-009-post-mvp-synthetic-bootstrap-boundary.md) | Post-MVP scorer synthetic bootstrap boundary | Approved | G0 and G2 synthetic bootstrap only | IS-009-IS-014; ES-015-ES-020 |

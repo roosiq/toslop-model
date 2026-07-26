@@ -20,6 +20,12 @@ Drafting an execution spec does not waive G0-G5.
 | [ES-012](ES-012-astro-administration-interface.md) | Astro admin interface, public/admin boundaries, responsive layout, and browser behavior | IS-008 v0.1.0 | Draft, retrospective conformance review required |
 | [ES-013](ES-013-github-specification-workflow.md) | GitHub discovery, validation, concurrency, branch, and pull-request workflow | IS-008 v0.1.0 | Draft, retrospective conformance review required |
 | [ES-014](ES-014-admin-access-tunnel-and-operations.md) | Authentication, edge proxy, Cloudflare Tunnel, services, monitoring, and recovery | IS-008 v0.1.0 | Draft, retrospective conformance review required |
+| [ES-015](ES-015-external-exploration-pipeline.md) | S1 aggregate observations, components, controls, and release pipeline | IS-009 v0.1.0 | Synthetic bootstrap implementing; release blocked |
+| [ES-016](ES-016-source-concentration-pipeline.md) | S2 reference distributions, entity levels, concentration, and release pipeline | IS-010 v0.1.0 | Synthetic bootstrap implementing; release blocked |
+| [ES-017](ES-017-perspective-diversity-pipeline.md) | S4 taxonomy aggregates, breadth, controls, and release pipeline | IS-011 v0.1.0 | Synthetic bootstrap implementing; release blocked |
+| [ES-018](ES-018-model-language-diffusion-pipeline.md) | S5 reference corpus contracts, pattern diffusion, lag, and release pipeline | IS-012 v0.1.0 | Synthetic bootstrap implementing; provider capture blocked |
+| [ES-019](ES-019-human-knowledge-contribution-pipeline.md) | S6 platform activity, normalization, controls, and release pipeline | IS-013 v0.1.0 | Synthetic bootstrap implementing; real collection blocked |
+| [ES-020](ES-020-novel-information-density-pipeline.md) | S8 claim/source/perspective density, controls, and release pipeline | IS-014 v0.1.0 | Synthetic bootstrap implementing; real extraction blocked |
 
 ## Administration dependency model
 
@@ -77,3 +83,11 @@ deterministic retrieval rule; ES-009 returns development-only adjudicated pair
 labels; ES-003 freezes the threshold; ES-009 then constructs validation and
 final partitions using that frozen rule. No final partition is used to tune
 ES-003.
+
+## Post-MVP synthetic bootstrap
+
+ES-015 through ES-020 share ES-001 contracts, ES-002 storage boundaries, and
+ES-009 evaluation controls. Their first stage consumes synthetic aggregate
+observations only. Source-specific collection, taxonomy extraction, model
+capture, and claim extraction become narrower execution specs after their
+rights and benchmark decisions are approved.
