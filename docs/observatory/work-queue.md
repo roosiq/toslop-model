@@ -18,9 +18,9 @@ still requires the narrower G1-G5 gates.
 | IS-006 | Deliver synthetic, labeled, and protected benchmark | Queued | ES-009 |
 | IS-007 | Deliver research API and dashboard | Queued | ES-010, ES-011 |
 | IS-008 | Close administration conformance and production gates | Implementing | ES-012, ES-013, ES-014 |
-| ES-001 | Build score registries and cross-runtime contract validation | In progress | Pending |
-| ES-002 | Build source registry and immutable snapshot storage | In progress | Local foundation and migration tests |
-| ES-003 | Build bounded job-posting collectors and normalization | Queued | Pending |
+| ES-001 | Build score registries and cross-runtime contract validation | Complete | RR-CONTRACT-v1.0.0 |
+| ES-002 | Build source registry and immutable snapshot storage | Foundation complete | PostgreSQL and object-store tests; infra PR #12 |
+| ES-003 | Build bounded job-posting collectors and normalization | Synthetic shadow complete | 21-test observatory suite; infra PR #12 |
 | ES-004 | Build S7 extraction model and evidence lineage | Queued | Pending |
 | ES-005 | Build S7 aggregation, uncertainty, and release artifacts | Queued | Pending |
 | ES-006 | Build professional-writing corpus pipeline | Queued | Pending |
@@ -86,3 +86,29 @@ intent or execution specs. They remain explicit build todos:
 - [ ] Select production providers, regions, recovery objectives, and alert
   destinations.
 - [ ] Approve one source-specific decision before any real pilot.
+
+## ES-003 checklist
+
+- [x] Approve the synthetic-shadow implementation boundary.
+- [x] Define strict collection-window, task, envelope, source-record, private
+  normalized posting, and canonical snapshot contracts.
+- [x] Implement a bounded HTTPS client with host, DNS, robots, redirect,
+  timeout, response-size, request-budget, and user-agent controls.
+- [x] Implement a deterministic synthetic adapter and end-to-end corpus build.
+- [x] Remove personal contacts and tracking parameters before normalized
+  persistence, including punctuation-boundary regression coverage.
+- [x] Implement exact grouping and deterministic provisional MinHash plus
+  Jaccard near-duplicate clustering.
+- [x] Implement versioned reviewed-alias employer resolution and occupation
+  mapping with ambiguous and unresolved states.
+- [x] Emit synthetic-shadow coverage, release, object, snapshot, and lineage
+  records with deterministic reruns.
+- [x] Add four named queues, retry and quarantine classification, and text-free
+  dead-letter contracts.
+- [x] Add the disabled-by-default `observatory-worker` Compose service.
+- [ ] Calibrate and freeze near-duplicate thresholds on the ES-009 development
+  partition.
+- [ ] Approve and implement the first real source adapter.
+- [ ] Complete bounded one-month pilot and one-year two-source-family shadow.
+- [ ] Meet final deduplication, employer, occupation, privacy, performance, and
+  release gates.

@@ -2,11 +2,11 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Draft, implementation blocked |
+| Status | Synthetic-shadow implementation complete; real collection blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Data lead |
-| Approved intent reference | IS-002 v0.1.0, approval pending |
+| Approved intent reference | IS-002 v0.1.0, foundation implementation scope |
 | Repositories | `slopslingers-infra`, `toslop-model` |
 | Gates | G1, G2 |
 | Start prerequisites | ES-002 storage readiness |
@@ -14,9 +14,10 @@
 
 ## Implementation authorization
 
-Implementation may begin after IS-002 approval and ES-002 storage readiness.
-Each collector remains disabled until its source decision authorizes the exact
-access method, fields, purpose, retention, and rate budget.
+Synthetic-shadow implementation is approved by DR-003 after IS-002 foundation
+approval and ES-002 storage readiness. Each real collector remains disabled
+until its source decision authorizes the exact access method, fields, purpose,
+retention, and rate budget.
 
 ## Outcome
 
@@ -325,12 +326,12 @@ taxonomy. Source, time, and S7 labels are not inputs.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved execution version | None |
-| Approved intent version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for synthetic-shadow implementation; real collection blocked |
+| Approved execution version | 0.1.0 synthetic scope |
+| Approved intent version | IS-002 v0.1.0 foundation implementation scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-001, DR-002, and DR-003 |
 
-Implementation is blocked until this table records approval for this exact
-execution version and the exact approved intent version.
+Real adapters, source pilots, threshold freeze, and corpus release remain
+blocked by their source-specific G1 decisions and ES-009 G2 evidence.
