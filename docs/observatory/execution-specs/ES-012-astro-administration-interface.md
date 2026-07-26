@@ -142,7 +142,7 @@ workspace, and pane shells do not expand with document content.
 7. Add keyboard traversal, focus restoration, zoom, and screen-reader checks.
 8. Record screenshots and measured scroll results in release evidence.
 
-Tasks 1-5 exist. Tasks 6-8 require closure evidence before conformance approval.
+Tasks 1-6 exist. Tasks 7-8 require closure evidence before conformance approval.
 
 ## Test and benchmark plan
 
