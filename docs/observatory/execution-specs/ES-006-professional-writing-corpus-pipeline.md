@@ -2,11 +2,11 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Draft, implementation blocked |
+| Status | Synthetic corpus implemented; real collection blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Data lead |
-| Approved intent reference | IS-004 v0.1.0, approval pending |
+| Approved intent reference | IS-004 v0.1.0 synthetic scope |
 | Repositories | `slopslingers-infra`, `toslop-model` |
 | Gates | G1, G2 |
 | Start prerequisites | ES-002 storage readiness |
@@ -14,10 +14,10 @@
 
 ## Implementation authorization
 
-Implementation may begin only after IS-004 approval and ES-002 storage
-readiness. Each source adapter requires an approved source decision. Corpus
-release is blocked until genre, topic, event, boilerplate, quote, deduplication,
-and coverage benchmarks pass.
+Synthetic explicit-block implementation is approved by DR-006. Each real source
+adapter still requires an approved source decision. Corpus release remains
+blocked until genre, topic, event, boilerplate, quote, deduplication, and
+coverage benchmarks pass.
 
 ## Outcome
 
@@ -352,12 +352,12 @@ thresholds. Deletion traverses every control and corpus release lineage edge.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved execution version | None |
-| Approved intent version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for explicit-role synthetic corpus only |
+| Approved execution version | 0.1.0 synthetic scope |
+| Approved intent version | IS-004 v0.1.0 synthetic scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-001 and DR-006 |
 
-Implementation is blocked until this table records approval for this exact
-execution version and the exact approved intent version.
+Real adapters, learned classifiers, benchmarks, backfills, and corpus release
+remain blocked.

@@ -2,11 +2,11 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Draft, implementation blocked |
+| Status | Synthetic formula implemented; scorer release blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Applied science lead |
-| Approved intent reference | IS-005 v0.1.0, approval pending |
+| Approved intent reference | IS-005 v0.1.0 synthetic scope |
 | Repositories | `slopslingers-infra`, `toslop-model` |
 | Gates | G1, G2, G3, G4, G5 |
 | Start prerequisites | ES-001, ES-006, and ES-007 candidate outputs |
@@ -14,9 +14,9 @@
 
 ## Implementation authorization
 
-Implementation may begin on synthetic features after IS-005 approval. Real
-backfills require approved ES-006 and ES-007 releases. Formula, baseline,
-component weight, concentration cap, and interval decisions must be approved
+Synthetic formula implementation is approved by DR-006. Real backfills require
+approved ES-006 and ES-007 releases. Formula, baseline, component weight,
+concentration cap, and interval decisions remain provisional until approved
 before protected final evaluation.
 
 ## Outcome
@@ -382,12 +382,12 @@ inherit source deletion and retirement lineage.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved execution version | None |
-| Approved intent version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for synthetic dispersion and suppressed projection only |
+| Approved execution version | 0.1.0 synthetic scope |
+| Approved intent version | IS-005 v0.1.0 synthetic scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-001 and DR-006 |
 
-Implementation is blocked until this table records approval for this exact
-execution version and the exact approved intent version.
+Historical baseline, uncertainty, full sensitivities, protected evaluation,
+backfill, and scorer release remain blocked by G1-G5.

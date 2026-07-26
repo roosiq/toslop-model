@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Proposed |
+| Status | Synthetic bootstrap implemented; real corpus blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Intent owner | Data lead |
@@ -215,11 +215,11 @@ most restrictive applicable source policy.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for explicit-role synthetic corpus only |
+| Approved version | 0.1.0 synthetic scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-001 and DR-006 |
 
-Collection and implementation are blocked until this table and the source
-decision records show approval.
+Real collection, classifier freeze, historical coverage, and corpus release
+remain blocked by source-specific and G1-G2 decisions.

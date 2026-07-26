@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Proposed |
+| Status | Synthetic bootstrap implemented; scorer release blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Intent owner | Research lead |
@@ -213,11 +213,11 @@ checksum, runtime requirements, and retirement policy.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for deterministic synthetic bootstrap only |
+| Approved version | 0.1.0 synthetic scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-001 and DR-006 |
 
-Implementation is blocked until this table records approval and G1-G2 inputs
-are frozen.
+Production representations, baseline, protected evaluation, backfill, and
+scorer release remain blocked until G1-G3 inputs are frozen.

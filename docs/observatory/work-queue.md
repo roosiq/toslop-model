@@ -13,8 +13,8 @@ still requires the narrower G1-G5 gates.
 | IS-001 | Freeze ontology and shared reporting semantics | In progress | ES-001 implementation |
 | IS-002 | Deliver compliant job-posting corpus foundation | In progress | ES-002, ES-003 |
 | IS-003 | Deliver Employer AI Compulsion scorer | Bootstrap implementing | ES-004, ES-005 |
-| IS-004 | Deliver controlled professional-writing corpus | Queued | ES-006 |
-| IS-005 | Deliver Language Homogenization scorer | Queued | ES-007, ES-008 |
+| IS-004 | Deliver controlled professional-writing corpus | Synthetic bootstrap complete | ES-006 |
+| IS-005 | Deliver Language Homogenization scorer | Synthetic bootstrap complete | ES-007, ES-008 |
 | IS-006 | Deliver synthetic, labeled, and protected benchmark | Queued | ES-009 |
 | IS-007 | Deliver research API and dashboard | Queued | ES-010, ES-011 |
 | IS-008 | Close administration conformance and production gates | Implementing | ES-012, ES-013, ES-014 |
@@ -23,9 +23,9 @@ still requires the narrower G1-G5 gates.
 | ES-003 | Build bounded job-posting collectors and normalization | Synthetic shadow complete | 21-test observatory suite; infra PR #12 |
 | ES-004 | Build S7 extraction model and evidence lineage | Synthetic bootstrap complete | 32-test suite; `bootstrap-rule-v0` |
 | ES-005 | Build S7 aggregation, uncertainty, and release artifacts | Synthetic formula complete | 37-test suite; suppressed contract projection |
-| ES-006 | Build professional-writing corpus pipeline | Queued | Pending |
-| ES-007 | Build S3 linguistic feature and control pipeline | Queued | Pending |
-| ES-008 | Build S3 aggregation, uncertainty, and release artifacts | Queued | Pending |
+| ES-006 | Build professional-writing corpus pipeline | Synthetic corpus complete | 50-test observatory suite |
+| ES-007 | Build S3 linguistic feature and control pipeline | Synthetic fallbacks complete | 50-test observatory suite |
+| ES-008 | Build S3 aggregation, uncertainty, and release artifacts | Synthetic formula complete | 50-test suite; suppressed contract projection |
 | ES-009 | Build benchmark, protected evaluation, and gate engine | Queued | Pending |
 | ES-010 | Build private read API and public Worker proxy | Queued | Pending |
 | ES-011 | Build and release the Observatory dashboard | Queued | Pending |
@@ -159,3 +159,53 @@ intent or execution specs. They remain explicit build todos:
 - [ ] Run real baseline and current backfills with a frozen ES-004 artifact.
 - [ ] Complete protected benchmark, event validation, monitoring, and release
   review.
+
+## ES-006 checklist
+
+- [x] Define explicit structural block roles and authored-only extraction.
+- [x] Implement contact minimization and quote, boilerplate, template,
+  navigation, code, table, and unknown ratios.
+- [x] Implement four allowlisted synthetic genres with unresolved state.
+- [x] Implement versioned topic fixtures and deterministic event clustering.
+- [x] Implement exact, near, syndication, revision, and logical identities.
+- [x] Emit canonical snapshots and no-text matched-frame counts.
+- [x] Test authored preservation, exclusion, deduplication, events, quality,
+  tracking removal, and public hygiene.
+- [ ] Approve four real genres, sources, taxonomy, thresholds, and ownership
+  policy.
+- [ ] Pass adjudicated extraction, classification, event, and dedup benchmarks.
+- [ ] Complete historical and one-year shadow corpus releases.
+
+## ES-007 checklist
+
+- [x] Fit immutable baseline lexical vocabulary and frequency artifacts.
+- [x] Implement lexical distributions and named diversity diagnostics.
+- [x] Implement transparent synthetic surface-syntax fallback.
+- [x] Implement fixed authored rhetorical registry and structural features.
+- [x] Implement local deterministic hashed TF-IDF semantic fallback.
+- [x] Enforce finite vectors, fixed dimensions, artifact checksums, and
+  current-period isolation.
+- [x] Emit no-text feature manifest.
+- [x] Test golden determinism, perturbations, normalization, metadata
+  invariance, and artifact immutability.
+- [ ] Approve production tokenizer, parser, rhetorical registry, and semantic
+  model with license, revision, checksums, and benchmarks.
+- [ ] Build private typed feature objects, drift thresholds, and shadow
+  release.
+
+## ES-008 checklist
+
+- [x] Implement base-2 Jensen-Shannon and cosine dispersion.
+- [x] Implement robust center and MAD, IQR, and standard-deviation scale
+  fallbacks.
+- [x] Implement convergence z-scores, clipping, four component scores, and
+  equal synthetic weights.
+- [x] Implement deterministic logical deduplication and contribution caps.
+- [x] Test exact numerical fixtures, convergence monotonicity, permutation,
+  duplicate, conflict, cap, and suppression behavior.
+- [x] Validate a shared score-contract projection with all values suppressed.
+- [ ] Approve historical baseline cells, weights, caps, scales, effective
+  sample, and sensitivity thresholds.
+- [ ] Implement entity-cluster uncertainty and every required sensitivity.
+- [ ] Complete baseline and shadow backfills, protected benchmark, monitoring,
+  and release review.

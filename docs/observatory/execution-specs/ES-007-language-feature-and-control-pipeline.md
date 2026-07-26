@@ -2,11 +2,11 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Draft, implementation blocked |
+| Status | Synthetic fallback features implemented; feature release blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Applied science lead |
-| Approved intent reference | IS-005 v0.1.0, approval pending |
+| Approved intent reference | IS-005 v0.1.0 synthetic scope |
 | Repositories | `slopslingers-infra`, `toslop-model` |
 | Gates | G2, G3 |
 | Start prerequisites | ES-006 approved corpus release |
@@ -14,10 +14,10 @@
 
 ## Implementation authorization
 
-Implementation may begin on synthetic text after IS-005 approval. Real-corpus
-execution requires an approved ES-006 release. Semantic feature implementation
-is blocked until its model, revision, license, checksum, runtime, and benchmark
-decision is approved.
+Synthetic deterministic fallback features are approved by DR-006. Real-corpus
+execution requires an approved ES-006 release. A production semantic feature
+remains blocked until its model, revision, license, checksum, runtime, and
+benchmark decision is approved.
 
 ## Outcome
 
@@ -330,12 +330,12 @@ statistics, metrics, and checksums only.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved execution version | None |
-| Approved intent version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for synthetic deterministic fallbacks only |
+| Approved execution version | 0.1.0 synthetic scope |
+| Approved intent version | IS-005 v0.1.0 synthetic scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-001 and DR-006 |
 
-Implementation is blocked until this table records approval for this exact
-execution version and the exact approved intent version.
+Production parser and semantic artifacts, benchmark freeze, corpus extraction,
+and feature release remain blocked.
