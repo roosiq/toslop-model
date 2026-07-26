@@ -44,6 +44,16 @@ Verified on 2026-07-26:
 - `toslop-admin.service` runs `npm run dev:admin` as a user service;
 - `cloudflared-matrix.service` runs the named tunnel as a user service;
 - local secrets are mode `600` in ignored `.dev.vars.local`;
+- `ops/systemd/toslop-admin.service` versions the live unit with no-new-
+  privileges, private temporary and device namespaces, kernel and control-group
+  protection, namespace and address-family restrictions, and mode-077
+  process-created files;
+- `scripts/check-admin-tunnel.mjs` verifies the constant origin, exact
+  same-origin rewrite, foreign-origin preservation, redirect rewrite, body and
+  authentication forwarding, and no-store response;
+- `scripts/check-admin-live.mjs` verifies loopback or public authentication,
+  session, file list, known read, deterministic validation, and cross-origin
+  rejection without writing;
 - unauthenticated live requests return `401`;
 - authenticated session, 32-file list, known file read, and validation return
   successfully;
@@ -166,7 +176,8 @@ obvious variable-time string equality. TLS is mandatory outside loopback.
    credential and document rotation.
 10. Record recovery and rollback drills.
 
-Tasks 1-2 exist. Tasks 3-10 are required before G5 approval.
+Tasks 1-2 and task 4 exist. The health-check portion of task 5 exists; alerting
+does not. Tasks 3 and 6-10 remain required before G5 approval.
 
 ## Test and benchmark plan
 
@@ -295,7 +306,7 @@ Rollback order:
 | Approved intent version | None |
 | Approver | None |
 | Decision date | None |
-| Evidence | 2026-07-26 live tunnel, auth, API, service, and browser verification |
+| Evidence | 2026-07-26 CI, hardened-service restart, loopback/public canaries, proxy tests, and edge Worker `9366be75-88f6-4a02-b756-ab20d74f4af1` |
 
 The temporary deployment may remain available for review. G5 is blocked until
 Cloudflare Access, scoped credentials, monitoring, and recovery evidence meet
