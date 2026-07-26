@@ -3,7 +3,7 @@
 | Field | Value |
 | --- | --- |
 | Status | Draft, retrospective conformance review required |
-| Version | 0.1.1 |
+| Version | 0.1.2 |
 | Created | 2026-07-26 |
 | Execution owner | Data engineering lead |
 | Approved intent reference | IS-008 v0.1.0, approval pending |
@@ -96,9 +96,9 @@ All responses are JSON with `Cache-Control: no-store`.
 
 ### `GET /api/admin/specs`
 
-Returns `files[]` containing only allowed blobs with path, name, extension,
-SHA, size, and logical group. A truncated recursive tree is an error, not a
-partial success.
+Returns `files[]` containing only allowed blobs with path, name, SHA, and size,
+plus the base commit SHA and `truncated: false`. A truncated recursive tree is
+an error, not a partial success.
 
 ### `GET /api/admin/spec?path=<encoded-path>`
 
@@ -119,8 +119,8 @@ Content must be a UTF-8 file within the size and path boundary.
 
 ### `POST /api/admin/validate`
 
-Input contains `path` and `content`. Output contains `valid`, normalized path,
-kind, byte size, and stable findings with `code`, `severity`, and `message`.
+Input contains `path` and `content`. Output contains `valid`, kind, byte size,
+and stable findings with `code`, `severity`, and `message`.
 Blocking findings include invalid path, invalid JSON, empty content, and size
 violations. Missing template sections are advisory.
 
@@ -138,7 +138,10 @@ violations. Missing template sections are advisory.
 
 A success returns pull-request number, URL, branch, commit SHA, and validation
 findings. `expected_sha` is mandatory for an existing file. A mismatch returns
-`409 stale_edit` before a branch is created.
+`409 stale_spec` before a branch is created.
+
+The machine-readable contract is
+`docs/observatory/contracts/admin-api-v1.openapi.json`.
 
 ### Error contract
 
@@ -206,8 +209,8 @@ have succeeded. Recovery inspects GitHub state before repeating.
    the repository or merge.
 8. Publish a versioned API schema or equivalent contract fixtures.
 
-Tasks 1-6 have implementation and deterministic test evidence. Tasks 7-8
-remain required before G5 approval.
+Tasks 1-6 and 8 have implementation evidence. Task 7 remains required before
+G5 approval.
 
 ## Test and benchmark plan
 
@@ -315,7 +318,7 @@ retaining authenticated read/validation only if a read credential is approved.
 | Approved intent version | None |
 | Approver | None |
 | Decision date | None |
-| Evidence | 2026-07-26 adversarial path/size suite, complete mocked GitHub failure matrix, and live read/validation canary |
+| Evidence | 2026-07-26 adversarial path/size suite, complete mocked GitHub failure matrix, OpenAPI v1 contract, and live read/validation canary |
 
 Material repository-workflow expansion is blocked until this table records
 approval.
