@@ -12,7 +12,7 @@ still requires the narrower G1-G5 gates.
 | --- | --- | --- | --- |
 | IS-001 | Freeze ontology and shared reporting semantics | In progress | ES-001 implementation |
 | IS-002 | Deliver compliant job-posting corpus foundation | In progress | ES-002, ES-003 |
-| IS-003 | Deliver Employer AI Compulsion scorer | Queued | ES-004, ES-005 |
+| IS-003 | Deliver Employer AI Compulsion scorer | Bootstrap implementing | ES-004, ES-005 |
 | IS-004 | Deliver controlled professional-writing corpus | Queued | ES-006 |
 | IS-005 | Deliver Language Homogenization scorer | Queued | ES-007, ES-008 |
 | IS-006 | Deliver synthetic, labeled, and protected benchmark | Queued | ES-009 |
@@ -21,8 +21,8 @@ still requires the narrower G1-G5 gates.
 | ES-001 | Build score registries and cross-runtime contract validation | Complete | RR-CONTRACT-v1.0.0 |
 | ES-002 | Build source registry and immutable snapshot storage | Foundation complete | PostgreSQL and object-store tests; infra PR #12 |
 | ES-003 | Build bounded job-posting collectors and normalization | Synthetic shadow complete | 21-test observatory suite; infra PR #12 |
-| ES-004 | Build S7 extraction model and evidence lineage | Queued | Pending |
-| ES-005 | Build S7 aggregation, uncertainty, and release artifacts | Queued | Pending |
+| ES-004 | Build S7 extraction model and evidence lineage | Synthetic bootstrap complete | 32-test suite; `bootstrap-rule-v0` |
+| ES-005 | Build S7 aggregation, uncertainty, and release artifacts | Synthetic formula complete | 37-test suite; suppressed contract projection |
 | ES-006 | Build professional-writing corpus pipeline | Queued | Pending |
 | ES-007 | Build S3 linguistic feature and control pipeline | Queued | Pending |
 | ES-008 | Build S3 aggregation, uncertainty, and release artifacts | Queued | Pending |
@@ -112,3 +112,50 @@ intent or execution specs. They remain explicit build todos:
 - [ ] Complete bounded one-month pilot and one-year two-source-family shadow.
 - [ ] Meet final deduplication, employer, occupation, privacy, performance, and
   release gates.
+
+## ES-004 checklist
+
+- [x] Approve a synthetic-only source-blind bootstrap boundary.
+- [x] Define the six-level primary enum, fixed class order, mechanism flags,
+  context masks, private offsets, and no-text public packet.
+- [x] Implement deterministic sentence segmentation and source-blind runtime
+  signature.
+- [x] Implement high-precision rule candidates for all primary levels and seven
+  mechanism families.
+- [x] Mask negation, quotation, third-party, and historical-only context.
+- [x] Add product-development and general-discussion hard negatives.
+- [x] Implement provisional highest-qualifying-passage document aggregation
+  with complete private passage lineage.
+- [x] Mark every candidate output `bootstrap_only`.
+- [x] Test all levels, mechanisms, context, ambiguity, determinism, offsets,
+  source blindness, and public artifact hygiene.
+- [ ] Freeze the adjudicated rubric, ambiguity margin, and conflict policy
+  through ES-009 development evidence.
+- [ ] Build and compare the predeclared linear classifier.
+- [ ] Run the protected final benchmark and required slice gates.
+- [ ] Package a checksum-verified shadow artifact and run real-corpus drift and
+  throughput review.
+
+## ES-005 checklist
+
+- [x] Approve synthetic-only formula implementation and fail-closed release
+  behavior.
+- [x] Implement strict baseline registry validation and approved-state checks.
+- [x] Implement logical-document deduplication and conflict rejection.
+- [x] Implement within-cell employer balancing and baseline-composition
+  standardization.
+- [x] Implement all level shares, required and enforcement prevalence,
+  mechanism prevalence, ambiguity, resolution, and matched-weight diagnostics.
+- [x] Implement effective sample size and production-default suppression gates.
+- [x] Implement deterministic employer-cluster bootstrap.
+- [x] Implement current-composition, document, source, and occupation
+  sensitivities.
+- [x] Prove endpoint, monotonicity, permutation, duplicate, balancing,
+  determinism, and suppression behavior with synthetic tests.
+- [x] Validate a bootstrap score-contract projection that nulls every reportable
+  value.
+- [ ] Approve real baseline dates, cell weights, effective-sample threshold,
+  and sensitivity tolerances.
+- [ ] Run real baseline and current backfills with a frozen ES-004 artifact.
+- [ ] Complete protected benchmark, event validation, monitoring, and release
+  review.

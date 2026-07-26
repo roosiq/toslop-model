@@ -9,8 +9,8 @@ Drafting an execution spec does not waive G0-G5.
 | [ES-001](ES-001-score-registry-and-output-contract.md) | Score registry, warning registry, and output contract | IS-001 v0.1.0 | Contract implementation complete; release gates retained |
 | [ES-002](ES-002-source-registry-and-immutable-storage.md) | Source governance, metadata store, immutable objects, and deletion lineage | IS-002 v0.1.0 | Development foundation complete; production activation blocked |
 | [ES-003](ES-003-job-posting-collectors-and-normalization.md) | Job-posting collectors, normalization, deduplication, and entity resolution | IS-002 v0.1.0 | Synthetic shadow complete; real collection blocked |
-| [ES-004](ES-004-employer-compulsion-extraction.md) | S7 rubric, classifier, mechanism extraction, and evidence | IS-003 v0.1.0 | Draft, implementation blocked |
-| [ES-005](ES-005-employer-compulsion-aggregation.md) | S7 formula, uncertainty, aggregation, backfill, and release | IS-003 v0.1.0 | Draft, implementation blocked |
+| [ES-004](ES-004-employer-compulsion-extraction.md) | S7 rubric, classifier, mechanism extraction, and evidence | IS-003 v0.1.0 | Synthetic bootstrap complete; candidate freeze blocked |
+| [ES-005](ES-005-employer-compulsion-aggregation.md) | S7 formula, uncertainty, aggregation, backfill, and release | IS-003 v0.1.0 | Synthetic formula complete; scorer release blocked |
 | [ES-006](ES-006-professional-writing-corpus-pipeline.md) | Professional-writing ingestion, controls, and corpus releases | IS-004 v0.1.0 | Draft, implementation blocked |
 | [ES-007](ES-007-language-feature-and-control-pipeline.md) | S3 lexical, syntactic, rhetorical, semantic, and matching features | IS-005 v0.1.0 | Draft, implementation blocked |
 | [ES-008](ES-008-language-homogenization-aggregation.md) | S3 formula, uncertainty, sensitivities, backfill, and release | IS-005 v0.1.0 | Draft, implementation blocked |

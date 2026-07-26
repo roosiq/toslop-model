@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Proposed |
+| Status | Bootstrap implementation authorized; scorer release blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Intent owner | Research lead |
@@ -215,11 +215,11 @@ roles. Entity-level public output is disabled by default.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for authored synthetic bootstrap only |
+| Approved version | 0.1.0 bootstrap scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-001 and DR-004 |
 
-Implementation is blocked until this table records approval and G1-G2 inputs
-are available.
+Candidate freeze, real-corpus extraction, aggregation, and scorer release remain
+blocked until the required G1-G3 inputs and ES-009 evidence are available.

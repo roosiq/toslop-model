@@ -2,11 +2,11 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Draft, implementation blocked |
+| Status | Synthetic bootstrap implemented; candidate freeze blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Applied science lead |
-| Approved intent reference | IS-003 v0.1.0, approval pending |
+| Approved intent reference | IS-003 v0.1.0 bootstrap scope |
 | Repositories | `slopslingers-infra`, `toslop-model` |
 | Gates | G2, G3 |
 | Start prerequisites | ES-003 bootstrap records; ES-009 development labels |
@@ -14,9 +14,10 @@
 
 ## Implementation authorization
 
-Implementation may begin only after IS-003 approval, an IS-002 corpus release
-candidate exists, and ES-009 freezes the S7 label rubric, split policy, and
-benchmark thresholds.
+Authored synthetic bootstrap implementation is approved by DR-004. Candidate
+training, freeze, real-corpus extraction, and release remain blocked until an
+IS-002 corpus release candidate exists and ES-009 freezes the S7 label rubric,
+split policy, and benchmark thresholds.
 
 ## Outcome
 
@@ -314,12 +315,12 @@ safe serialized vocabulary, coefficients, intercepts, enums, and metadata.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved execution version | None |
-| Approved intent version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for `bootstrap-rule-v0` synthetic scope only |
+| Approved execution version | 0.1.0 bootstrap scope |
+| Approved intent version | IS-003 v0.1.0 bootstrap scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-001 and DR-004 |
 
-Implementation is blocked until this table records approval for this exact
-execution version and the exact approved intent version.
+The linear candidate, threshold selection, protected evaluation, shadow
+artifact, and downstream score remain blocked by G2-G3 evidence.

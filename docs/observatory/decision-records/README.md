@@ -15,3 +15,5 @@ Supersede it with a new record and link both directions.
 | [DR-001](DR-001-implementation-directive.md) | Observatory implementation directive | Approved | G0 implementation start | IS-001-IS-008; ES-001-ES-014 |
 | [DR-002](DR-002-storage-development-boundary.md) | Observatory storage development boundary | Approved | G1 development and shadow | IS-002; ES-002 |
 | [DR-003](DR-003-synthetic-job-corpus-boundary.md) | Synthetic job-corpus implementation boundary | Approved | G1 development and G2 bootstrap | IS-002; ES-003 |
+| [DR-004](DR-004-s7-bootstrap-extractor-boundary.md) | S7 bootstrap extractor boundary | Approved | G2 bootstrap only | IS-003; ES-004 |
+| [DR-005](DR-005-s7-synthetic-aggregation-boundary.md) | S7 synthetic aggregation boundary | Approved | G2 formula bootstrap only | IS-003; ES-005 |

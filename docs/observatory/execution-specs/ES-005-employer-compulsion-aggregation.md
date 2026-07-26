@@ -2,11 +2,11 @@
 
 | Field | Value |
 | --- | --- |
-| Status | Draft, implementation blocked |
+| Status | Synthetic formula implemented; scorer release blocked |
 | Version | 0.1.0 |
 | Created | 2026-07-25 |
 | Execution owner | Applied science lead |
-| Approved intent reference | IS-003 v0.1.0, approval pending |
+| Approved intent reference | IS-003 v0.1.0 bootstrap scope |
 | Repositories | `slopslingers-infra`, `toslop-model` |
 | Gates | G1, G2, G3, G4, G5 |
 | Start prerequisites | ES-001, ES-003, and ES-004 candidate outputs |
@@ -14,9 +14,10 @@
 
 ## Implementation authorization
 
-Implementation may begin after IS-003 approval and draft work may use only
-synthetic fixtures until ES-003, ES-004, ES-009, and the baseline and weighting
-decision records pass their prerequisite gates.
+Synthetic formula work is approved by DR-005. It may use only synthetic
+fixtures and must project a suppressed score contract until ES-003, ES-004,
+ES-009, and the real baseline and weighting decision records pass their
+prerequisite gates.
 
 ## Outcome
 
@@ -334,12 +335,12 @@ separate publication decision enables them.
 
 | Field | Value |
 | --- | --- |
-| Decision | Pending |
-| Approved execution version | None |
-| Approved intent version | None |
-| Approver | None |
-| Decision date | None |
-| Evidence | None |
+| Decision | Approved for synthetic formula and fail-closed projection only |
+| Approved execution version | 0.1.0 bootstrap scope |
+| Approved intent version | IS-003 v0.1.0 bootstrap scope |
+| Approver | Ryan Cook, program owner |
+| Decision date | 2026-07-25 |
+| Evidence | DR-001 and DR-005 |
 
-Implementation is blocked until this table records approval for this exact
-execution version and the exact approved intent version.
+Real baselines, candidate values, backfills, release registry entries, and
+public scores remain blocked by G1-G5.
