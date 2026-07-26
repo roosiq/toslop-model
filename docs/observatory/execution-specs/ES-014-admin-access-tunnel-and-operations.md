@@ -54,6 +54,10 @@ Verified on 2026-07-26:
 - `scripts/check-admin-live.mjs` verifies loopback or public authentication,
   session, file list, known read, deterministic validation, and cross-origin
   rejection without writing;
+- `scripts/wait-admin-ready.mjs` prevents the app unit from reaching ready
+  state before the loopback authentication challenge responds;
+- `toslop-admin-health.timer` runs the complete public-path canary every five
+  minutes and records a failed unit and bounded journal evidence on failure;
 - unauthenticated live requests return `401`;
 - authenticated session, 32-file list, known file read, and validation return
   successfully;
@@ -176,8 +180,8 @@ obvious variable-time string equality. TLS is mandatory outside loopback.
    credential and document rotation.
 10. Record recovery and rollback drills.
 
-Tasks 1-2 and task 4 exist. The health-check portion of task 5 exists; alerting
-does not. Tasks 3 and 6-10 remain required before G5 approval.
+Tasks 1-4 exist. The scheduled health-check portion of task 5 exists; external
+alert delivery does not. Tasks 6-10 remain required before G5 approval.
 
 ## Test and benchmark plan
 
@@ -306,7 +310,7 @@ Rollback order:
 | Approved intent version | None |
 | Approver | None |
 | Decision date | None |
-| Evidence | 2026-07-26 CI, hardened-service restart, loopback/public canaries, proxy tests, and edge Worker `9366be75-88f6-4a02-b756-ab20d74f4af1` |
+| Evidence | 2026-07-26 CI, readiness-gated hardened-service restart, successful five-minute canary unit, loopback/public checks, proxy tests, and edge Worker `9366be75-88f6-4a02-b756-ab20d74f4af1` |
 
 The temporary deployment may remain available for review. G5 is blocked until
 Cloudflare Access, scoped credentials, monitoring, and recovery evidence meet
